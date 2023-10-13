@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   AppBar,
   Box,
@@ -8,91 +8,91 @@ import {
   Typography,
   Badge,
   MenuItem,
-  Menu,
-} from "@mui/material";
-import { HomeWork } from "@mui/icons-material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import LogoGreen from "../Images/logo-green.png"
+  Menu
+} from '@mui/material'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import MailIcon from '@mui/icons-material/Mail'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import MoreIcon from '@mui/icons-material/MoreVert'
+// @ts-ignore
+import LogoGreen from '../Images/logo-green.png'
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement> (null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+    React.useState<null | HTMLElement>(null)
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(anchorEl)
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+    setMobileMoreAnchorEl(null)
+  }
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+    setAnchorEl(null)
+    handleMobileMenuClose()
+  }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+    setMobileMoreAnchorEl(event.currentTarget)
+  }
 
-  const menuId = "primary-search-account-menu";
+  const menuId = 'primary-search-account-menu'
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={ anchorEl }
       anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
+        vertical: 'top',
+        horizontal: 'right'
       }}
-      id={menuId}
+      id={ menuId }
       keepMounted
       transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
+        vertical: 'top',
+        horizontal: 'right'
       }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
+      open={ isMenuOpen }
+      onClose={ handleMenuClose }
     >
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={ handleMenuClose }>
         <Link href="/connexion" underline="none">
           Connexion
         </Link>
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={ handleMenuClose }>
         <Link href="/inscription" underline="none">
           Inscription
         </Link>
       </MenuItem>
     </Menu>
-  );
+  )
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  const mobileMenuId = 'primary-search-account-menu-mobile'
   const renderMobileMenu = (
     <Menu
-      anchorEl={mobileMoreAnchorEl}
+      anchorEl={ mobileMoreAnchorEl }
       anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
+        vertical: 'top',
+        horizontal: 'right'
       }}
-      id={mobileMenuId}
+      id={ mobileMenuId }
       keepMounted
       transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
+        vertical: 'top',
+        horizontal: 'right'
       }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
+      open={ isMobileMenuOpen }
+      onClose={ handleMobileMenuClose }
     >
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
+          <Badge badgeContent={ 4 } color="error">
+            <MailIcon/>
           </Badge>
         </IconButton>
         <p>Messages</p>
@@ -103,8 +103,8 @@ export default function PrimarySearchAppBar() {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+          <Badge badgeContent={ 17 } color="error">
+            <NotificationsIcon/>
           </Badge>
         </IconButton>
         <p>Notifications</p>
@@ -117,16 +117,16 @@ export default function PrimarySearchAppBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <AccountCircle/>
         </IconButton>
         <p>Profile</p>
       </MenuItem>
     </Menu>
-  );
+  )
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar component="nav" sx={{ backgroundColor: "bg-green-light" }}>
+      <AppBar component="nav" sx={{ backgroundColor: 'bg-green-light' }}>
         <Toolbar>
           <Typography
             variant="h6"
@@ -134,54 +134,54 @@ export default function PrimarySearchAppBar() {
             component="a"
             href="/"
             sx={{
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
               fontWeight: 700,
-              color: "inherit",
-              textDecoration: "none",
+              color: 'inherit',
+              textDecoration: 'none'
             }}
           >
-            <img src={LogoGreen} style={{ height: '50px' }} alt="photo de profile"/>
+            <img src={ LogoGreen } style={{ height: '50px' }} alt="photo de profile"/>
           </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1 }}/>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+              <Badge badgeContent={ 17 } color="error">
+                <NotificationsIcon/>
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
-              aria-controls={menuId}
+              aria-controls={ menuId }
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={ handleProfileMenuOpen }
               color="inherit"
             >
-              <AccountCircle />
+              <AccountCircle/>
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="show more"
-              aria-controls={mobileMenuId}
+              aria-controls={ mobileMenuId }
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              onClick={ handleMobileMenuOpen }
               color="inherit"
             >
-              <MoreIcon />
+              <MoreIcon/>
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      { renderMobileMenu }
+      { renderMenu }
     </Box>
-  );
+  )
 }
