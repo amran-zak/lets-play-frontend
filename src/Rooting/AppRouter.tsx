@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Header from '../components/NavBar/Header'
 import Login from '../components/Authentification/Login'
 import NewPassword from '../components/Authentification/NewPassword'
+import SignUp from '../components/Authentification/SignUp'
 
 export default function AppRouter(): JSX.Element {
     return (
@@ -15,6 +16,7 @@ export default function AppRouter(): JSX.Element {
                         {/*  <Route path='/details' element={<Details />} /> */}
                         <Route path='/connexion' element={<Login/>}/>
                         <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
+                        <Route path='/inscription' element={<SignUp/>}/>
                         {/*  <Route path='/nouveau_mot_de_passe' element={<New_password/>} /> */}
                         {/*  <Route path='/profile' element={<UserProfile/>} /> */}
                         {/*  <Route path='/airbnb' element={<AirBNB/>} /> */}
