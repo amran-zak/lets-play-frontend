@@ -14,9 +14,15 @@ import * as Yup from 'yup'
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import background from '../Images/badminton.jpeg'
-import type LoginData from '../../Types/Login.types'
 import Authentification from '../../Services/Authentification'
 import NewpasswordData from '../../Types/NewPassword.types'
+import LoginData from '../../Types/Login.types'
+
+interface Newpassword {
+  email: string
+  newPassword: string
+  newPassword2: string
+}
 
 export default function NewPassword(): JSX.Element {
   const [user, setUser] = React.useState(undefined)
@@ -25,15 +31,15 @@ export default function NewPassword(): JSX.Element {
     email: Yup.string()
       .required('Email est requis')
       .email("Email n'est pas valide"),
-    password: Yup.string().required('Mot de passe requis '),
-    password2: Yup.string().required('Mot de passe requis ')
+    newPassword: Yup.string().required('Mot de passe requis'),
+    newPassword2: Yup.string().required('Mot de passe requis')
   })
 
   const {
     register,
     handleSubmit,
     formState: {errors}
-  } = useForm<NewpasswordData>({
+  } = useForm<Newpassword>({
     resolver: yupResolver(validationSchema),
     criteriaMode: 'all'
   })
@@ -41,20 +47,29 @@ export default function NewPassword(): JSX.Element {
     event.preventDefault()
   }
   const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword2, setShowPassword2] = React.useState(false)
 
+  console.log('Le composant NewPassword est rendu.')
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show)
+    setShowPassword2((show) => !show)
   }
 
-  const onSubmit = (data: NewpasswordData) => {
-    Authentification.newPassword(data)
+  const onSubmit = (data: Newpassword) => {
+    const loginData: NewpasswordData = {
+      email: data.email,
+      newPassword: data.newPassword
+    }
+    Authentification.newPassword(loginData)
       .then((response: any) => {
+        console.log(loginData)
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)
         }
       })
       .catch((error: Error) => {
+        console.log('error')
         console.error(error)
       })
   }
@@ -100,129 +115,123 @@ export default function NewPassword(): JSX.Element {
           <Typography component="h1" variant="h5">
             Nouveau mot de passe
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            sx={{mt: 1}}
-          >
-            <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="email"
-                label="Votre adresse email"
-                type="email"
-                id="email"
-                autoComplete="email"
-              />
-              <FormControl fullWidth variant="outlined" margin="normal" required>
-                <InputLabel
-                  error={errors.password !== null && errors.password !== undefined}
-                  htmlFor="outlined-adornment-password"
-                >
-                  Mot de passe
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? 'text' : 'password'}
-                  {...register('password')}
-                  error={errors.password !== null && errors.password !== undefined}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword
-                          ? (
-                            <VisibilityOff
-                              style={{
-                                backgroundColor: 'transparent !important'
-                              }}
-                            />
-                          )
-                          : (
-                            <Visibility
-                              style={{
-                                backgroundColor: 'transparent !important'
-                              }}
-                            />
-                          )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                />
-                <FormHelperText
-                  error={errors.password !== null && errors.password !== undefined}
-                  id="component-error-text"
-                >
-                  {errors.password?.message}
-                </FormHelperText>
-              </FormControl>
-              <FormControl fullWidth variant="outlined" margin="normal" required>
-                <InputLabel
-                  error={errors.password !== null && errors.password !== undefined}
-                  htmlFor="outlined-adornment-password"
-                >
-                  Retaper votre mot de passe
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type={showPassword ? 'text' : 'password'}
-                  {...register('password')}
-                  error={errors.password !== null && errors.password !== undefined}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword
-                          ? (
-                            <VisibilityOff
-                              style={{
-                                backgroundColor: 'transparent !important'
-                              }}
-                            />
-                          )
-                          : (
-                            <Visibility
-                              style={{
-                                backgroundColor: 'transparent !important'
-                              }}
-                            />
-                          )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                />
-                <FormHelperText
-                  error={errors.password !== null && errors.password !== undefined}
-                  id="component-error-text"
-                >
-                  {errors.password?.message}
-                </FormHelperText>
-              </FormControl>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2
-                }}
+          <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="email"
+              label="Votre adresse email"
+              type="email"
+              id="email"
+              autoComplete="email"
+            />
+            <FormControl fullWidth variant="outlined" margin="normal" required>
+              <InputLabel
+                error={errors.newPassword !== null && errors.newPassword !== undefined}
+                htmlFor="outlined-adornment-password"
               >
-                Valider
-              </Button>
-            </form>
-          </Box>
+                Mot de passe
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'newPassword'}
+                {...register('newPassword')}
+                error={errors.newPassword !== null && errors.newPassword !== undefined}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword
+                        ? (
+                          <VisibilityOff
+                            style={{
+                              backgroundColor: 'transparent !important'
+                            }}
+                          />
+                        )
+                        : (
+                          <Visibility
+                            style={{
+                              backgroundColor: 'transparent !important'
+                            }}
+                          />
+                        )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              <FormHelperText
+                error={errors.newPassword !== null && errors.newPassword !== undefined}
+                id="component-error-text"
+              >
+                {errors.newPassword?.message}
+              </FormHelperText>
+            </FormControl>
+            <FormControl fullWidth variant="outlined" margin="normal" required>
+              <InputLabel
+                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                htmlFor="outlined-adornment-password2"
+              >
+                Retaper votre mot de passe
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password2"
+                type={showPassword ? 'text' : 'password2'}
+                {...register('newPassword2')}
+                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword2
+                        ? (
+                          <VisibilityOff
+                            style={{
+                              backgroundColor: 'transparent !important'
+                            }}
+                          />
+                        )
+                        : (
+                          <Visibility
+                            style={{
+                              backgroundColor: 'transparent !important'
+                            }}
+                          />
+                        )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+              <FormHelperText
+                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                id="component-error-text"
+              >
+                {errors.newPassword2?.message}
+              </FormHelperText>
+            </FormControl>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                mb: 2
+              }}
+            >
+              Valider
+            </Button>
+          </form>
         </Box>
       </Grid>
     </Grid>
