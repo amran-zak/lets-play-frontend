@@ -4,7 +4,7 @@ import UserData from '../Types/User.types'
 
 class Authentification {
     async signUp(data: UserData) {
-        return http.post<UserData[]>('/users/signup', data)
+        return http.post<UserData[]>('/api/auth/sign-up', data)
     }
 
     async signIn(data: LoginData) {

@@ -38,15 +38,15 @@ export default function SignUp() {
     resolver: yupResolver(validationSchema),
     criteriaMode: 'all'
   });
-  console.log("data");
 
-   
+
   const onSubmit = (data: UserData) => {
-    console.log(data);
+    console.log("bb", data);
     AuthentificationService.signUp(data)
       .then((response: any) => {
         if (response.data.token) {
           localStorage.setItem('token', response.data.token);
+          console.log(response)
           // Vous pouvez gérer la redirection ou l'affichage d'un message de succès ici
         }
       })
@@ -65,74 +65,100 @@ export default function SignUp() {
         <Typography component='h1' variant='h5'>
           Inscription
         </Typography>
-        <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ marginTop: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete='given-name'
-                required
-                fullWidth
-                id='userName'
-                label='Nom'
-                autoFocus
-                {...register('userName')}
-                error={!!errors.userName}
-                helperText={errors.userName?.message}
-              />
-            </Grid>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* <Box   sx={{ marginTop: 3 }}> */}
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete='given-name'
+                  required
+                  fullWidth
+                  id='userName'
+                  label='Nom'
+                  autoFocus
+                  {...register('userName')}
+                  error={!!errors.userName}
+                  helperText={errors.userName?.message}
+                />
+              </Grid>
 
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id='email'
-                label='Adresse Email'
-                autoComplete='email'
-                {...register('email')}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-              />
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id='email'
+                  label='Adresse Email'
+                  autoComplete='email'
+                  {...register('email')}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label='Ville'
+                  id='city'
+                  autoComplete='city'
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label='Téléphone'
+                  id='phoneNumber'
+                  autoComplete='phoneNumber'
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Année de naissance'
+                  id='yearBirth'
+                  autoComplete='yearBirth'
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label='Mot de passe'
+                  type='password'
+                  id='password'
+                  autoComplete='new-password'
+                  {...register('password')}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label='Confirmez votre mot de passe'
+                  type='password'
+                  id='passwordConfirmation'
+                  autoComplete='new-password'
+                  {...register('passwordConfirmation')}
+                  error={!!errors.passwordConfirmation}
+                  helperText={errors.passwordConfirmation?.message}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label='Mot de passe'
-                type='password'
-                id='password'
-                autoComplete='new-password'
-                {...register('password')}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-              />
+            <Button type='submit' fullWidth variant='contained' sx={{ marginTop: 3, marginBottom: 2 }}>
+              Inscription
+            </Button>
+            <Grid container justifyContent='flex-end'>
+              <Grid item>
+                <Link href='/connexion' variant='body2'>
+                  Vous avez déjà un compte ? Connectez-vous !
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label='Confirmez votre mot de passe'
-                type='password'
-                id='passwordConfirmation'
-                autoComplete='new-password'
-                {...register('passwordConfirmation')}
-                error={!!errors.passwordConfirmation}
-                helperText={errors.passwordConfirmation?.message}
-              />
-            </Grid>
-            {/* Ajoutez d'autres champs du formulaire ici */}
-          </Grid>
-          <Button type='submit' fullWidth variant='contained' sx={{ marginTop: 3, marginBottom: 2 }}>
-            Inscription
-          </Button>
-          <Grid container justifyContent='flex-end'>
-            <Grid item>
-              <Link href='/connexion' variant='body2'>
-                Vous avez déjà un compte ? Connectez-vous !
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
+          {/* </Box> */}
+        </form>
+
       </Box>
     </Container>
   );
