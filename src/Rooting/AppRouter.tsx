@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Header from '../Components/NavBar/Header'
-import Login from '../Components/Authentification/Login'
-import NewPassword from '../Components/Authentification/NewPassword'
+import Header from '../components/NavBar/Header'
+import Login from '../components/Authentification/Login'
+import NewPassword from '../components/Authentification/NewPassword'
 
 export default function AppRouter(): JSX.Element {
     return (

@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import background from '../Images/badminton.jpeg'
-import AuthentificationService from '../../Services/Authentification'
+import AuthentificationService from '../../services/Authentification'
 import type LoginData from '../../Types/Login.types'
 
 export default function NewPassword(): JSX.Element {

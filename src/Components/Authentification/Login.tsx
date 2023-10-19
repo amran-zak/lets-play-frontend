@@ -22,15 +22,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import background from '../Images/image.jpeg'
-import AuthentificationService from '../../Services/Authentification'
+import AuthentificationService from '../../services/Authentification'
 
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import LoginData from '../../Types/Login.types'
+import {useState} from 'react'
 
 export default function Login(): JSX.Element {
     const [user, setUser] = React.useState(undefined)
+    const [errorMessage, setErrorMessage] = useState(false)
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -64,10 +66,14 @@ export default function Login(): JSX.Element {
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token)
                     setUser(response.data.User)
+                    setErrorMessage(false)
+                    console.log(errorMessage)
                 }
             })
             .catch((error: Error) => {
                 console.error(error)
+                setErrorMessage(true)
+                console.log(errorMessage)
             })
     }
 
@@ -174,11 +180,11 @@ export default function Login(): JSX.Element {
                                 {errors.password?.message}
                             </FormHelperText>
                         </FormControl>
-
-                        <FormControlLabel
-                            control={<Checkbox value='remember' color='primary'/>}
-                            label='Rester connecté'
-                        />
+                        {errorMessage &&
+                            <Typography style={{ color: 'red' }}>
+                                Une erreur est survenue veuillez vérifier vos informations
+                            </Typography>
+                        }
                         <Button
                             type='submit'
                             fullWidth
