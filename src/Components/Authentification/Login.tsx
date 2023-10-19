@@ -22,7 +22,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import background from '../Images/image.jpeg'
-import AuthentificationService from '../../Services/Authentification'
+import AuthentificationService from '../../services/Authentification'
 
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
