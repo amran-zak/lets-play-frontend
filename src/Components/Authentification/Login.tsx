@@ -67,13 +67,11 @@ export default function Login(): JSX.Element {
                     localStorage.setItem('token', response.data.token)
                     setUser(response.data.User)
                     setErrorMessage(false)
-                    console.log(errorMessage)
                 }
             })
             .catch((error: Error) => {
                 console.error(error)
                 setErrorMessage(true)
-                console.log(errorMessage)
             })
     }
 

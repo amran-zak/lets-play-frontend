@@ -30,7 +30,7 @@ module.exports = {
     rules: {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/restrict-plus-operands': 'error',
-        '@typescript-eslint/indent': ['error', 4],
+        '@typescript-eslint/indent': ['error', 2],
         '@typescript-eslint/object-curly-spacing': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/consistent-type-imports': 'off',

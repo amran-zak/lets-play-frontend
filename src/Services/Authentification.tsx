@@ -10,6 +10,10 @@ class Authentification {
     async signIn(data: LoginData) {
         return http.post<LoginData[]>('/api/auth/sign-in', data)
     }
+
+    async newPassword(data: LoginData) {
+        return http.post<LoginData[]>('/api/auth/forgot-password', data)
+    }
 }
 
 export default new Authentification()
