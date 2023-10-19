@@ -33,9 +33,9 @@ export default function Login(): JSX.Element {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
-            .required("Email est requis")
-            .email("Email n'est pas valide"),
-        password: Yup.string().required("Mot de passe requis "),
+          .required("Email est requis")
+          .email("Email n'est pas valide"),
+        password: Yup.string().required("Mot de passe requis"),
     });
 
     const {
@@ -46,26 +46,30 @@ export default function Login(): JSX.Element {
         resolver: yupResolver(validationSchema),
         criteriaMode: "all",
     });
+
     const handleMouseDownPassword = (
-        event: React.MouseEvent<HTMLButtonElement>
+      event: React.MouseEvent<HTMLButtonElement>
     ) => {
         event.preventDefault();
     };
+
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const onSubmit = (data: any) => {
-        AuthentificationService.login(data)
-            .then((response: any) => {
-                setUser(response.data.User.firstname);
-                if (response.data.User) {
-                    localStorage.setItem("user", JSON.stringify(response.data.User));
-                }
-            })
-            .catch((e: Error) => {
-                console.log(e);
-            });
+    const onSubmit = (data: LoginData) => {
+        AuthentificationService.signIn(data)
+          .then((response: any) => {
+              if (response.data.token) {
+                  localStorage.setItem("token", response.data.token);
+                  setUser(response.data.User);
+              } else {
+                  console.log("La connexion a échoué.");
+              }
+          })
+          .catch((error: Error) => {
+              console.error(error);
+          });
     };
 
     return (

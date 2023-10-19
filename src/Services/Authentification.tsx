@@ -8,8 +8,8 @@ class Authentification {
         return http.post<Array<UserData>>("/users/signup", data);
     }
 
-    login(data : LoginData) {
-        return http.post<Array<LoginData>>("/users/login", data);
+    signIn(data : LoginData) {
+        return http.post<Array<LoginData>>("/api/login", data);
     }
 }
 
