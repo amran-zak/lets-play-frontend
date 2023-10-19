@@ -64,8 +64,6 @@ export default function Login(): JSX.Element {
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token)
                     setUser(response.data.User)
-                } else {
-                    console.log('La connexion a échoué.')
                 }
             })
             .catch((error: Error) => {
@@ -121,13 +119,6 @@ export default function Login(): JSX.Element {
                     <Typography component='h1' variant='h5'>
                         Connexion
                     </Typography>
-                    {user ? (
-                        <Typography component='h1' variant='h5'>
-                            Hi {user} 👋🙂
-                        </Typography>
-                    ) : (
-                        <Typography component='h1' variant='h5'></Typography>
-                    )}
                     <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
                         <TextField
                             margin='normal'

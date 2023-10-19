@@ -8,7 +8,7 @@ class Authentification {
     }
 
     async signIn(data: LoginData) {
-        return http.post<LoginData[]>('/api/login', data)
+        return http.post<LoginData[]>('/api/auth/sign-in', data)
     }
 }
 
