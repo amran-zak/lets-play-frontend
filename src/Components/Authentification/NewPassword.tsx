@@ -21,18 +21,16 @@ import LoginData from '../../Types/Login.types'
 interface Newpassword {
   email: string
   newPassword: string
-  newPassword2: string
+  passwordConfirmation: string
 }
 
 export default function NewPassword(): JSX.Element {
   const [user, setUser] = React.useState(undefined)
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .required('Email est requis')
-      .email("Email n'est pas valide"),
-    newPassword: Yup.string().required('Mot de passe requis'),
-    newPassword2: Yup.string().required('Mot de passe requis')
+    email: Yup.string().required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
+    newPassword: Yup.string().required('Le mot de passe est requis').min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+    passwordConfirmation: Yup.string().oneOf([Yup.ref('password')], 'Les mots de passe ne correspondent pas').required('La confirmation du mot de passe est requise')
   })
 
   const {
@@ -47,12 +45,15 @@ export default function NewPassword(): JSX.Element {
     event.preventDefault()
   }
   const [showPassword, setShowPassword] = React.useState(false)
-  const [showPassword2, setShowPassword2] = React.useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = React.useState(false)
 
-  console.log('Le composant NewPassword est rendu.')
-  const handleClickShowPassword = () => {
-    setShowPassword((show) => !show)
-    setShowPassword2((show) => !show)
+  const handleClickShowPassword = (passwordField: string) => {
+    console.log(passwordField)
+    if (passwordField === 'newPassword') {
+      setShowPassword(!showPassword)
+    } else if (passwordField === 'passwordConfirmation') {
+      setShowPasswordConfirmation(!showPasswordConfirmation)
+    }
   }
 
   const onSubmit = (data: Newpassword) => {
@@ -64,12 +65,12 @@ export default function NewPassword(): JSX.Element {
       .then((response: any) => {
         console.log(loginData)
         if (response.data.token) {
+          console.log('Mot de passe rénitialisé')
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)
         }
       })
       .catch((error: Error) => {
-        console.log('error')
         console.error(error)
       })
   }
@@ -112,7 +113,7 @@ export default function NewPassword(): JSX.Element {
           }}>
             <LockOutlinedIcon/>
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{ marginBottom: 5}}>
             Nouveau mot de passe
           </Typography>
           <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
@@ -120,10 +121,10 @@ export default function NewPassword(): JSX.Element {
               margin="normal"
               required
               fullWidth
-              name="email"
               label="Votre adresse email"
               type="email"
               id="email"
+              {...register('email')}
               autoComplete="email"
             />
             <FormControl fullWidth variant="outlined" margin="normal" required>
@@ -135,14 +136,14 @@ export default function NewPassword(): JSX.Element {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                type={showPassword ? 'text' : 'newPassword'}
+                type={showPassword ? 'text' : 'password'} // Utilisez 'newPassword' ici
                 {...register('newPassword')}
                 error={errors.newPassword !== null && errors.newPassword !== undefined}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={() => handleClickShowPassword('newPassword')}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
@@ -173,27 +174,28 @@ export default function NewPassword(): JSX.Element {
                 {errors.newPassword?.message}
               </FormHelperText>
             </FormControl>
+
             <FormControl fullWidth variant="outlined" margin="normal" required>
               <InputLabel
-                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                error={errors.passwordConfirmation !== null && errors.passwordConfirmation !== undefined}
                 htmlFor="outlined-adornment-password2"
               >
-                Retaper votre mot de passe
+                Confirmer votre mot de passe
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password2"
-                type={showPassword ? 'text' : 'password2'}
-                {...register('newPassword2')}
-                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                type={showPasswordConfirmation ? 'text' : 'password'}
+                {...register('passwordConfirmation')}
+                error={errors.passwordConfirmation !== null && errors.passwordConfirmation !== undefined}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={() => handleClickShowPassword('passwordConfirmation')}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword2
+                      {showPasswordConfirmation
                         ? (
                           <VisibilityOff
                             style={{
@@ -214,10 +216,10 @@ export default function NewPassword(): JSX.Element {
                 label="Password"
               />
               <FormHelperText
-                error={errors.newPassword2 !== null && errors.newPassword2 !== undefined}
+                error={errors.passwordConfirmation !== null && errors.passwordConfirmation !== undefined}
                 id="component-error-text"
               >
-                {errors.newPassword2?.message}
+                {errors.passwordConfirmation?.message}
               </FormHelperText>
             </FormControl>
             <Button

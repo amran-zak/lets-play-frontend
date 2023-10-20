@@ -16,6 +16,7 @@
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.13",
     "axios": "^1.5.1",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
@@ -27,6 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-proxy": "react-scripts start --proxy=proxy.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

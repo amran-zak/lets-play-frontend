@@ -4,8 +4,6 @@ import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Paper,
   Box,
@@ -22,7 +20,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import background from '../Images/image.jpeg'
-
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
@@ -35,10 +32,8 @@ export default function Login(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState(false)
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .required('Email est requis')
-      .email('Email n\'est pas valide'),
-    password: Yup.string().required('Mot de passe requis')
+    email: Yup.string().required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
+    password: Yup.string().required('Le mot de passe est requis').min(6, 'Le mot de passe doit contenir au moins 6 caractères')
   })
 
   const {
@@ -64,6 +59,7 @@ export default function Login(): JSX.Element {
     Authentification.signIn(data)
       .then((response: any) => {
         if (response.data.token) {
+          console.log('Connecté')
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)
           setErrorMessage(false)
@@ -120,7 +116,7 @@ export default function Login(): JSX.Element {
           }}>
             <LockOutlinedIcon/>
           </Avatar>
-          <Typography component='h1' variant='h5'>
+          <Typography component='h1' variant='h5' sx={{ marginBottom: 5}}>
             Connexion
           </Typography>
           <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
