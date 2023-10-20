@@ -26,8 +26,15 @@ interface User {
   email: string
   password: string
   passwordConfirmation: string
-  city: string
+  address: string
+  city?: string | undefined
   yearBirth: number
+}
+
+interface CitySuggestion {
+  id: number
+  label: string
+  city: string
 }
 
 export default function SignUp() {
@@ -40,15 +47,9 @@ export default function SignUp() {
       .required('La confirmation du mot de passe est requise'),
     phoneNumber: Yup.number()
       .typeError('Le téléphone doit être un nombre')
-      .required('Le téléphone est requis')
-      .test('isTenDigits', 'Le téléphone doit contenir exactement 10 chiffres', (value) => {
-        if (!value) {
-          return false // Champ vide
-        }
-        const phoneNumberString = value.toString()
-        return phoneNumberString.length === 10 && /^\d+$/.test(phoneNumberString)
-      }),
-    city: Yup.string().required('La ville est requise'),
+      .required('Le téléphone est requis'),
+    address: Yup.string().required('La ville est requise'),
+    city: Yup.string(),
     yearBirth: Yup.number()
       .typeError('L\'année doit être un nombre')
       .required('L\'année de naissance est requise')
@@ -63,7 +64,7 @@ export default function SignUp() {
     criteriaMode: 'all'
   })
 
-  const [citySuggestions, setCitySuggestions] = useState([])
+  const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([])
   const fetchCitySuggestions = async (input: string) => {
     console.log(input)
     try {
@@ -71,14 +72,22 @@ export default function SignUp() {
       console.log(response)
       if (response.ok) {
         const data = await response.json()
-        console.log(data)
+        console.log('data : ', data)
         if (data.features) {
-          const citySuggestions = data.features.map((feature: { properties: { id: React.Key | null | undefined
-            label: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined } }) => (
-            <div key={feature.properties.id}>{feature.properties.label}</div>
-          ))
+          const citySuggestions: CitySuggestion[] = data.features.map((
+            feature: {
+              properties: {
+                id: number
+                label: string
+                city: string
+              }
+            }) => ({
+            id: feature.properties.id,
+            label: feature.properties.label,
+            city: feature.properties.city
+          }))
           setCitySuggestions(citySuggestions)
-          console.log(citySuggestions)
+          console.log('citySuggestions : ', citySuggestions)
         }
       }
     } catch (error) {
@@ -86,6 +95,7 @@ export default function SignUp() {
     }
   }
 
+  const [adresseInput, setAdresseInput] = useState('')
   const [cityInput, setCityInput] = useState('')
   const debouncedFetchCitySuggestions = useCallback(
     debounce(async (input) => fetchCitySuggestions(input), 300), []
@@ -93,18 +103,13 @@ export default function SignUp() {
 
   const handleCityInputChange = async (e: { target: { value: any } }) => {
     const inputValue = e.target.value
-    setCityInput(inputValue)
+    setAdresseInput(inputValue)
     await debouncedFetchCitySuggestions(inputValue)
   }
 
-  const handleCitySuggestionClick = (suggestion: string) => {
-    try {
-      const suggestionObject = JSON.parse(suggestion)
-      const suggestionText = suggestionObject.props.children
-      setCityInput(suggestionText)
-    } catch (error) {
-      console.error("Erreur d'analyse JSON : ", error)
-    }
+  const handleCitySuggestionClick = (suggestion: CitySuggestion) => {
+    setAdresseInput(suggestion.label)
+    setCityInput(suggestion.city)
     setCitySuggestions([])
   }
 
@@ -128,14 +133,16 @@ export default function SignUp() {
       email: data.email,
       password: data.password,
       phoneNumber: data.phoneNumber,
-      city: data.city,
+      address: adresseInput,
+      city: cityInput,
       yearBirth: data.yearBirth
     }
+    console.log('user : ', signUpData)
     Authentification.signUp(signUpData)
       .then((response: any) => {
+        console.log(response)
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
-          console.log(response)
         }
       })
       .catch((error: Error) => {
@@ -224,19 +231,19 @@ export default function SignUp() {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label='Ville'
-                id='city'
-                value={cityInput}
-                autoComplete='city'
-                {...register('city')}
-                error={!!errors.city}
-                helperText={errors.city?.message}
+                label='Adresse'
+                id='address'
+                value={adresseInput}
+                autoComplete='address'
+                {...register('address')}
+                error={!!errors.address}
+                helperText={errors.address?.message}
                 onChange={handleCityInputChange}
               />
               {citySuggestions.length > 0 && (
                 <ul>
                   {citySuggestions.map((suggestion, index) => (
-                    <li key={index} onClick={() => handleCitySuggestionClick(JSON.stringify(suggestion))} style={{ cursor: 'pointer' }} >{suggestion}</li>
+                    <li key={index} onClick={() => handleCitySuggestionClick(suggestion)} style={{ cursor: 'pointer' }}>{suggestion.label}</li>
                   ))}
                 </ul>
               )}

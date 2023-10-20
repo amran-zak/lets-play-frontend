@@ -3,6 +3,7 @@ export default interface UserData {
   userName: string
   email: string
   password: string
-  city: string
+  address: string
+  city?: string | undefined
   yearBirth: number
 }
