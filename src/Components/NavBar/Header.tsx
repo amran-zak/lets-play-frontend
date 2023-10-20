@@ -15,6 +15,7 @@ import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import LogoGreen from '../Images/logo-green.png'
+import {ListSharp} from '@mui/icons-material'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -146,6 +147,27 @@ export default function Header() {
             <img src={LogoGreen} style={{height: '50px'}} alt="photo de profile"/>
           </Typography>
           <Box sx={{flexGrow: 1}}/>
+          <Box sx={{
+            display: {
+              xs: 'none',
+              md: 'flex',
+              background: 'white',
+              borderRadius: '25px'
+            }
+          }}>
+            <Link href="/nouvelle_annonce" underline="none">
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <ListSharp/>
+                <Typography>
+                  Mes Annonces
+                </Typography>
+              </IconButton>
+            </Link>
+          </Box>
           <Box sx={{
             display: {
               xs: 'none',
