@@ -30,7 +30,7 @@ export default function NewPassword(): JSX.Element {
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
     newPassword: Yup.string().required('Le mot de passe est requis').min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
-    passwordConfirmation: Yup.string().oneOf([Yup.ref('password')], 'Les mots de passe ne correspondent pas').required('La confirmation du mot de passe est requise')
+    passwordConfirmation: Yup.string().oneOf([Yup.ref('newPassword')], 'Les mots de passe ne correspondent pas').required('La confirmation du mot de passe est requise')
   })
 
   const {
