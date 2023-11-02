@@ -48,7 +48,6 @@ export default function NewPassword(): JSX.Element {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = React.useState(false)
 
   const handleClickShowPassword = (passwordField: string) => {
-    console.log(passwordField)
     if (passwordField === 'newPassword') {
       setShowPassword(!showPassword)
     } else if (passwordField === 'passwordConfirmation') {

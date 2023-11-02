@@ -10,6 +10,7 @@ import {
   MenuItem,
   Menu
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -124,6 +125,13 @@ export default function Header() {
     </Menu>
   )
 
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
+
+  const navigateToPage = (url: string) => {
+    navigate(url, { state: { token } })
+  }
+
   return (
     <Box sx={{flexGrow: 1}}>
       <AppBar component="nav" sx={{backgroundColor: 'bg-green-light'}}>
@@ -155,7 +163,7 @@ export default function Header() {
               borderRadius: '25px'
             }
           }}>
-            <Link href="/nouvelle_annonce" underline="none">
+            <Link underline="none" onClick={() => navigateToPage('/nouvelle_annonce')}>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"

@@ -22,6 +22,7 @@ import {useCallback, useState} from 'react'
 import UserData from '../../Types/User.types'
 import Authentification from '../../Services/Authentification'
 import SportsList from '../SportsList'
+import Announce from '../../Services/Announce'
 
 interface CitySuggestion {
   id: number
@@ -131,11 +132,13 @@ export default function CreateAnnounce() {
   const [selectedSport, setSelectedSport] = useState<string>('')
 
   const handleSportChange = (selectedSport: string) => {
-    console.log(selectedSport)
     setSelectedSport(selectedSport)
   }
 
-  const onSubmit = (data: AnnounceData) => {
+  const [errorMessage, setErrorMessage] = useState<boolean>(false)
+  const [successMessage, setSuccessMessage] = useState<boolean>(false)
+
+  const onSubmit = async (data: AnnounceData) => {
     const addData: AnnounceData = {
       sport: selectedSport,
       numberOfPeopleMax: data.numberOfPeopleMax,
@@ -148,17 +151,26 @@ export default function CreateAnnounce() {
       ageMax: data.ageMax,
       price: data.price
     }
-    console.log('user : ', addData)
-  //   Authentification.signUp(signUpData)
-  //     .then((response: any) => {
-  //       console.log(response)
-  //       if (response.data.token) {
-  //         localStorage.setItem('token', response.data.token)
-  //       }
-  //     })
-  //     .catch((error: Error) => {
-  //       console.error(error)
-  //     })
+    try {
+      const existingAnnouncements = await Announce.getAll()
+
+      if (existingAnnouncements.data.sports && Array.isArray(existingAnnouncements.data.sports)) {
+        const annonceExistante = existingAnnouncements.data.sports.find((annonce: AnnounceData) => {
+          return annonce.sport === addData.sport
+        })
+
+        if (annonceExistante) {
+          setErrorMessage(true)
+          setSuccessMessage(false)
+        } else {
+          await Announce.create(addData)
+          setSuccessMessage(true)
+          setErrorMessage(false)
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des annonces existantes :', error)
+    }
   }
 
   const token = 'pk.eyJ1IjoiZ2lzZmVlZGJhY2siLCJhIjoiY2l2eDJndmtjMDFkeTJvcHM4YTNheXZtNyJ9.-HNJNch_WwLIAifPgzW2Ig'
@@ -330,6 +342,16 @@ export default function CreateAnnounce() {
                 />
               </Grid>
             </Grid>
+            {errorMessage &&
+              <Typography color='red'>
+                L&apos;annonce existe déjà
+              </Typography>
+            }
+            {successMessage &&
+              <Typography color='secondary.main'>
+                L&apos;annonce est ajouté avec succès
+              </Typography>
+            }
             <Button type='submit' fullWidth variant='contained' sx={{
               marginTop: 3,
               marginBottom: 2
