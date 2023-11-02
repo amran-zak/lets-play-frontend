@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   AppBar,
   Box,
@@ -17,6 +17,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import LogoGreen from '../Images/logo-green.png'
 import {ListSharp} from '@mui/icons-material'
+import PopUp from '../PopUp'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -133,7 +134,7 @@ export default function Header() {
   }
 
   return (
-    <Box sx={{flexGrow: 1}}>
+    <Box>
       <AppBar component="nav" sx={{backgroundColor: 'bg-green-light'}}>
         <Toolbar>
           <Typography
@@ -200,7 +201,7 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle/>
+              <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{
@@ -220,6 +221,7 @@ export default function Header() {
               <MoreIcon/>
             </IconButton>
           </Box>
+          <PopUp />
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
