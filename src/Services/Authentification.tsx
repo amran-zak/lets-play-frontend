@@ -13,7 +13,6 @@ class Authentification {
   }
 
   async newPassword(data: NewpasswordData) {
-    console.log(data)
     return http.post<NewpasswordData[]>('/api/auth/forgot-password', data)
   }
 }
