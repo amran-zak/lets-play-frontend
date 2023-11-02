@@ -52,6 +52,7 @@ export default function Login(): JSX.Element {
   }
 
   const [showPassword, setShowPassword] = React.useState(false)
+  const [message, setMessage] = React.useState(null)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -61,6 +62,7 @@ export default function Login(): JSX.Element {
         if (response.data.token) {
           console.log('Connecté')
           localStorage.setItem('token', response.data.token)
+          setMessage(response.data.message)
           setUser(response.data.User)
           setErrorMessage(false)
         }
@@ -177,6 +179,11 @@ export default function Login(): JSX.Element {
             {errorMessage &&
               <Typography style={{color: 'red'}}>
                 Une erreur est survenue veuillez vérifier vos informations
+              </Typography>
+            }
+            {message &&
+              <Typography style={{color: 'green'}}>
+                {message}
               </Typography>
             }
             <Button

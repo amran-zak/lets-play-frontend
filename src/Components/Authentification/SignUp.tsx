@@ -65,6 +65,8 @@ export default function SignUp() {
   })
 
   const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([])
+  const [message, setMessage] = React.useState(null)
+
   const fetchCitySuggestions = async (input: string) => {
     console.log(input)
     try {
@@ -141,6 +143,7 @@ export default function SignUp() {
     Authentification.signUp(signUpData)
       .then((response: any) => {
         console.log(response)
+        setMessage(response.data.message)
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
         }
@@ -347,6 +350,11 @@ export default function SignUp() {
               </FormControl>
             </Grid>
           </Grid>
+          {message &&
+              <Typography style={{color: 'green'}}>
+                {message}
+              </Typography>
+          }
           <Button type='submit' fullWidth variant='contained' sx={{
             marginTop: 3,
             marginBottom: 2
