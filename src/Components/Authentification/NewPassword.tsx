@@ -48,7 +48,6 @@ export default function NewPassword(): JSX.Element {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = React.useState(false)
 
   const handleClickShowPassword = (passwordField: string) => {
-    console.log(passwordField)
     if (passwordField === 'newPassword') {
       setShowPassword(!showPassword)
     } else if (passwordField === 'passwordConfirmation') {
@@ -63,9 +62,8 @@ export default function NewPassword(): JSX.Element {
     }
     Authentification.newPassword(loginData)
       .then((response: any) => {
-        console.log(loginData)
+        console.log('Mot de passe rénitialisé')
         if (response.data.token) {
-          console.log('Mot de passe rénitialisé')
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)
         }

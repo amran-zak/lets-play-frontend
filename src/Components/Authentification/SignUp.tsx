@@ -68,13 +68,10 @@ export default function SignUp() {
   const [message, setMessage] = React.useState(null)
 
   const fetchCitySuggestions = async (input: string) => {
-    console.log(input)
     try {
       const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${input.replaceAll(' ', '+')}&limit=15`)
-      console.log(response)
       if (response.ok) {
         const data = await response.json()
-        console.log('data : ', data)
         if (data.features) {
           const citySuggestions: CitySuggestion[] = data.features.map((
             feature: {
@@ -89,7 +86,6 @@ export default function SignUp() {
             city: feature.properties.city
           }))
           setCitySuggestions(citySuggestions)
-          console.log('citySuggestions : ', citySuggestions)
         }
       }
     } catch (error) {
@@ -139,10 +135,9 @@ export default function SignUp() {
       city: cityInput,
       yearBirth: data.yearBirth
     }
-    console.log('user : ', signUpData)
     Authentification.signUp(signUpData)
       .then((response: any) => {
-        console.log(response)
+        console.log('Inscript réussit')
         setMessage(response.data.message)
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
