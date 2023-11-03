@@ -2,6 +2,7 @@ import module from 'module'
 import Timestamp = module
 
 export default interface AnnounceData {
+  _id?: string
   sport?: string
   numberOfPeopleMax: number
   date: string

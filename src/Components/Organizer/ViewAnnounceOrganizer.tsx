@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 // Importations nécessaires depuis @mui/material
-import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box } from '@mui/material'
+import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -19,8 +20,20 @@ interface DetailProps {
   children: React.ReactNode
 }
 const SportsListOrganizer: React.FC = () => {
+  const navigate = useNavigate()
+
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
   const [loading, setLoading] = useState(true)
+
+  const handleEdit = (sportId: string) => {
+    // Logique pour gérer la modification
+    navigate(`/modifier_une_annonce/${sportId}`)
+  }
+
+  const handleDelete = (sport: AnnounceData) => {
+    // Logique pour gérer la suppression
+    console.log('Supprimer', sport)
+  }
 
   useEffect(() => {
     organizerService.getAllSports()
@@ -69,6 +82,14 @@ const SportsListOrganizer: React.FC = () => {
                 <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
               </CardContent>
             </CardActionArea>
+            <CardActions style={{ justifyContent: 'space-between' }}>
+              <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>
+                Modifier
+              </Button>
+              <Button size="small" color="error" variant="contained" onClick={() => handleDelete(sport)}>
+                Supprimer
+              </Button>
+            </CardActions>
           </Card>
         </Grid>
       ))}
