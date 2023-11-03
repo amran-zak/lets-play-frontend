@@ -37,8 +37,10 @@ export default function ModifyAnnounce() {
     const fetchData = async () => {
       return Announce.getById(id)
         .then((response) => {
-          const selectedAnnounce = response.data
-          setAnnounceData(selectedAnnounce)
+          if (response) {
+            const selectedAnnounce = response.data
+            setAnnounceData(selectedAnnounce)
+          }
         })
         .catch((error) => {
           console.error(error)

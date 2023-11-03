@@ -16,12 +16,8 @@ export default function AnnouncesHeader() {
   const token = localStorage.getItem('token')
 
   const navigateToPage = (url: string) => {
+    setAnchorEl(null) // Fermer le menu
     navigate(url, { state: { token } })
-  }
-
-  const handleClose = (url: string) => {
-    setAnchorEl(null)
-    navigateToPage(url)
   }
 
   return (
@@ -34,19 +30,25 @@ export default function AnnouncesHeader() {
         onClick={handleClick}
         style={{color: 'black'}}
       >
-        <ListSharp /> Annonces
+        <ListSharp />
       </Button>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)} // Fermer le menu en cliquant en dehors
         MenuListProps={{
           'aria-labelledby': 'basic-button'
         }}
       >
-        <MenuItem onClick={() => handleClose('/annonce/ajouter')}>Ajouter</MenuItem>
-        <MenuItem onClick={() => handleClose('/annonces/liste')}>Voir mes annonces</MenuItem>
+        {token ? (
+          <>
+            <MenuItem onClick={() => navigateToPage('/annonce/ajouter')}>Ajouter une annonce</MenuItem>
+            <MenuItem onClick={() => navigateToPage('/annonces/liste')}>Voir mes annonces</MenuItem>
+          </>
+        ) : (
+          <></>
+        )}
       </Menu>
     </div>
   )

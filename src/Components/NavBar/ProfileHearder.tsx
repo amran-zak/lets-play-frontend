@@ -3,9 +3,9 @@ import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AccountCircle from '@mui/icons-material/AccountCircle'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-export default function ProfileHearder() {
+export default function ProfileHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -16,12 +16,8 @@ export default function ProfileHearder() {
   const token = localStorage.getItem('token')
 
   const navigateToPage = (url: string) => {
+    setAnchorEl(null) // Fermer le menu
     navigate(url, { state: { token } })
-  }
-
-  const handleClose = (url: string) => {
-    setAnchorEl(null)
-    navigateToPage(url)
   }
 
   return (
@@ -32,7 +28,7 @@ export default function ProfileHearder() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        style={{color: 'black'}}
+        style={{ color: 'black' }}
       >
         <AccountCircle />
       </Button>
@@ -40,15 +36,22 @@ export default function ProfileHearder() {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)} // Fermer le menu en cliquant en dehors
         MenuListProps={{
           'aria-labelledby': 'basic-button'
         }}
       >
-        <MenuItem onClick={() => handleClose('/')}>Mon compte</MenuItem>
-        <MenuItem onClick={() => handleClose('/')}>Déconnexion</MenuItem>
-        <MenuItem onClick={() => handleClose('/connexion')}>Connexion</MenuItem>
-        <MenuItem onClick={() => handleClose('/inscription')}>Inscription</MenuItem>
+        {token ? (
+          <>
+            <MenuItem onClick={() => navigateToPage('/')}>Mon compte</MenuItem>
+            <MenuItem onClick={() => navigateToPage('/')}>Déconnexion</MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem onClick={() => navigateToPage('/connexion')}>Connexion</MenuItem>
+            <MenuItem onClick={() => navigateToPage('/inscription')}>Inscription</MenuItem>
+          </>
+        )}
       </Menu>
     </div>
   )
