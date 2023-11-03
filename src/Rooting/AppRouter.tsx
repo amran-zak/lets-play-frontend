@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import {BrowserRouter, Route, Routes, Navigate, Outlet} from 'react-router-dom'
 import NewPassword from '../Components/Authentification/NewPassword'
 import SignUp from '../Components/Authentification/SignUp'
 import Login from '../Components/Authentification/Login'
@@ -10,6 +10,11 @@ import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer
 import HomePage from '../Components/Home'
 import AnnouncesLists from '../Components/Home/AnnonoucesLists'
 
+// Composant pour la protection de route
+const PrivateRoute = () => {
+  const auth = localStorage.getItem('token') // Obtenez le token de localStorage
+  return auth ? <Outlet /> : <Navigate to="/connexion" state={{ from: location.pathname }} replace />
+}
 export default function AppRouter(): JSX.Element {
   return (
     <BrowserRouter>
@@ -22,9 +27,12 @@ export default function AppRouter(): JSX.Element {
             <Route path='/connexion' element={<Login/>}/>
             <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
             <Route path='/inscription' element={<SignUp/>}/>
-            <Route path='/annonce/ajouter' element={<CreateAnnounce/>}/>
-            <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
-            <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
+
+            <Route element={<PrivateRoute />}>
+              <Route path='/annonce/ajouter' element={<CreateAnnounce/>}/>
+              <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
+              <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
+            </Route>
           </Routes>
         </div>
       </div>

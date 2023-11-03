@@ -19,6 +19,12 @@ export default function ProfileHeader() {
     setAnchorEl(null) // Fermer le menu
     navigate(url, { state: { token } })
   }
+  const logout = () => {
+    // Supprime le token du localStorage
+    localStorage.removeItem('token')
+    // Actualiser la page pour appliquer les changements d'état de connexion
+    window.location.reload()
+  }
 
   return (
     <div>
@@ -43,7 +49,7 @@ export default function ProfileHeader() {
       >
         {token ? ([
           <MenuItem key="mon-compte" onClick={() => navigateToPage('/')}>Mon compte</MenuItem>,
-          <MenuItem key="deconnexion" onClick={() => navigateToPage('/')}>Déconnexion</MenuItem>
+          <MenuItem key="deconnexion" onClick={logout}>Déconnexion</MenuItem>
         ]) : ([
           <MenuItem key="connexion" onClick={() => navigateToPage('/connexion')}>Connexion</MenuItem>,
           <MenuItem key="inscription" onClick={() => navigateToPage('/inscription')}>Inscription</MenuItem>

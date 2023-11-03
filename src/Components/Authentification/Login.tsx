@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Avatar,
   Button,
@@ -28,8 +29,11 @@ import {useState} from 'react'
 import Authentification from '../../Services/Authentification'
 
 export default function Login(): JSX.Element {
-  const [user, setUser] = React.useState(undefined)
   const [errorMessage, setErrorMessage] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  // Si l'utilisateur a été redirigé vers la connexion, location.state contiendra la page d'où il vient
+  const from = location.state?.from || '/'
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
@@ -56,21 +60,27 @@ export default function Login(): JSX.Element {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
-  const onSubmit = (data: LoginData) => {
-    Authentification.signIn(data)
-      .then((response: any) => {
-        if (response.data.token) {
-          console.log('Connecté')
-          localStorage.setItem('token', response.data.token)
-          setMessage(response.data.message)
-          setUser(response.data.User)
-          setErrorMessage(false)
-        }
-      })
-      .catch((error: Error) => {
-        console.error(error)
-        setErrorMessage(true)
-      })
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const response = await Authentification.signIn(data)
+      if (response.data.token || response.data.message) {
+        console.log('Connecté')
+        console.log(response.data.token, response.data.message)
+        // Stocker le token dans le localStorage
+        localStorage.setItem('token', response.data.token)
+        // Mettre à jour le message et les données utilisateur dans l'état local
+        // setMessage('response.data.message')
+        setErrorMessage(false)
+        // Assurez-vous que la mise à jour de l'état local est terminée avant de rediriger.
+        await new Promise(resolve => setTimeout(resolve, 0))
+        // Rediriger l'utilisateur
+        navigate(from, { replace: true })
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error(error)
+      setErrorMessage(true)
+    }
   }
 
   return (
