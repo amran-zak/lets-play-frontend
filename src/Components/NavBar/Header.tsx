@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   AppBar,
   Box,
@@ -10,12 +10,14 @@ import {
   MenuItem,
   Menu
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import LogoGreen from '../Images/logo-green.png'
 import {ListSharp} from '@mui/icons-material'
+import PopUp from '../PopUp'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -124,8 +126,15 @@ export default function Header() {
     </Menu>
   )
 
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
+
+  const navigateToPage = (url: string) => {
+    navigate(url, { state: { token } })
+  }
+
   return (
-    <Box sx={{flexGrow: 1}}>
+    <Box>
       <AppBar component="nav" sx={{backgroundColor: 'bg-green-light'}}>
         <Toolbar>
           <Typography
@@ -155,7 +164,7 @@ export default function Header() {
               borderRadius: '25px'
             }
           }}>
-            <Link href="/nouvelle_annonce" underline="none">
+            <Link underline="none" onClick={() => navigateToPage('/nouvelle_annonce')}>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -192,7 +201,7 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle/>
+              <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{
@@ -212,6 +221,7 @@ export default function Header() {
               <MoreIcon/>
             </IconButton>
           </Box>
+          <PopUp />
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

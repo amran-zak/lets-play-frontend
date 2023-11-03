@@ -37,7 +37,8 @@ module.exports = {
     '@typescript-eslint/consistent-type-imports': 'off',
     '@typescript-eslint/no-confusing-void-expression': 'off',
     '@typescript-eslint/strict-boolean-expressions': 'off',
-    'multiline-ternary': 'off'
+    'multiline-ternary': 'off',
+    '@typescript-eslint/no-var-requires': 'off'
   },
   settings: {
     react: {
