@@ -74,10 +74,10 @@ const SportsListOrganizer: React.FC = () => {
                 </Typography>
                 <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
                 <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()}</Detail>
+                <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()}</Detail>
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
-                <Detail icon={LocationOnIcon}>Ville: {sport.city ? `, ${sport.city}` : ''}</Detail>
+                <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
                 <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
                 <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
               </CardContent>
