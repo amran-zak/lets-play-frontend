@@ -1,5 +1,6 @@
 import module from 'module'
 import Timestamp = module
+import UserData from './User.types'
 
 export default interface AnnounceData {
   _id?: string
@@ -13,4 +14,5 @@ export default interface AnnounceData {
   ageMin: number
   ageMax: number
   price: number
+  organizer?: UserData
 }

@@ -1,7 +1,4 @@
 import http from '../server'
-import LoginData from '../Types/Login.types'
-import UserData from '../Types/User.types'
-import NewpasswordData from '../Types/NewPassword.types'
 import AnnounceData from '../Types/Announce.types'
 
 class Announce {

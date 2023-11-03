@@ -6,6 +6,8 @@ import Login from '../Components/Authentification/Login'
 import Header from '../Components/NavBar/Header'
 import CreateAnnounce from '../Components/Organizer/CreateAnnounce'
 import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
+import HomePage from '../Components/Home'
+import AnnouncesLists from '../Components/Home/AnnonoucesLists'
 
 export default function AppRouter(): JSX.Element {
   return (
@@ -14,6 +16,8 @@ export default function AppRouter(): JSX.Element {
         <div className='app-body'>
           <Header/>
           <Routes>
+            <Route path='/' element={<HomePage/>}/>
+            <Route path='/liste_annonces' element={<AnnouncesLists/>}/>
             <Route path='/connexion' element={<Login/>}/>
             <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
             <Route path='/inscription' element={<SignUp/>}/>
