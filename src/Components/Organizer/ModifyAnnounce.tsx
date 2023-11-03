@@ -35,21 +35,19 @@ export default function ModifyAnnounce() {
 
   useEffect(() => {
     const fetchData = async () => {
-      return Announce.getById(id)
-        .then((response) => {
-          if (response) {
-            const selectedAnnounce = response.data
-            setAnnounceData(selectedAnnounce)
-          }
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+      try {
+        const response = await Announce.getById(id.id)
+        console.log('response : ', response)
+        if (response) {
+          const selectedAnnounce = response.data.sport
+          setAnnounceData(selectedAnnounce)
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
 
-    void (async () => {
-      await fetchData()
-    })()
+    void fetchData()
   }, [id])
 
   const validationSchema = Yup.object().shape({
@@ -270,7 +268,7 @@ export default function ModifyAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
-                  value={announceData ? announceData.date : ''}
+                  value={announceData ? announceData.date.split('T')[0] : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true

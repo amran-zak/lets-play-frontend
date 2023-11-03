@@ -7,10 +7,8 @@ class Announce {
     return http.get('/api/organizer/sports')
   }
 
-  async getById(id: Readonly<Params<string>>) {
-    if (id?.value) {
-      return http.get(`/api/organizer/sports/${id.value.toString()}`)
-    }
+  async getById(id: string | undefined) {
+    return http.get(`/api/organizer/sports/${id}`)
   }
 
   async create(data: AnnounceData) {
