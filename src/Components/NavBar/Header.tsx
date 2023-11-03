@@ -160,19 +160,32 @@ export default function Header() {
             display: {
               xs: 'none',
               md: 'flex',
-              background: 'white',
+              // background: 'white',
+              color: 'white',
               borderRadius: '25px'
             }
           }}>
+            <Link underline="none" onClick={() => navigateToPage('/mes_annonces')}>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                // color="inherit"
+              >
+                {/* <ListSharp/> */}
+                <Typography>
+                  Mes Annonces
+                </Typography>
+              </IconButton>
+            </Link>
             <Link underline="none" onClick={() => navigateToPage('/nouvelle_annonce')}>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
-                color="inherit"
+                // color="inherit"
               >
-                <ListSharp/>
+                {/* <ListSharp/> */}
                 <Typography>
-                  Mes Annonces
+                  Ajouter une annonce
                 </Typography>
               </IconButton>
             </Link>
