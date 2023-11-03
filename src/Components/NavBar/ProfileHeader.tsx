@@ -48,7 +48,7 @@ export default function ProfileHeader() {
         }}
       >
         {token ? ([
-          <MenuItem key="mon-compte" onClick={() => navigateToPage('/')}>Mon compte</MenuItem>,
+          <MenuItem key="mon-compte" onClick={() => navigateToPage('/profile')}>Mon compte</MenuItem>,
           <MenuItem key="deconnexion" onClick={logout}>Déconnexion</MenuItem>
         ]) : ([
           <MenuItem key="connexion" onClick={() => navigateToPage('/connexion')}>Connexion</MenuItem>,
