@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-// Importations nécessaires depuis @mui/material
 import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
@@ -9,11 +8,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import { SvgIconProps } from '@mui/material/SvgIcon'
-// Datas
 import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
-// Services
-import organizerService from '../../Services/Organizer'
+import Announce from '../../Services/Announce'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -26,8 +23,7 @@ const SportsListOrganizer: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   const handleEdit = (sportId: string) => {
-    // Logique pour gérer la modification
-    navigate(`/modifier_une_annonce/${sportId}`)
+    navigate(`/annonce/modifier/${sportId}`)
   }
 
   const handleDelete = (sport: AnnounceData) => {
@@ -36,7 +32,7 @@ const SportsListOrganizer: React.FC = () => {
   }
 
   useEffect(() => {
-    organizerService.getAllSports()
+    Announce.getAll()
       .then(response => {
         const data = response.data
         setSportsList(data.sports)
@@ -47,7 +43,9 @@ const SportsListOrganizer: React.FC = () => {
         setLoading(false)
       })
   }, [])
+
   const theme = useTheme()
+
   const Detail: React.FC<DetailProps> = ({ icon: IconComponent, children }) => (
     <Box display="flex" alignItems="center" mt={1}>
       <IconComponent color="action" style={{ marginRight: theme.spacing(1), color: 'green' }} />
@@ -56,6 +54,7 @@ const SportsListOrganizer: React.FC = () => {
       </Typography>
     </Box>
   )
+
   return (
     <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 50 }}>
       {sportsList.map((sport, index) => (

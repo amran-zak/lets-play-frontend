@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import {useNavigate} from 'react-router-dom'
 
-function ProfileHearder() {
+export default function ProfileHearder() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -53,4 +53,3 @@ function ProfileHearder() {
     </div>
   )
 }
-export default ProfileHearder

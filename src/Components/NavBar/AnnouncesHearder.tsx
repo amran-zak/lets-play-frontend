@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem'
 import {useNavigate} from 'react-router-dom'
 import {ListSharp} from '@mui/icons-material'
 
-function AnnouncesHeader() {
+export default function AnnouncesHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -51,4 +51,3 @@ function AnnouncesHeader() {
     </div>
   )
 }
-export default AnnouncesHeader

@@ -7,7 +7,6 @@ import {
   Grid,
   Box,
   Typography,
-  Container,
   Paper, debounce
 } from '@mui/material'
 import Map, {Marker, NavigationControl} from 'react-map-gl'
@@ -16,13 +15,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-import background from '../Images/chaussure.jpeg'
 import AnnounceData from '../../Types/Announce.types'
-import {useCallback, useState} from 'react'
-import UserData from '../../Types/User.types'
-import Authentification from '../../Services/Authentification'
+import {useCallback, useEffect, useState} from 'react'
 import SportsList from '../SportsList'
 import Announce from '../../Services/Announce'
+import {useParams} from 'react-router-dom'
 
 interface CitySuggestion {
   id: number
@@ -32,7 +29,27 @@ interface CitySuggestion {
   longitude: number
 }
 
-export default function CreateAnnounce() {
+export default function ModifyAnnounce() {
+  const id = useParams()
+  const [announceData, setAnnounceData] = useState<AnnounceData | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      return Announce.getById(id)
+        .then((response) => {
+          const selectedAnnounce = response.data
+          setAnnounceData(selectedAnnounce)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    }
+
+    void (async () => {
+      await fetchData()
+    })()
+  }, [id])
+
   const validationSchema = Yup.object().shape({
     sport: Yup.string(),
     numberOfPeopleMax: Yup.number()
@@ -138,7 +155,7 @@ export default function CreateAnnounce() {
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
 
   const onSubmit = async (data: AnnounceData) => {
-    const addData: AnnounceData = {
+    const modifyData: AnnounceData = {
       sport: selectedSport,
       numberOfPeopleMax: data.numberOfPeopleMax,
       date: data.date,
@@ -155,14 +172,14 @@ export default function CreateAnnounce() {
 
       if (existingAnnouncements.data.sports && Array.isArray(existingAnnouncements.data.sports)) {
         const annonceExistante = existingAnnouncements.data.sports.find((annonce: AnnounceData) => {
-          return annonce.sport === addData.sport
+          return annonce.sport === modifyData.sport
         })
 
         if (annonceExistante) {
           setErrorMessage(true)
           setSuccessMessage(false)
         } else {
-          await Announce.create(addData)
+          await Announce.modify(modifyData)
           setSuccessMessage(true)
           setErrorMessage(false)
         }
@@ -238,6 +255,7 @@ export default function CreateAnnounce() {
                   id='price'
                   label='Prix'
                   autoComplete='price'
+                  defaultValue={announceData ? announceData.price : ''}
                   {...register('price')}
                   error={!!errors.price}
                   helperText={errors.price?.message}
@@ -250,6 +268,7 @@ export default function CreateAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
+                  defaultValue={announceData ? announceData.date : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true
@@ -266,6 +285,7 @@ export default function CreateAnnounce() {
                   id='startTime'
                   label='Horaire début'
                   autoComplete='startTime'
+                  defaultValue={announceData ? announceData.startTime : ''}
                   {...register('startTime')}
                   error={!!errors.startTime}
                   helperText={errors.startTime?.message}
@@ -278,6 +298,7 @@ export default function CreateAnnounce() {
                   id='endTime'
                   label='Horaire de fin'
                   autoComplete='endTime'
+                  defaultValue={announceData ? announceData.endTime : ''}
                   {...register('endTime')}
                   error={!!errors.endTime}
                   helperText={errors.endTime?.message}
@@ -290,6 +311,7 @@ export default function CreateAnnounce() {
                   id='address'
                   label='Lieux'
                   value={adresseInput}
+                  defaultValue={announceData ? announceData.address : ''}
                   {...register('address')}
                   error={!!errors.address}
                   helperText={errors.address?.message}
@@ -311,6 +333,7 @@ export default function CreateAnnounce() {
                   id='numberOfPeopleMax'
                   label='Nombre maximal de participants'
                   autoComplete='numberOfPeopleMax'
+                  defaultValue={announceData ? announceData.numberOfPeopleMax : ''}
                   {...register('numberOfPeopleMax')}
                   error={!!errors.numberOfPeopleMax}
                   helperText={errors.numberOfPeopleMax?.message}
@@ -323,6 +346,7 @@ export default function CreateAnnounce() {
                   id='ageMin'
                   label='Âge minimal requis'
                   autoComplete='ageMin'
+                  defaultValue={announceData ? announceData.ageMin : ''}
                   {...register('ageMin')}
                   error={!!errors.ageMin}
                   helperText={errors.ageMin?.message}
@@ -335,6 +359,7 @@ export default function CreateAnnounce() {
                   id='ageMax'
                   label='Âge maximal'
                   autoComplete='ageMax'
+                  defaultValue={announceData ? announceData.ageMax : ''}
                   {...register('ageMax')}
                   error={!!errors.ageMax}
                   helperText={errors.ageMax?.message}
@@ -343,19 +368,19 @@ export default function CreateAnnounce() {
             </Grid>
             {errorMessage &&
               <Typography color='red'>
-                L&apos;annonce existe déjà
+                L&aposannonce existe déjà
               </Typography>
             }
             {successMessage &&
               <Typography color='secondary.main'>
-                L&apos;annonce est ajouté avec succès
+                L&aposannonce est ajouté avec succès
               </Typography>
             }
             <Button type='submit' fullWidth variant='contained' sx={{
               marginTop: 3,
               marginBottom: 2
             }}>
-              Ajouter
+              Modifier
             </Button>
           </form>
         </Box>
