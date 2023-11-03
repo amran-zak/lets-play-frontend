@@ -5,8 +5,8 @@ import SignUp from '../Components/Authentification/SignUp'
 import Login from '../Components/Authentification/Login'
 import Header from '../Components/NavBar/Header'
 import CreateAnnounce from '../Components/Organizer/CreateAnnounce'
-import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
 import ModifyAnnounce from '../Components/Organizer/ModifyAnnounce'
+import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
 
 export default function AppRouter(): JSX.Element {
   return (

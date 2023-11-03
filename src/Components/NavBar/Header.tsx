@@ -5,23 +5,16 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Badge
+  Badge,
+  Link
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import LogoGreen from '../Images/logo-green.png'
 import PopUp from '../PopUp'
-import ProfileHearder from './ProfileHearder'
+import ProfileHeader from './ProfileHeader'
 import AnnouncesHeader from './AnnouncesHearder'
 
-export default function Header() {
-  const navigate = useNavigate()
-  const token = localStorage.getItem('token')
-
-  const navigateToPage = (url: string) => {
-    navigate(url, { state: { token } })
-  }
-
+function Header() {
   return (
     <Box>
       <AppBar component="nav" sx={{backgroundColor: 'bg-green-light'}}>
@@ -62,10 +55,11 @@ export default function Header() {
               </Badge>
             </IconButton>
           </Box>
-          <ProfileHearder />
+          <ProfileHeader />
           <PopUp />
         </Toolbar>
       </AppBar>
     </Box>
   )
 }
+export default Header

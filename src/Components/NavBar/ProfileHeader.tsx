@@ -41,17 +41,13 @@ export default function ProfileHeader() {
           'aria-labelledby': 'basic-button'
         }}
       >
-        {token ? (
-          <>
-            <MenuItem onClick={() => navigateToPage('/')}>Mon compte</MenuItem>
-            <MenuItem onClick={() => navigateToPage('/')}>Déconnexion</MenuItem>
-          </>
-        ) : (
-          <>
-            <MenuItem onClick={() => navigateToPage('/connexion')}>Connexion</MenuItem>
-            <MenuItem onClick={() => navigateToPage('/inscription')}>Inscription</MenuItem>
-          </>
-        )}
+        {token ? ([
+          <MenuItem key="mon-compte" onClick={() => navigateToPage('/')}>Mon compte</MenuItem>,
+          <MenuItem key="deconnexion" onClick={() => navigateToPage('/')}>Déconnexion</MenuItem>
+        ]) : ([
+          <MenuItem key="connexion" onClick={() => navigateToPage('/connexion')}>Connexion</MenuItem>,
+          <MenuItem key="inscription" onClick={() => navigateToPage('/inscription')}>Inscription</MenuItem>
+        ])}
       </Menu>
     </div>
   )

@@ -16,7 +16,23 @@ interface DetailProps {
   icon: React.ElementType<SvgIconProps>
   children: React.ReactNode
 }
-const SportsListOrganizer: React.FC = () => {
+
+const Detail: React.FC<DetailProps> = ({
+  icon: IconComponent,
+  children
+}) => (
+  <Box display="flex" alignItems="center" mt={1}>
+    <IconComponent color="action" style={{
+      marginRight: useTheme().spacing(1),
+      color: 'green'
+    }}/>
+    <Typography variant="body2" color="text.secondary">
+      {children}
+    </Typography>
+  </Box>
+)
+
+export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
@@ -44,19 +60,11 @@ const SportsListOrganizer: React.FC = () => {
       })
   }, [])
 
-  const theme = useTheme()
-
-  const Detail: React.FC<DetailProps> = ({ icon: IconComponent, children }) => (
-    <Box display="flex" alignItems="center" mt={1}>
-      <IconComponent color="action" style={{ marginRight: theme.spacing(1), color: 'green' }} />
-      <Typography variant="body2" color="text.secondary">
-        {children}
-      </Typography>
-    </Box>
-  )
-
   return (
-    <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 50 }}>
+    <Grid container spacing={4} style={{
+      padding: useTheme().spacing(2),
+      marginTop: 50
+    }}>
       {sportsList.map((sport, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card elevation={3}>
@@ -68,7 +76,7 @@ const SportsListOrganizer: React.FC = () => {
                 alt={sport.sport}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div" style={{ color: theme.palette.primary.main }}>
+                <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>
                   {sport.sport}
                 </Typography>
                 <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
@@ -81,8 +89,9 @@ const SportsListOrganizer: React.FC = () => {
                 <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
               </CardContent>
             </CardActionArea>
-            <CardActions style={{ justifyContent: 'space-between' }}>
-              <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>
+            <CardActions style={{justifyContent: 'space-between'}}>
+              <Button size="small" color="primary" variant="contained"
+                onClick={() => handleEdit(sport._id ? sport._id : '')}>
                 Modifier
               </Button>
               <Button size="small" color="error" variant="contained" onClick={() => handleDelete(sport)}>
@@ -95,5 +104,3 @@ const SportsListOrganizer: React.FC = () => {
     </Grid>
   )
 }
-
-export default SportsListOrganizer

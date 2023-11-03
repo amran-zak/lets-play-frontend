@@ -257,7 +257,7 @@ export default function ModifyAnnounce() {
                   id='price'
                   label='Prix'
                   autoComplete='price'
-                  defaultValue={announceData ? announceData.price : ''}
+                  value={announceData ? announceData.price : ''}
                   {...register('price')}
                   error={!!errors.price}
                   helperText={errors.price?.message}
@@ -270,7 +270,7 @@ export default function ModifyAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
-                  defaultValue={announceData ? announceData.date : ''}
+                  value={announceData ? announceData.date : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true
@@ -287,7 +287,7 @@ export default function ModifyAnnounce() {
                   id='startTime'
                   label='Horaire début'
                   autoComplete='startTime'
-                  defaultValue={announceData ? announceData.startTime : ''}
+                  value={announceData ? announceData.startTime : ''}
                   {...register('startTime')}
                   error={!!errors.startTime}
                   helperText={errors.startTime?.message}
@@ -300,7 +300,7 @@ export default function ModifyAnnounce() {
                   id='endTime'
                   label='Horaire de fin'
                   autoComplete='endTime'
-                  defaultValue={announceData ? announceData.endTime : ''}
+                  value={announceData ? announceData.endTime : ''}
                   {...register('endTime')}
                   error={!!errors.endTime}
                   helperText={errors.endTime?.message}
@@ -312,8 +312,7 @@ export default function ModifyAnnounce() {
                   fullWidth
                   id='address'
                   label='Lieux'
-                  value={adresseInput}
-                  defaultValue={announceData ? announceData.address : ''}
+                  value={announceData ? announceData.address : adresseInput}
                   {...register('address')}
                   error={!!errors.address}
                   helperText={errors.address?.message}
@@ -335,7 +334,7 @@ export default function ModifyAnnounce() {
                   id='numberOfPeopleMax'
                   label='Nombre maximal de participants'
                   autoComplete='numberOfPeopleMax'
-                  defaultValue={announceData ? announceData.numberOfPeopleMax : ''}
+                  value={announceData ? announceData.numberOfPeopleMax : ''}
                   {...register('numberOfPeopleMax')}
                   error={!!errors.numberOfPeopleMax}
                   helperText={errors.numberOfPeopleMax?.message}
@@ -348,7 +347,7 @@ export default function ModifyAnnounce() {
                   id='ageMin'
                   label='Âge minimal requis'
                   autoComplete='ageMin'
-                  defaultValue={announceData ? announceData.ageMin : ''}
+                  value={announceData ? announceData.ageMin : ''}
                   {...register('ageMin')}
                   error={!!errors.ageMin}
                   helperText={errors.ageMin?.message}
@@ -361,7 +360,7 @@ export default function ModifyAnnounce() {
                   id='ageMax'
                   label='Âge maximal'
                   autoComplete='ageMax'
-                  defaultValue={announceData ? announceData.ageMax : ''}
+                  value={announceData ? announceData.ageMax : ''}
                   {...register('ageMax')}
                   error={!!errors.ageMax}
                   helperText={errors.ageMax?.message}
