@@ -31,7 +31,28 @@ interface CitySuggestion {
 
 export default function ModifyAnnounce() {
   const id = useParams()
-  const [announceData, setAnnounceData] = useState<AnnounceData | null>(null)
+  const [announceData, setAnnounceData] = useState<AnnounceData>({
+    _id: '', // Vous pouvez initialiser l'ID avec une chaîne vide ou une valeur appropriée
+    sport: '', // Vous pouvez initialiser le sport avec une chaîne vide ou une valeur appropriée
+    numberOfPeopleMax: 0, // Vous pouvez initialiser avec la valeur appropriée
+    date: '', // Vous pouvez initialiser la date avec une chaîne vide ou une valeur appropriée
+    startTime: '', // Vous pouvez initialiser l'heure de début avec une chaîne vide ou une valeur appropriée
+    endTime: '', // Vous pouvez initialiser l'heure de fin avec une chaîne vide ou une valeur appropriée
+    address: '', // Vous pouvez initialiser l'adresse avec une chaîne vide ou une valeur appropriée
+    city: '', // Vous pouvez initialiser la ville avec une chaîne vide ou une valeur appropriée
+    ageMin: 0, // Vous pouvez initialiser avec la valeur appropriée
+    ageMax: 0, // Vous pouvez initialiser avec la valeur appropriée
+    price: 0, // Vous pouvez initialiser avec la valeur appropriée
+    organizer: {
+      phoneNumber: 0, // Vous pouvez initialiser avec la valeur appropriée
+      userName: '', // Vous pouvez initialiser le nom d'utilisateur avec une chaîne vide ou une valeur appropriée
+      email: '', // Vous pouvez initialiser l'e-mail avec une chaîne vide ou une valeur appropriée
+      password: '', // Vous pouvez initialiser le mot de passe avec une chaîne vide ou une valeur appropriée
+      address: '', // Vous pouvez initialiser l'adresse avec une chaîne vide ou une valeur appropriée
+      city: '', // Vous pouvez initialiser la ville avec une chaîne vide ou une valeur appropriée
+      yearBirth: 0 // Vous pouvez initialiser avec la valeur appropriée
+    }
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,8 +83,20 @@ export default function ModifyAnnounce() {
         }
         return value
       }).required('La date de l\'évènement est requise'),
-    startTime: Yup.string().required('L\'heure de début de l\'évènement est requise'),
-    endTime: Yup.string().required('L\'heure de fin de l\'évènement est requise'),
+    startTime: Yup.string()
+      .transform((value, originalValue) => {
+        if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+          return null
+        }
+        return value
+      }).required('L\'heure de début de l\'évènement est requise'),
+    endTime: Yup.string()
+      .transform((value, originalValue) => {
+        if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+          return null
+        }
+        return value
+      }).required('L\'heure de fin de l\'évènement est requise'),
     address: Yup.string().required('L\'adresse est requise'),
     city: Yup.string(),
     ageMin: Yup.number()
@@ -268,7 +301,7 @@ export default function ModifyAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
-                  value={announceData ? announceData.date.split('T')[0] : ''}
+                  value={announceData ? announceData.date : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true
@@ -287,6 +320,13 @@ export default function ModifyAnnounce() {
                   autoComplete='startTime'
                   value={announceData ? announceData.startTime : ''}
                   {...register('startTime')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      startTime: newValue
+                    }))
+                  }}
                   error={!!errors.startTime}
                   helperText={errors.startTime?.message}
                 />
