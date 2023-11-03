@@ -35,7 +35,15 @@ interface CitySuggestion {
 }
 
 export default function ProfileEdit() {
-  const [profileData, setProfileData] = useState<UserProfileData | null>(null)
+  const [profileData, setProfileData] = useState<UserProfileData>({
+
+    phoneNumber: 1,
+    userName: '',
+    email: '',
+    address: '',
+    city: '',
+    yearBirth: 1
+  })
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
@@ -134,6 +142,13 @@ export default function ProfileEdit() {
                 label="Nom d'utilisateur"
                 fullWidth
                 {...register('userName')}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    userName: newValue
+                  }))
+                }}
                 error={!!errors.userName}
                 helperText={errors.userName?.message}
                 value={profileData?.userName ?? ''}
@@ -145,6 +160,13 @@ export default function ProfileEdit() {
                 label="Adresse email"
                 fullWidth
                 {...register('email')}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    email: newValue
+                  }))
+                }}
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 value={profileData?.email ?? ''}
@@ -157,6 +179,13 @@ export default function ProfileEdit() {
                 label="Téléphone"
                 fullWidth
                 {...register('phoneNumber')}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value) // Convertir en nombre
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    phoneNumber: newValue
+                  }))
+                }}
                 error={!!errors.phoneNumber}
                 helperText={errors.phoneNumber?.message}
                 value={profileData?.phoneNumber ?? ''}
@@ -169,6 +198,13 @@ export default function ProfileEdit() {
                 label="Adresse"
                 fullWidth
                 {...register('address')}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    address: newValue
+                  }))
+                }}
                 error={!!errors.address}
                 helperText={errors.address?.message}
                 value={profileData?.address ?? ''}
@@ -178,21 +214,16 @@ export default function ProfileEdit() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Ville"
-                fullWidth
-                {...register('city')}
-                error={!!errors.city}
-                helperText={errors.city?.message}
-                value={profileData?.city ?? ''}
-                disabled={!isEditing}
-
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
                 label="Année de naissance"
                 fullWidth
                 {...register('yearBirth')}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value) // Convertir en nombre
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    yearBirth: newValue
+                  }))
+                }}
                 error={!!errors.yearBirth}
                 helperText={errors.yearBirth?.message}
                 value={profileData?.yearBirth ?? ''}
