@@ -6,4 +6,5 @@ export default interface UserData {
   address: string
   city?: string | undefined
   yearBirth: number
+  _id?: string
 }

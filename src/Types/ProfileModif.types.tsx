@@ -5,4 +5,5 @@ export default interface UserProfileData {
   address: string
   city?: string | undefined
   yearBirth: number
+  _id?: string
 }

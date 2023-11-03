@@ -15,6 +15,10 @@ import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
 // Services
 import publicService from '../../Services/Public'
+import ParticipationsService from '../../Services/Participations'
+import ParticipationData from '../../Types/Participation.types'
+import Authentification from '../../Services/Authentification'
+import UserProfileData from '../../Types/ProfileModif.types'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -22,6 +26,8 @@ interface DetailProps {
 }
 const AnnouncesLists: React.FC = () => {
   const navigate = useNavigate()
+  const [userParticipations, setUserParticipations] = useState<ParticipationData[]>([])
+  const [profileData, setProfileData] = useState<UserProfileData | null>(null)
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
   const [loading, setLoading] = useState(true)
@@ -33,9 +39,37 @@ const AnnouncesLists: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date())
 
   const handleParticipe = (sportId: string) => {
-    navigate(`/participer_une_annonce/${sportId}`)
+    ParticipationsService.participer(sportId).then((result) => {
+      console.log(result)
+      alert('Participation a été bien prise en compte!')
+      window.location.reload()
+    }).catch((error) => {
+      console.log(error)
+    })
   }
-
+  useEffect(() => {
+    // Récupérez les participations de l'utilisateur connecté
+    ParticipationsService.getMyAllParticipations().then(response => {
+      setUserParticipations(response.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  }, [])
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await Authentification.getProfile()
+        setProfileData(response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    void fetchProfile()
+  }, [])
+  // Fonction pour vérifier si l'utilisateur a déjà participé à un sport donné
+  const hasParticipated = (sportId: string) => {
+    return userParticipations?.some(participation => participation.sport === sportId)
+  }
   useEffect(() => {
     publicService.getAllSports()
       .then(response => {
@@ -109,9 +143,19 @@ const AnnouncesLists: React.FC = () => {
             </CardActionArea>
             <CardActions>
               <Box width="100%">
-                <Button size="large" color="primary" variant="contained" fullWidth onClick={() => handleParticipe(sport._id ? sport._id : '')}>
-                  Participer
-                </Button>
+                {sport.organizer?._id === profileData?._id ? (
+                  <Button size="large" variant="outlined" fullWidth disabled>
+                Votre annonce
+                  </Button>
+                ) : hasParticipated(sport._id ? sport._id : '') ? (
+                  <Button size="large" variant="outlined" fullWidth disabled>
+                    Déjà participé
+                  </Button>
+                ) : (
+                  <Button size="large" color="primary" variant="contained" fullWidth onClick={() => handleParticipe(sport._id ? sport._id : '')}>
+                    Participer
+                  </Button>
+                )}
               </Box>
             </CardActions>
           </Card>
