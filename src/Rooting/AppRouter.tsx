@@ -5,6 +5,7 @@ import SignUp from '../Components/Authentification/SignUp'
 import Login from '../Components/Authentification/Login'
 import Header from '../Components/NavBar/Header'
 import CreateAnnounce from '../Components/Organizer/CreateAnnounce'
+import ProfileEdit from '../Components/Authentification/Profile'
 
 export default function AppRouter(): JSX.Element {
   return (
@@ -17,6 +18,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
             <Route path='/inscription' element={<SignUp/>}/>
             <Route path='/nouvelle_annonce' element={<CreateAnnounce/>}/>
+            <Route path='/profile' element={<ProfileEdit/>}/>
           </Routes>
         </div>
       </div>
