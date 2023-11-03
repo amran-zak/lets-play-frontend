@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material'
+import React, {useEffect, useState} from 'react'
+import {FormControl, MenuItem, Select, SelectChangeEvent} from '@mui/material'
 
 const sportsList = [
   'Football',
@@ -35,10 +35,16 @@ const sportsList = [
 
 interface SportsListProps {
   onSportChange: (selectedSport: string) => void
+  defaultValue: string
 }
 
-const SportsList: React.FC<SportsListProps> = ({ onSportChange }) => {
+const SportsList: React.FC<SportsListProps> = ({ onSportChange, defaultValue }) => {
   const [selectedSport, setSelectedSport] = useState<string>('')
+
+  useEffect(() => {
+    const initialSelectedSport = sportsList.indexOf(defaultValue)
+    setSelectedSport(initialSelectedSport !== -1 ? defaultValue : sportsList[0])
+  }, [defaultValue])
 
   const handleSportChange = (event: SelectChangeEvent<string>) => {
     const newSelectedSport = event.target.value
@@ -49,7 +55,6 @@ const SportsList: React.FC<SportsListProps> = ({ onSportChange }) => {
   return (
     <div>
       <FormControl fullWidth>
-        <InputLabel id="sport-label">Sport</InputLabel>
         <Select
           labelId="sport-label"
           id="sport"

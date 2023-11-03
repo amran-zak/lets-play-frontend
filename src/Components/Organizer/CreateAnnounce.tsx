@@ -7,7 +7,6 @@ import {
   Grid,
   Box,
   Typography,
-  Container,
   Paper, debounce
 } from '@mui/material'
 import Map, {Marker, NavigationControl} from 'react-map-gl'
@@ -16,11 +15,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-import background from '../Images/chaussure.jpeg'
 import AnnounceData from '../../Types/Announce.types'
 import {useCallback, useState} from 'react'
-import UserData from '../../Types/User.types'
-import Authentification from '../../Services/Authentification'
 import SportsList from '../SportsList'
 import Announce from '../../Services/Announce'
 
@@ -46,8 +42,20 @@ export default function CreateAnnounce() {
         }
         return value
       }).required('La date de l\'évènement est requise'),
-    startTime: Yup.string().required('L\'heure de début de l\'évènement est requise'),
-    endTime: Yup.string().required('L\'heure de fin de l\'évènement est requise'),
+    startTime: Yup.string()
+      .transform((value, originalValue) => {
+        if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+          return null
+        }
+        return value
+      }).required('L\'heure de début de l\'évènement est requise et doit être du format 00:00'),
+    endTime: Yup.string()
+      .transform((value, originalValue) => {
+        if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+          return null
+        }
+        return value
+      }).required('L\'heure de fin de l\'évènement est requise et doit être du format 00:00'),
     address: Yup.string().required('L\'adresse est requise'),
     city: Yup.string(),
     ageMin: Yup.number()
@@ -143,8 +151,8 @@ export default function CreateAnnounce() {
       sport: selectedSport,
       numberOfPeopleMax: data.numberOfPeopleMax,
       date: data.date,
-      startTime: data.startTime,
-      endTime: data.endTime,
+      startTime: `${data.date}T${data.startTime}:00.000Z`,
+      endTime: `${data.date}T${data.endTime}:00.000Z`,
       address: adresseInput,
       city: cityInput,
       ageMin: data.ageMin,
@@ -229,7 +237,7 @@ export default function CreateAnnounce() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <SportsList onSportChange={handleSportChange} />
+                <SportsList onSportChange={handleSportChange} defaultValue={selectedSport}/>
                 {selectedSport === '' && <Typography variant="caption" display="block" gutterBottom>Ce champ est requis</Typography>}
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -237,6 +245,7 @@ export default function CreateAnnounce() {
                   required
                   fullWidth
                   id='price'
+                  type='number'
                   label='Prix'
                   autoComplete='price'
                   {...register('price')}
@@ -310,6 +319,7 @@ export default function CreateAnnounce() {
                   required
                   fullWidth
                   id='numberOfPeopleMax'
+                  type='number'
                   label='Nombre maximal de participants'
                   autoComplete='numberOfPeopleMax'
                   {...register('numberOfPeopleMax')}
@@ -322,6 +332,7 @@ export default function CreateAnnounce() {
                   required
                   fullWidth
                   id='ageMin'
+                  type='number'
                   label='Âge minimal requis'
                   autoComplete='ageMin'
                   {...register('ageMin')}
@@ -334,6 +345,7 @@ export default function CreateAnnounce() {
                   required
                   fullWidth
                   id='ageMax'
+                  type='number'
                   label='Âge maximal'
                   autoComplete='ageMax'
                   {...register('ageMax')}

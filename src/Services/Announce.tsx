@@ -1,6 +1,5 @@
 import http from '../server'
 import AnnounceData from '../Types/Announce.types'
-import {Params} from 'react-router-dom'
 
 class Announce {
   async getAll() {
@@ -15,8 +14,8 @@ class Announce {
     return http.post<AnnounceData[]>('/api/organizer/sports', data)
   }
 
-  async modify(data: AnnounceData) {
-    return http.post<AnnounceData[]>('/api/...', data)
+  async modify(data: AnnounceData, id: string | undefined) {
+    return http.put<AnnounceData[]>(`/api/organizer/sports/${id}`, data)
   }
 }
 

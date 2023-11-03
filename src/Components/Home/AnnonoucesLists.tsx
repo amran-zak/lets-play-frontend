@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-// Importations nécessaires depuis @mui/material
 import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
@@ -10,10 +9,8 @@ import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
 import { SvgIconProps } from '@mui/material/SvgIcon'
-// Datas
 import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
-// Services
 import publicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
 import ParticipationData from '../../Types/Participation.types'
@@ -31,7 +28,6 @@ const AnnouncesLists: React.FC = () => {
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
   const [loading, setLoading] = useState(true)
-  // Filter state hooks
   const [selectedSport, setSelectedSport] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, 100]) // Assuming price range is an array [min, max]
@@ -40,11 +36,10 @@ const AnnouncesLists: React.FC = () => {
 
   const handleParticipe = (sportId: string) => {
     ParticipationsService.participer(sportId).then((result) => {
-      console.log(result)
       alert('Participation a été bien prise en compte!')
       window.location.reload()
     }).catch((error) => {
-      console.log(error)
+      console.error(error)
     })
   }
   useEffect(() => {
@@ -52,7 +47,7 @@ const AnnouncesLists: React.FC = () => {
     ParticipationsService.getMyAllParticipations().then(response => {
       setUserParticipations(response.data)
     }).catch(error => {
-      console.log(error)
+      console.error(error)
     })
   }, [])
   useEffect(() => {

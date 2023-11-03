@@ -65,15 +65,10 @@ export default function Login(): JSX.Element {
       const response = await Authentification.signIn(data)
       if (response.data.token || response.data.message) {
         console.log('Connecté')
-        console.log(response.data.token, response.data.message)
         // Stocker le token dans le localStorage
         localStorage.setItem('token', response.data.token)
-        // Mettre à jour le message et les données utilisateur dans l'état local
-        // setMessage('response.data.message')
         setErrorMessage(false)
-        // Assurez-vous que la mise à jour de l'état local est terminée avant de rediriger.
         await new Promise(resolve => setTimeout(resolve, 0))
-        // Rediriger l'utilisateur
         navigate(from, { replace: true })
         window.location.reload()
       }

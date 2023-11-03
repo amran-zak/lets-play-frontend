@@ -36,7 +36,7 @@ export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
-  const [loading, setLoading] = useState(true)
+  const [, setLoading] = useState(true)
 
   const handleEdit = (sportId: string) => {
     navigate(`/annonce/modifier/${sportId}`)
@@ -79,14 +79,32 @@ export default function ViewAnnounceOrganizer() {
                 <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>
                   {sport.sport}
                 </Typography>
-                <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
-                <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                  </Grid>
+                </Grid>
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
                 <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
-                <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
-                <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
               </CardContent>
             </CardActionArea>
             <CardActions style={{justifyContent: 'space-between'}}>

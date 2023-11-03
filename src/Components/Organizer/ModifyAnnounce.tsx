@@ -32,25 +32,25 @@ interface CitySuggestion {
 export default function ModifyAnnounce() {
   const id = useParams()
   const [announceData, setAnnounceData] = useState<AnnounceData>({
-    _id: '', // Vous pouvez initialiser l'ID avec une chaîne vide ou une valeur appropriée
-    sport: '', // Vous pouvez initialiser le sport avec une chaîne vide ou une valeur appropriée
-    numberOfPeopleMax: 0, // Vous pouvez initialiser avec la valeur appropriée
-    date: '', // Vous pouvez initialiser la date avec une chaîne vide ou une valeur appropriée
-    startTime: '', // Vous pouvez initialiser l'heure de début avec une chaîne vide ou une valeur appropriée
-    endTime: '', // Vous pouvez initialiser l'heure de fin avec une chaîne vide ou une valeur appropriée
-    address: '', // Vous pouvez initialiser l'adresse avec une chaîne vide ou une valeur appropriée
-    city: '', // Vous pouvez initialiser la ville avec une chaîne vide ou une valeur appropriée
-    ageMin: 0, // Vous pouvez initialiser avec la valeur appropriée
-    ageMax: 0, // Vous pouvez initialiser avec la valeur appropriée
-    price: 0, // Vous pouvez initialiser avec la valeur appropriée
+    _id: '',
+    sport: '',
+    numberOfPeopleMax: 0,
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    city: '',
+    ageMin: 0,
+    ageMax: 0,
+    price: 0,
     organizer: {
-      phoneNumber: 0, // Vous pouvez initialiser avec la valeur appropriée
-      userName: '', // Vous pouvez initialiser le nom d'utilisateur avec une chaîne vide ou une valeur appropriée
-      email: '', // Vous pouvez initialiser l'e-mail avec une chaîne vide ou une valeur appropriée
-      password: '', // Vous pouvez initialiser le mot de passe avec une chaîne vide ou une valeur appropriée
-      address: '', // Vous pouvez initialiser l'adresse avec une chaîne vide ou une valeur appropriée
-      city: '', // Vous pouvez initialiser la ville avec une chaîne vide ou une valeur appropriée
-      yearBirth: 0 // Vous pouvez initialiser avec la valeur appropriée
+      phoneNumber: 0,
+      userName: '',
+      email: '',
+      password: '',
+      address: '',
+      city: '',
+      yearBirth: 0
     }
   })
 
@@ -58,10 +58,16 @@ export default function ModifyAnnounce() {
     const fetchData = async () => {
       try {
         const response = await Announce.getById(id.id)
-        console.log('response : ', response)
         if (response) {
           const selectedAnnounce = response.data.sport
           setAnnounceData(selectedAnnounce)
+          setAnnounceData((prevData: AnnounceData) => ({
+            ...prevData,
+            startTime: transformHours(selectedAnnounce.startTime),
+            endTime: transformHours(selectedAnnounce.endTime)
+          }))
+          setCityInput(selectedAnnounce.city)
+          setSelectedSport(selectedAnnounce.sport)
         }
       } catch (error) {
         console.error(error)
@@ -89,14 +95,14 @@ export default function ModifyAnnounce() {
           return null
         }
         return value
-      }).required('L\'heure de début de l\'évènement est requise'),
+      }).required('L\'heure de début de l\'évènement est requise et doit être du format 00:00'),
     endTime: Yup.string()
       .transform((value, originalValue) => {
         if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
           return null
         }
         return value
-      }).required('L\'heure de fin de l\'évènement est requise'),
+      }).required('L\'heure de fin de l\'évènement est requise et doit être du format 00:00'),
     address: Yup.string().required('L\'adresse est requise'),
     city: Yup.string(),
     ageMin: Yup.number()
@@ -192,8 +198,8 @@ export default function ModifyAnnounce() {
       sport: selectedSport,
       numberOfPeopleMax: data.numberOfPeopleMax,
       date: data.date,
-      startTime: data.startTime,
-      endTime: data.endTime,
+      startTime: `${data.date}T${data.startTime}:00.000Z`,
+      endTime: `${data.date}T${data.endTime}:00.000Z`,
       address: adresseInput,
       city: cityInput,
       ageMin: data.ageMin,
@@ -212,7 +218,7 @@ export default function ModifyAnnounce() {
           setErrorMessage(true)
           setSuccessMessage(false)
         } else {
-          await Announce.modify(modifyData)
+          await Announce.modify(modifyData, id.id)
           setSuccessMessage(true)
           setErrorMessage(false)
         }
@@ -223,6 +229,11 @@ export default function ModifyAnnounce() {
   }
 
   const token = 'pk.eyJ1IjoiZ2lzZmVlZGJhY2siLCJhIjoiY2l2eDJndmtjMDFkeTJvcHM4YTNheXZtNyJ9.-HNJNch_WwLIAifPgzW2Ig'
+
+  const transformHours = (time: string) => {
+    const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
+    return timePart || ''
+  }
 
   return (
     <Grid
@@ -278,7 +289,7 @@ export default function ModifyAnnounce() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <SportsList onSportChange={handleSportChange} />
+                <SportsList onSportChange={handleSportChange} defaultValue={selectedSport} />
                 {selectedSport === '' && <Typography variant="caption" display="block" gutterBottom>Ce champ est requis</Typography>}
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -287,9 +298,18 @@ export default function ModifyAnnounce() {
                   fullWidth
                   id='price'
                   label='Prix'
+                  type='number'
                   autoComplete='price'
                   value={announceData ? announceData.price : ''}
                   {...register('price')}
+                  onChange={(e) => {
+                    const inputValue = e.target.value
+                    const newValue = inputValue !== '' ? parseInt(inputValue) : 0
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      price: newValue
+                    }))
+                  }}
                   error={!!errors.price}
                   helperText={errors.price?.message}
                 />
@@ -301,12 +321,20 @@ export default function ModifyAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
-                  value={announceData ? announceData.date : ''}
+                  value={announceData ? announceData.date.split('T')[0] : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true
                   }}
                   {...register('date')}
+                  onChange={(e) => {
+                    const inputValue = e.target.value
+                    const newValue = inputValue !== '' ? inputValue : ''
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      date: newValue
+                    }))
+                  }}
                   error={!!errors.date}
                   helperText={errors.date?.message}
                 />
@@ -340,6 +368,13 @@ export default function ModifyAnnounce() {
                   autoComplete='endTime'
                   value={announceData ? announceData.endTime : ''}
                   {...register('endTime')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      endTime: newValue
+                    }))
+                  }}
                   error={!!errors.endTime}
                   helperText={errors.endTime?.message}
                 />
@@ -352,9 +387,16 @@ export default function ModifyAnnounce() {
                   label='Lieux'
                   value={announceData ? announceData.address : adresseInput}
                   {...register('address')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      address: newValue
+                    }))
+                    void handleCityInputChange(e)
+                  }}
                   error={!!errors.address}
                   helperText={errors.address?.message}
-                  onChange={handleCityInputChange}
                 />
                 {citySuggestions.length > 0 && (
                   <ul>
@@ -370,10 +412,18 @@ export default function ModifyAnnounce() {
                   required
                   fullWidth
                   id='numberOfPeopleMax'
+                  type='number'
                   label='Nombre maximal de participants'
                   autoComplete='numberOfPeopleMax'
                   value={announceData ? announceData.numberOfPeopleMax : ''}
                   {...register('numberOfPeopleMax')}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value)
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      numberOfPeopleMax: newValue
+                    }))
+                  }}
                   error={!!errors.numberOfPeopleMax}
                   helperText={errors.numberOfPeopleMax?.message}
                 />
@@ -383,10 +433,18 @@ export default function ModifyAnnounce() {
                   required
                   fullWidth
                   id='ageMin'
+                  type='number'
                   label='Âge minimal requis'
                   autoComplete='ageMin'
                   value={announceData ? announceData.ageMin : ''}
                   {...register('ageMin')}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value)
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      ageMin: newValue
+                    }))
+                  }}
                   error={!!errors.ageMin}
                   helperText={errors.ageMin?.message}
                 />
@@ -396,10 +454,18 @@ export default function ModifyAnnounce() {
                   required
                   fullWidth
                   id='ageMax'
+                  type='number'
                   label='Âge maximal'
                   autoComplete='ageMax'
                   value={announceData ? announceData.ageMax : ''}
                   {...register('ageMax')}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value)
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      ageMax: newValue
+                    }))
+                  }}
                   error={!!errors.ageMax}
                   helperText={errors.ageMax?.message}
                 />
@@ -407,12 +473,12 @@ export default function ModifyAnnounce() {
             </Grid>
             {errorMessage &&
               <Typography color='red'>
-                L&aposannonce existe déjà
+                L&apos;annonce existe déjà
               </Typography>
             }
             {successMessage &&
               <Typography color='secondary.main'>
-                L&aposannonce est ajouté avec succès
+                L&apos;annonce est modifiée avec succès
               </Typography>
             }
             <Button type='submit' fullWidth variant='contained' sx={{
