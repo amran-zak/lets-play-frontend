@@ -47,10 +47,17 @@ export default function ViewAnnounceOrganizer() {
     console.log('Supprimer', sport)
   }
 
+  const transformHours = (time: string) => {
+    console.log(time)
+    const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
+    return timePart || ''
+  }
+
   useEffect(() => {
     Announce.getAll()
       .then(response => {
         const data = response.data
+        console.log('all : ', data)
         setSportsList(data.sports)
         setLoading(false)
       })
@@ -97,10 +104,10 @@ export default function ViewAnnounceOrganizer() {
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()}</Detail>
+                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).getUTCHours()}h{new Date(sport.startTime).getUTCMinutes()}</Detail>
                   </Grid>
                   <Grid item xs={6}>
-                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).getUTCHours()}h{new Date(sport.endTime).getUTCMinutes()}</Detail>
                   </Grid>
                 </Grid>
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>

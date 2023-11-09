@@ -53,6 +53,8 @@ export default function ModifyAnnounce() {
       yearBirth: 0
     }
   })
+  const [adresseInput, setAdresseInput] = useState('')
+  const [cityInput, setCityInput] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,11 +65,13 @@ export default function ModifyAnnounce() {
           setAnnounceData(selectedAnnounce)
           setAnnounceData((prevData: AnnounceData) => ({
             ...prevData,
+            date: selectedAnnounce.date.split('T')[0],
             startTime: transformHours(selectedAnnounce.startTime),
             endTime: transformHours(selectedAnnounce.endTime)
           }))
-          setCityInput(selectedAnnounce.city)
           setSelectedSport(selectedAnnounce.sport)
+          setAdresseInput(selectedAnnounce.address)
+          setCityInput(selectedAnnounce.city)
         }
       } catch (error) {
         console.error(error)
@@ -82,13 +86,7 @@ export default function ModifyAnnounce() {
     numberOfPeopleMax: Yup.number()
       .typeError('Le nombre de participants maximal doit être un nombre')
       .required('Le nombre de participants maximum que peut accueillir votre évènement'),
-    date: Yup.string()
-      .transform((value, originalValue) => {
-        if (originalValue && !originalValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
-          return null
-        }
-        return value
-      }).required('La date de l\'évènement est requise'),
+    date: Yup.string().required('La date de l\'évènement est requise'),
     startTime: Yup.string()
       .transform((value, originalValue) => {
         if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
@@ -126,6 +124,9 @@ export default function ModifyAnnounce() {
   })
 
   const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([])
+  const [latitudeInput, setLatitudeInput] = useState(48.866667)
+  const [longitudeInput, setLongitudeInput] = useState(2.333333)
+
   const fetchCitySuggestions = async (input: string) => {
     if (input.length >= 3) {
       try {
@@ -162,10 +163,6 @@ export default function ModifyAnnounce() {
     }
   }
 
-  const [adresseInput, setAdresseInput] = useState('')
-  const [cityInput, setCityInput] = useState('')
-  const [latitudeInput, setLatitudeInput] = useState(48.866667)
-  const [longitudeInput, setLongitudeInput] = useState(2.333333)
   const debouncedFetchCitySuggestions = useCallback(
     debounce(async (input) => fetchCitySuggestions(input), 300), []
   )
@@ -194,38 +191,31 @@ export default function ModifyAnnounce() {
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
 
   const onSubmit = async (data: AnnounceData) => {
+    console.log('announceData : ', announceData)
     const modifyData: AnnounceData = {
       sport: selectedSport,
-      numberOfPeopleMax: data.numberOfPeopleMax,
-      date: data.date,
-      startTime: `${data.date}T${data.startTime}:00.000Z`,
-      endTime: `${data.date}T${data.endTime}:00.000Z`,
+      numberOfPeopleMax: announceData.numberOfPeopleMax,
+      date: announceData.date,
+      startTime: `${announceData.date.split('T')[0]}T${announceData.startTime}:00.000Z`,
+      endTime: `${announceData.date.split('T')[0]}T${announceData.endTime}:00.000Z`,
       address: adresseInput,
       city: cityInput,
-      ageMin: data.ageMin,
-      ageMax: data.ageMax,
-      price: data.price
+      ageMin: announceData.ageMin,
+      ageMax: announceData.ageMax,
+      price: announceData.price
     }
-    try {
-      const existingAnnouncements = await Announce.getAll()
+    console.log('modifyData : ', modifyData)
 
-      if (existingAnnouncements.data.sports && Array.isArray(existingAnnouncements.data.sports)) {
-        const annonceExistante = existingAnnouncements.data.sports.find((annonce: AnnounceData) => {
-          return annonce.sport === modifyData.sport
-        })
-
-        if (annonceExistante) {
-          setErrorMessage(true)
-          setSuccessMessage(false)
-        } else {
-          await Announce.modify(modifyData, id.id)
-          setSuccessMessage(true)
-          setErrorMessage(false)
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des annonces existantes :', error)
-    }
+    Announce.modify(modifyData, id.id)
+      .then(response => {
+        setSuccessMessage(true)
+        setErrorMessage(false)
+      })
+      .catch(error => {
+        console.error(error)
+        setSuccessMessage(false)
+        setErrorMessage(true)
+      })
   }
 
   const token = 'pk.eyJ1IjoiZ2lzZmVlZGJhY2siLCJhIjoiY2l2eDJndmtjMDFkeTJvcHM4YTNheXZtNyJ9.-HNJNch_WwLIAifPgzW2Ig'
@@ -321,7 +311,7 @@ export default function ModifyAnnounce() {
                   id='date'
                   label='Date'
                   autoComplete='date'
-                  value={announceData ? announceData.date.split('T')[0] : ''}
+                  value={announceData ? announceData.date : ''}
                   type='date'
                   InputLabelProps={{
                     shrink: true
@@ -330,10 +320,12 @@ export default function ModifyAnnounce() {
                   onChange={(e) => {
                     const inputValue = e.target.value
                     const newValue = inputValue !== '' ? inputValue : ''
-                    setAnnounceData((prevData: AnnounceData) => ({
-                      ...prevData,
-                      date: newValue
-                    }))
+                    if (newValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
+                      setAnnounceData((prevData: AnnounceData) => ({
+                        ...prevData,
+                        date: newValue
+                      }))
+                    }
                   }}
                   error={!!errors.date}
                   helperText={errors.date?.message}
@@ -385,14 +377,10 @@ export default function ModifyAnnounce() {
                   fullWidth
                   id='address'
                   label='Lieux'
-                  value={announceData ? announceData.address : adresseInput}
+                  value={adresseInput}
                   {...register('address')}
                   onChange={(e) => {
                     const newValue = e.target.value
-                    setAnnounceData((prevData: AnnounceData) => ({
-                      ...prevData,
-                      address: newValue
-                    }))
                     void handleCityInputChange(e)
                   }}
                   error={!!errors.address}
