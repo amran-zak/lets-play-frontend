@@ -39,6 +39,7 @@ const AnnouncesLists: React.FC = () => {
       alert('Participation a été bien prise en compte!')
       window.location.reload()
     }).catch((error) => {
+      alert('Veuillez vous connectez à votre compte!')
       console.error(error)
     })
   }
