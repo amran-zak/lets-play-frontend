@@ -1,3 +1,4 @@
+import AnnounceData from './Announce.types'
 export default interface ParticipationData {
   _id: string
   participant: {

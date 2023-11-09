@@ -13,7 +13,7 @@ import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
 import publicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
-import ParticipationData from '../../Types/Participation.types'
+import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import Authentification from '../../Services/Authentification'
 import UserProfileData from '../../Types/ProfileModif.types'
 
@@ -23,7 +23,7 @@ interface DetailProps {
 }
 const AnnouncesLists: React.FC = () => {
   const navigate = useNavigate()
-  const [userParticipations, setUserParticipations] = useState<ParticipationData[]>([])
+  const [userParticipations, setUserParticipations] = useState<PopulateParticipationData[]>([])
   const [profileData, setProfileData] = useState<UserProfileData | null>(null)
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
@@ -64,7 +64,7 @@ const AnnouncesLists: React.FC = () => {
   }, [])
   // Fonction pour vérifier si l'utilisateur a déjà participé à un sport donné
   const hasParticipated = (sportId: string) => {
-    return userParticipations?.some(participation => participation.sport === sportId)
+    return userParticipations?.some(participation => participation.sport._id === sportId)
   }
   useEffect(() => {
     publicService.getAllSports()
@@ -123,6 +123,7 @@ const AnnouncesLists: React.FC = () => {
                   {sport.sport}
                 </Typography>
                 <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
+                <Detail icon={PeopleIcon}>Déjà participé: {sport.numberOfPeopleCurrent}</Detail>
                 <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
                 <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
                 <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
@@ -146,6 +147,10 @@ const AnnouncesLists: React.FC = () => {
                 ) : hasParticipated(sport._id ? sport._id : '') ? (
                   <Button size="large" variant="outlined" fullWidth disabled>
                     Déjà participé
+                  </Button>
+                ) : sport.numberOfPeopleMax === sport.numberOfPeopleCurrent ? (
+                  <Button size="large" color="primary" variant="contained" fullWidth disabled>
+                    Déja complet
                   </Button>
                 ) : (
                   <Button size="large" color="primary" variant="contained" fullWidth onClick={() => handleParticipe(sport._id ? sport._id : '')}>

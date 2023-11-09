@@ -43,7 +43,8 @@ export default function AnnouncesHeader() {
       >
         {[
           <MenuItem key="ajouter-annonce" onClick={() => navigateToPage('/annonce/ajouter')}>Ajouter une annonce</MenuItem>,
-          <MenuItem key="-voir-annonces" onClick={() => navigateToPage('/annonces/liste')}>Voir mes annonces</MenuItem>
+          <MenuItem key="-voir-annonces" onClick={() => navigateToPage('/annonces/liste')}>Voir mes annonces</MenuItem>,
+          <MenuItem key="-voir-annonces" onClick={() => navigateToPage('/annonces/partcipations')}>Voir mes partcipations</MenuItem>
         ]}
       </Menu>
     </div>

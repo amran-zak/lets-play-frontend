@@ -10,6 +10,7 @@ import ModifyAnnounce from '../Components/Organizer/ModifyAnnounce'
 import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
 import HomePage from '../Components/Home'
 import AnnouncesLists from '../Components/Home/AnnonoucesLists'
+import AnnouncesListsParticipant from '../Components/Participant/AnnounceListParticipant'
 
 // Composant pour la protection de route
 const PrivateRoute = () => {
@@ -34,6 +35,7 @@ export default function AppRouter(): JSX.Element {
               <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
               <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
               <Route path='/profile' element={<ProfileEdit/>}/>
+              <Route path='/annonces/partcipations' element={<AnnouncesListsParticipant/>}/>
             </Route>
           </Routes>
         </div>

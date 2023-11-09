@@ -8,6 +8,10 @@ class Participations {
   async getMyAllParticipations() {
     return http.get('/api/participations/')
   }
+
+  async deleteParticipation(partcipationId: string) {
+    return http.delete('/api/participations/' + partcipationId)
+  }
 }
 
 export default new Participations()
