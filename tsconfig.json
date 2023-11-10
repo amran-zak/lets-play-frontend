@@ -24,5 +24,8 @@
     "src",
     ".eslintrc.js",
     "custom.d.ts"
-  ]
+, "jest.config.js", "setupTests.js", "babel.config.js"  ],
+  "jest": {
+    "preset": "ts-jest"
+  }
 }
