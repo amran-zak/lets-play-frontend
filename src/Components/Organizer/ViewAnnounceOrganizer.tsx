@@ -47,10 +47,23 @@ export default function ViewAnnounceOrganizer() {
     console.log('Supprimer', sport)
   }
 
+  const handleViewDetails = (sportId: string) => {
+    // Logique pour gérer la suppression
+    console.log(sportId)
+    navigate(`/participations/${sportId}`)
+  }
+
+  const transformHours = (time: string) => {
+    console.log(time)
+    const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
+    return timePart || ''
+  }
+
   useEffect(() => {
     Announce.getAll()
       .then(response => {
         const data = response.data
+        console.log('all : ', data)
         setSportsList(data.sports)
         setLoading(false)
       })
@@ -66,7 +79,7 @@ export default function ViewAnnounceOrganizer() {
       marginTop: 50
     }}>
       {sportsList.map((sport, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid item xs={12} sm={6} md={4} key={index} onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
           <Card elevation={3}>
             <CardActionArea>
               <CardMedia
@@ -97,10 +110,10 @@ export default function ViewAnnounceOrganizer() {
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()}</Detail>
+                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).getUTCHours()}h{new Date(sport.startTime).getUTCMinutes()}</Detail>
                   </Grid>
                   <Grid item xs={6}>
-                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).getUTCHours()}h{new Date(sport.endTime).getUTCMinutes()}</Detail>
                   </Grid>
                 </Grid>
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>

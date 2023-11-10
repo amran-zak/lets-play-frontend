@@ -9,7 +9,9 @@ import ProfileEdit from '../Components/Authentification/Profile'
 import ModifyAnnounce from '../Components/Organizer/ModifyAnnounce'
 import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
 import HomePage from '../Components/Home'
-import AnnouncesLists from '../Components/Home/AnnonoucesLists'
+import AnnouncesLists from '../Components/Home/AnnouncesLists'
+import AnnouncesListsParticipant from '../Components/Participant/AnnounceListParticipant'
+import AnnounceDetails from '../Components/Organizer/ViewDetailAnnounce'
 
 // Composant pour la protection de route
 const PrivateRoute = () => {
@@ -34,6 +36,8 @@ export default function AppRouter(): JSX.Element {
               <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
               <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
               <Route path='/profile' element={<ProfileEdit/>}/>
+              <Route path='/annonces/partcipations' element={<AnnouncesListsParticipant/>}/>
+              <Route path='/partcipations/:sportId' element={<AnnounceDetails/>}/>
             </Route>
           </Routes>
         </div>
