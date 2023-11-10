@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18 # Choisissez la version de Node.js dont vous avez besoin
+          node-version: 16 # Choisissez la version de Node.js dont vous avez besoin
 
       - name: Install Dependencies
         run: npm --force install # Assurez-vous d'installer ESLint et toutes les dépendances nécessaires
