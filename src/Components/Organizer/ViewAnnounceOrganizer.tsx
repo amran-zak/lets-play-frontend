@@ -47,6 +47,12 @@ export default function ViewAnnounceOrganizer() {
     console.log('Supprimer', sport)
   }
 
+  const handleViewDetails = (sportId: string) => {
+    // Logique pour gérer la suppression
+    console.log(sportId)
+    navigate(`/participations/${sportId}`)
+  }
+
   const transformHours = (time: string) => {
     console.log(time)
     const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
@@ -73,7 +79,7 @@ export default function ViewAnnounceOrganizer() {
       marginTop: 50
     }}>
       {sportsList.map((sport, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid item xs={12} sm={6} md={4} key={index} onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
           <Card elevation={3}>
             <CardActionArea>
               <CardMedia

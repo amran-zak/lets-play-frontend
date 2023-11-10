@@ -12,6 +12,10 @@ class Participations {
   async deleteParticipation(partcipationId: string) {
     return http.delete('/api/participations/' + partcipationId)
   }
+
+  async getParticipationsBySportId(sportId: string) {
+    return http.delete('/api/sports/' + sportId + '/participations')
+  }
 }
 
 export default new Participations()
