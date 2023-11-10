@@ -19,7 +19,7 @@ jobs:
           node-version: 18 # Choisissez la version de Node.js dont vous avez besoin
 
       - name: Install Dependencies
-        run: npm install # Assurez-vous d'installer ESLint et toutes les dépendances nécessaires
+        run: npm --force install # Assurez-vous d'installer ESLint et toutes les dépendances nécessaires
 
       - name: Run ESLint
         run: npm run lint # Assurez-vous que vous avez une commande de lint configurée dans votre projet
