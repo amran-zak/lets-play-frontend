@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {BrowserRouter, Route, Routes, Navigate, Outlet} from 'react-router-dom'
+import {BrowserRouter, Route, Routes, Navigate, Outlet} from 'react-router-dom';
 import NewPassword from '../Components/Authentification/NewPassword'
 import SignUp from '../Components/Authentification/SignUp'
 import Login from '../Components/Authentification/Login'
@@ -22,7 +22,7 @@ export default function AppRouter(): JSX.Element {
   return (
     <BrowserRouter>
       <div className='app-container'>
-        <div className='app-body'>
+         <div className='app-body'>
           <Header/>
           <Routes>
             <Route path='/' element={<HomePage/>}/>
