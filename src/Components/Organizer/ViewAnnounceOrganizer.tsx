@@ -8,8 +8,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import { SvgIconProps } from '@mui/material/SvgIcon'
-import AnnounceData from '../../Types/Announce.types'
-import background from '../Images/image.jpeg'
+import AnnounceData from '../../Types/Announce.types';
+import background from '../Images/image.jpeg';
 import Announce from '../../Services/Announce'
 
 interface DetailProps {
@@ -22,7 +22,7 @@ const Detail: React.FC<DetailProps> = ({
   children
 }) => (
   <Box display="flex" alignItems="center" mt={1}>
-    <IconComponent color="action" style={{
+          <IconComponent color="action" style={{
       marginRight: useTheme().spacing(1),
       color: 'green'
     }}/>
