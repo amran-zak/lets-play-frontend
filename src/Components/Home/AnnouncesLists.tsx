@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  CardActionArea,
+  Grid,
+  useTheme,
+  Box,
+  CardActions,
+  Button,
+  InputLabel, OutlinedInput, InputAdornment, Icon, FormControl, debounce
+} from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -21,6 +33,11 @@ interface DetailProps {
   icon: React.ElementType<SvgIconProps>
   children: React.ReactNode
 }
+
+interface CitySuggestion {
+  city: string
+}
+
 const AnnouncesLists: React.FC = () => {
   const navigate = useNavigate()
   const [userParticipations, setUserParticipations] = useState<PopulateParticipationData[]>([])
@@ -97,6 +114,82 @@ const AnnouncesLists: React.FC = () => {
       )
     })
   }
+
+  const [searchCity, setSearchCity] = React.useState<string>('')
+  const [isFiltered, setIsFiltered] = React.useState<boolean>(false)
+
+  const fetchCitySuggestions = async (input: string) => {
+    if (input.length >= 3) {
+      try {
+        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${input.replaceAll(' ', '+')}&type=municipality&limit=5`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.features) {
+            const uniqueCitySuggestions: CitySuggestion[] = []
+            const seenCities = new Set()
+
+            data.features.forEach((feature: { properties: { city: string } }) => {
+              const city = feature.properties.city
+              // Vérifier si la ville n'a pas déjà été ajoutée
+              if (!seenCities.has(city)) {
+                uniqueCitySuggestions.push({ city })
+                seenCities.add(city)
+              }
+            })
+
+            setCitySuggestions(uniqueCitySuggestions)
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
+  const debouncedFetchCitySuggestions = useCallback(
+    debounce(async (input) => fetchCitySuggestions(input), 300), []
+  )
+
+  const handleSearchAddress = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchCity(event.target.value)
+    await debouncedFetchCitySuggestions(event.target.value)
+  }
+
+  const handleFilter = () => {
+    const filtered = sportsList.filter(
+      (element) =>
+        element.city &&
+        element.city
+          .toLowerCase()
+          .includes(searchCity.toLowerCase())
+    )
+    setIsFiltered(true)
+    setSportsList(filtered)
+  }
+
+  const handleFilterReset = () => {
+    publicService.getAllSports()
+      .then(response => {
+        const data = response.data
+        setSportsList(data.sports)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching sports:', error)
+        setLoading(false)
+      })
+
+    setIsFiltered(false)
+    setSearchCity('')
+  }
+
+  const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([])
+
+  const handleCitySuggestionClick = (suggestion: CitySuggestion) => {
+    setSearchCity(suggestion.city)
+    setCitySuggestions([])
+  }
+
   const theme = useTheme()
   const Detail: React.FC<DetailProps> = ({ icon: IconComponent, children }) => (
     <Box display="flex" alignItems="center" mt={1}>
@@ -108,6 +201,56 @@ const AnnouncesLists: React.FC = () => {
   )
   return (
     <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 50 }}>
+      <Grid container justifyContent="center">
+        <Grid item xs={12} md={6} lg={4}>
+          <FormControl sx={{ my: 1, mt: 5, textAlign: 'center' }} size='small'>
+            <InputLabel
+              htmlFor="outlined-adornment-amount"
+              sx={{ backgroundColor: 'white', paddingRight: '5px' }}
+            >
+              Rechercher par nom de ville
+            </InputLabel>
+            <OutlinedInput
+              id='outlined-adornment-location'
+              value={searchCity}
+              onChange={handleSearchAddress}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <Icon fontSize='small' sx={{ marginLeft: '10px' }}></Icon>
+                </InputAdornment>
+              }
+              label='Location'
+            />
+            {citySuggestions.length > 0 && (
+              <ul>
+                {citySuggestions.map((suggestion, index) => (
+                  <li color='black' key={index} onClick={() => handleCitySuggestionClick(suggestion)}
+                    style={{cursor: 'pointer'}}>{suggestion.city}</li>
+                ))}
+              </ul>
+            )}
+            {!isFiltered &&
+              <Button
+                variant="contained"
+                sx={{ marginTop: '10px', bgcolor: 'secondary.main' }}
+                onClick={handleFilter}
+                disabled={!searchCity}
+              >
+                Valider
+              </Button>
+            }
+            {isFiltered &&
+              <Button
+                variant="contained"
+                sx={{ marginTop: '10px', bgcolor: 'secondary.main' }}
+                onClick={handleFilterReset}
+              >
+                Rénitialiser les filtres
+              </Button>
+            }
+          </FormControl>
+        </Grid>
+      </Grid>
       {sportsList.map((sport, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card elevation={3}>
@@ -119,18 +262,35 @@ const AnnouncesLists: React.FC = () => {
                 alt={sport.sport}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div" style={{ color: theme.palette.primary.main }}>
+                <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>
                   {sport.sport}
                 </Typography>
-                <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
-                <Detail icon={PeopleIcon}>Déjà participé: {sport.numberOfPeopleCurrent}</Detail>
-                <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
-                <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).toLocaleTimeString()} - {new Date(sport.endTime).toLocaleTimeString()}</Detail>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).getUTCHours()}h{new Date(sport.startTime).getUTCMinutes()}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).getUTCHours()}h{new Date(sport.endTime).getUTCMinutes()}</Detail>
+                  </Grid>
+                </Grid>
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
-                <Detail icon={LocationOnIcon}>Ville: {sport.city ? `, ${sport.city}` : ''}</Detail>
-                <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
-                <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
+                <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
                 <Detail icon={PeopleIcon}>Organisateur: {sport.organizer?.userName}</Detail>
                 {/* Add masked phoneNumber */}
                 <Detail icon={Phone}>
