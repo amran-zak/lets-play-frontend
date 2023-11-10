@@ -23,11 +23,4 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-        continue-on-error: true # Continue même en cas d'erreur
 
-      - name: Check ESLint Status
-        run: |
-          if [ ${{ job.status }} != "completed" ]; then
-            echo "ESLint check failed. Cancelling the workflow..."
-            exit 1
-          fi
