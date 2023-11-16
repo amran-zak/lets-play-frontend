@@ -87,9 +87,9 @@ export default function ViewAnnounceOrganizer() {
       marginTop: 50
     }}>
       {sportsList.map((sport, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index} onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
+        <Grid item xs={12} sm={6} md={4} key={index}>
           <Card elevation={3}>
-            <CardActionArea>
+            <CardActionArea onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
               <CardMedia
                 component="img"
                 height="140"
@@ -127,7 +127,7 @@ export default function ViewAnnounceOrganizer() {
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
                 <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
               </CardContent>
-            </CardActionArea>
+            </CardActionArea>c
             <CardActions style={{justifyContent: 'space-between'}}>
               <Button size="small" color="primary" variant="contained"
                 onClick={() => handleEdit(sport._id ? sport._id : '')}>

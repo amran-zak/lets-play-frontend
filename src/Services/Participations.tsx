@@ -14,7 +14,7 @@ class Participations {
   }
 
   async getParticipationsBySportId(sportId: string) {
-    return http.delete('/api/sports/' + sportId + '/participations')
+    return http.get('/api/organizer/sports/' + sportId + '/participations')
   }
 }
 

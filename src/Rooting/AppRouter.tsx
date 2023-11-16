@@ -37,7 +37,7 @@ export default function AppRouter(): JSX.Element {
               <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
               <Route path='/profile' element={<ProfileEdit/>}/>
               <Route path='/annonces/partcipations' element={<AnnouncesListsParticipant/>}/>
-              <Route path='/partcipations/:sportId' element={<AnnounceDetails/>}/>
+              <Route path='/participations/:sportId' element={<AnnounceDetails/>}/>
             </Route>
           </Routes>
         </div>
