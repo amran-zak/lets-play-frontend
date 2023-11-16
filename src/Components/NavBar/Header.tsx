@@ -3,18 +3,23 @@ import {
   AppBar,
   Box,
   Toolbar,
-  IconButton,
+  Tooltip,
   Typography,
-  Badge,
-  Link
+  Button
 } from '@mui/material'
-import NotificationsIcon from '@mui/icons-material/Notifications'
+import {useNavigate} from 'react-router-dom'
 import LogoGreen from '../Images/logo-green.png'
 import PopUp from '../PopUp'
 import ProfileHeader from './ProfileHeader'
 import AnnouncesHeader from './AnnouncesHearder'
+import { Home } from '@mui/icons-material'
 
 function Header() {
+  const navigate = useNavigate()
+
+  const navigateToPage = (url: string) => {
+    navigate(url)
+  }
   return (
     <Box>
       <AppBar component="nav" sx={{backgroundColor: 'bg-green-light'}}>
@@ -38,6 +43,15 @@ function Header() {
             <img src={LogoGreen} style={{height: '50px'}} alt="photo de profile"/>
           </Typography>
           <Box sx={{flexGrow: 1}}/>
+          <Tooltip title="Accueil" arrow>
+            <Button
+              id="basic-button"
+              onClick={() => navigateToPage('/')}
+              style={{ color: 'black' }}
+            >
+              <Home />
+            </Button>
+          </Tooltip>
           <AnnouncesHeader />
           {/* <Box sx={{
             display: {

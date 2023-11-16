@@ -16,7 +16,7 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Authentification from '../../Services/Authentification'
 import debounce from 'lodash/debounce'
-import background from '../Images/surf.jpeg'
+import background from '../Images/football_homepage.jpeg'
 
 interface UserProfileData {
   phoneNumber: number

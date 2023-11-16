@@ -22,7 +22,7 @@ import AnnounceData from '../../Types/Announce.types'
 import {useCallback, useState} from 'react'
 import SportsList from '../SportsList'
 import Announce from '../../Services/Announce'
-import background from '../Images/montagne.jpeg'
+import background from '../Images/football_homepage.jpeg'
 
 interface CitySuggestion {
   id: number
