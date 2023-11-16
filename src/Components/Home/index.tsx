@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
         {/* Ici, vous pouvez utiliser un composant similaire à celui que vous avez déjà pour afficher les cartes d'annonce */}
       </section>
       <section className="how-it-works" style={{ margin: '40px 0' }}>
-        <Typography variant="h4">Comment ça marche?</Typography>
+        {/* <Typography variant="h4">Comment ça marche?</Typography> */}
         {/* Ajoutez du contenu descriptif ici */}
       </section>
       <section className="testimonials" style={{ margin: '40px 0' }}>
