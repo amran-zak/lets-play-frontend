@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Avatar,
   Button,
   CssBaseline,
   TextField,
-  Link,
   Grid,
   Box,
   Typography,
@@ -17,7 +16,7 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Authentification from '../../Services/Authentification'
 import debounce from 'lodash/debounce'
-import background from '../Images/chaussure.jpeg'
+import background from '../Images/surf.jpeg'
 
 interface UserProfileData {
   phoneNumber: number
@@ -36,7 +35,6 @@ interface CitySuggestion {
 
 export default function ProfileEdit() {
   const [profileData, setProfileData] = useState<UserProfileData>({
-
     phoneNumber: 1,
     userName: '',
     email: '',
@@ -44,26 +42,51 @@ export default function ProfileEdit() {
     city: '',
     yearBirth: 1
   })
+
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await Authentification.getProfile()
-        setProfileData(response.data.user)
+        if (response) {
+          const selectedProfile = response.data.user
+          setProfileData(selectedProfile)
+          setProfileData((prevData: UserProfileData) => ({
+            ...prevData
+          }))
+          setAdresseInput(selectedProfile.address)
+        }
       } catch (error) {
         console.error(error)
       }
     }
     void fetchProfile()
   }, [])
+
   const handleEditClick = () => {
-    setIsEditing(!isEditing) // Inverser l'état de l'édition
+    setIsEditing(!isEditing)
   }
 
   const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('Le nom est requis'),
-    email: Yup.string().required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
+    userName: Yup.string()
+      .transform((value, originalValue) => {
+        console.log('value : ' + value)
+        console.log('user : ' + profileData.userName)
+        if (!value) {
+          value = profileData.userName
+        }
+        return value
+      }).required('Le nom est requis'),
+    email: Yup.string()
+      .transform((value, originalValue) => {
+        console.log('value : ' + value)
+        console.log('user : ' + profileData.email)
+        if (!value) {
+          value = profileData.email
+        }
+        return value
+      }).required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
     phoneNumber: Yup.number()
       .typeError('Le téléphone doit être un nombre')
       .required('Le téléphone est requis'),
@@ -105,25 +128,48 @@ export default function ProfileEdit() {
     }
   }
 
-  const debouncedFetchCitySuggestions = debounce(async (input: string) => fetchCitySuggestions(input), 300)
+  const [adresseInput, setAdresseInput] = useState('')
+  const [cityInput, setCityInput] = useState('')
 
-  const handleCityInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const debouncedFetchCitySuggestions = useCallback(
+    debounce(async (input) => fetchCitySuggestions(input), 300), []
+  )
+
+  const handleCityInputChange = async (e: { target: { value: any } }) => {
     const inputValue = e.target.value
+    setAdresseInput(inputValue)
     await debouncedFetchCitySuggestions(inputValue)
   }
 
   const handleCitySuggestionClick = (suggestion: CitySuggestion) => {
-    // Handle city suggestion click logic here
+    setAdresseInput(suggestion.label)
+    setCityInput(suggestion.city)
+    setCitySuggestions([])
   }
 
   const onSubmit = async (data: UserProfileData) => {
+    const modifyData: UserProfileData = {
+      phoneNumber: profileData.phoneNumber,
+      userName: profileData.userName,
+      email: profileData.email,
+      address: adresseInput,
+      city: cityInput,
+      yearBirth: profileData.yearBirth
+    }
     try {
-      const response = await Authentification.updateUserProfile(data)
+      await Authentification.updateUserProfile(modifyData)
       setMessage('Profil mis à jour avec succès.')
       setIsEditing(false)
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    setIsDisabled(false)
+    setIsEditing(true)
   }
 
   return (
@@ -153,110 +199,168 @@ export default function ProfileEdit() {
           <LockOutlinedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5" sx={{ marginTop: 2, marginBottom: 4 }}>
-          Modification de profil
+          Mes informations
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+        <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <TextField
-                label="Nom d'utilisateur"
-                fullWidth
-                {...register('userName')}
-                onChange={(e) => {
-                  const newValue = e.target.value
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    userName: newValue
-                  }))
-                }}
-                error={!!errors.userName}
-                helperText={errors.userName?.message}
-                value={profileData?.userName ?? ''}
-                disabled={!isEditing}
-              />
+              {!isEditing &&
+                <TextField
+                  fullWidth
+                  label="Nom d'utilisateur"
+                  value={profileData ? profileData.userName : ''}
+                  disabled={true}
+                />
+              }
+              {isEditing &&
+                <TextField
+                  required
+                  fullWidth
+                  id="userName"
+                  label="Nom d'utilisateur"
+                  autoComplete='userName'
+                  value={profileData ? profileData.userName : ''}
+                  {...register('userName')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    setProfileData((prevData: UserProfileData) => ({
+                      ...prevData,
+                      userName: newValue
+                    }))
+                  }}
+                  error={!!errors.userName}
+                  helperText={errors.userName?.message}
+                />
+              }
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Adresse email"
-                fullWidth
-                {...register('email')}
-                onChange={(e) => {
-                  const newValue = e.target.value
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    email: newValue
-                  }))
-                }}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                value={profileData?.email ?? ''}
-                disabled={!isEditing}
-
-              />
+              {!isEditing &&
+                <TextField
+                  fullWidth
+                  label="Adresse email"
+                  value={profileData ? profileData.email : ''}
+                  disabled={true}
+                />
+              }
+              {isEditing &&
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Adresse email"
+                  autoComplete='email'
+                  value={profileData ? profileData.email : ''}
+                  {...register('email')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    setProfileData((prevData: UserProfileData) => ({
+                      ...prevData,
+                      email: newValue
+                    }))
+                  }}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                />
+              }
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Téléphone"
-                fullWidth
-                {...register('phoneNumber')}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target.value) // Convertir en nombre
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    phoneNumber: newValue
-                  }))
-                }}
-                error={!!errors.phoneNumber}
-                helperText={errors.phoneNumber?.message}
-                value={profileData?.phoneNumber ?? ''}
-                disabled={!isEditing}
-
-              />
+              {!isEditing &&
+                <TextField
+                  fullWidth
+                  label="Numéro de téléphone"
+                  value={profileData ? profileData.phoneNumber : ''}
+                  disabled={true}
+                />
+              }
+              {isEditing &&
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Numéro de téléphone"
+                  autoComplete='phoneNumber'
+                  value={profileData ? profileData.phoneNumber : ''}
+                  {...register('phoneNumber')}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value)
+                    setProfileData((prevData: UserProfileData) => ({
+                      ...prevData,
+                      phoneNumber: newValue
+                    }))
+                  }}
+                  error={!!errors.phoneNumber}
+                  helperText={errors.phoneNumber?.message}
+                />
+              }
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Année de naissance"
-                fullWidth
-                {...register('yearBirth')}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target.value) // Convertir en nombre
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    yearBirth: newValue
-                  }))
-                }}
-                error={!!errors.yearBirth}
-                helperText={errors.yearBirth?.message}
-                value={profileData?.yearBirth ?? ''}
-                disabled={!isEditing}
-
-              />
+              {!isEditing &&
+                <TextField
+                  fullWidth
+                  label="Année de naissance"
+                  value={profileData ? profileData.yearBirth : ''}
+                  helperText={errors.yearBirth?.message}
+                  disabled={true}
+                />
+              }
+              {isEditing &&
+                <TextField
+                  required
+                  fullWidth
+                  id="yearBirth"
+                  label="Année de naissance"
+                  autoComplete='yearBirth'
+                  value={profileData ? profileData.yearBirth : ''}
+                  {...register('yearBirth')}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value)
+                    setProfileData((prevData: UserProfileData) => ({
+                      ...prevData,
+                      yearBirth: newValue
+                    }))
+                  }}
+                  error={!!errors.yearBirth}
+                  helperText={errors.yearBirth?.message}
+                />
+              }
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Adresse"
-                fullWidth
-                {...register('address')}
-                onChange={(e) => {
-                  const newValue = e.target.value
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    address: newValue
-                  }))
-                }}
-                error={!!errors.address}
-                helperText={errors.address?.message}
-                value={profileData?.address ?? ''}
-                disabled={!isEditing}
-
-              />
+              {!isEditing &&
+                <TextField
+                  fullWidth
+                  label='Adresse'
+                  value={adresseInput}
+                  disabled={true}
+                />
+              }
+              {isEditing &&
+                <TextField
+                  required
+                  fullWidth
+                  id='address'
+                  label='Adresse'
+                  value={adresseInput}
+                  {...register('address')}
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                  onChange={handleCityInputChange}
+                />
+              }
+              {isEditing && citySuggestions.length > 0 && (
+                <ul>
+                  {citySuggestions.map((suggestion, index) => (
+                    <li key={index} onClick={() => handleCitySuggestionClick(suggestion)}
+                      style={{cursor: 'pointer'}}>{suggestion.label}</li>
+                  ))}
+                </ul>
+              )}
             </Grid>
           </Grid>
           {message && <Typography style={{ color: 'green', marginTop: 2 }}>{message}</Typography>}
           {isEditing &&
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Button type="submit" variant="contained" sx={{ marginTop: 3 }}>
+                <Button type="submit" variant="contained" sx={{ marginTop: 3 }} disabled={isDisabled}>
                   Enregistrer les modifications
                 </Button>
               </Grid>

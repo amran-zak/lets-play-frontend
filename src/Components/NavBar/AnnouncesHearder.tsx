@@ -1,13 +1,10 @@
 import * as React from 'react'
 import {
   Button,
-  Box,
-  Menu,
-  MenuItem,
   Tooltip
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
-import {AddSharp, Groups2, HowToReg, ListSharp, Person, SportsBaseball, SportsTennis} from '@mui/icons-material'
+import {AddSharp, HowToReg, ListSharp, SportsBaseball, SportsTennis} from '@mui/icons-material'
 
 export default function AnnouncesHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
