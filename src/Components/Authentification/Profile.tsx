@@ -152,7 +152,7 @@ export default function ProfileEdit() {
       phoneNumber: profileData.phoneNumber,
       userName: profileData.userName,
       email: profileData.email,
-      address: profileData.address,
+      address: adresseInput,
       city: cityInput,
       yearBirth: profileData.yearBirth
     }
@@ -346,7 +346,7 @@ export default function ProfileEdit() {
                   onChange={handleCityInputChange}
                 />
               }
-              {citySuggestions.length > 0 && (
+              {isEditing && citySuggestions.length > 0 && (
                 <ul>
                   {citySuggestions.map((suggestion, index) => (
                     <li key={index} onClick={() => handleCitySuggestionClick(suggestion)}
