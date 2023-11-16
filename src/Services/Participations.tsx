@@ -14,7 +14,15 @@ class Participations {
   }
 
   async getParticipationsBySportId(sportId: string) {
-    return http.delete('/api/sports/' + sportId + '/participations')
+    return http.get('/api/organizer/sports/' + sportId + '/participations')
+  }
+
+  async acceptParticipation(sportId: string, partcipationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/accept')
+  }
+
+  async rejectParticipation(sportId: string, partcipationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/reject')
   }
 }
 

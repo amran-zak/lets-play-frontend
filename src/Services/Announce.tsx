@@ -17,6 +17,10 @@ class Announce {
   async modify(data: AnnounceData, id: string | undefined) {
     return http.put<AnnounceData[]>(`/api/organizer/sports/${id}`, data)
   }
+
+  async delete(id: string | undefined) {
+    return http.delete<AnnounceData[]>(`/api/organizer/sports/${id}`)
+  }
 }
 
 export default new Announce()

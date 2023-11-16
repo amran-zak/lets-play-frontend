@@ -270,6 +270,9 @@ const AnnouncesLists: React.FC = () => {
                     <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
                   </Grid>
                   <Grid item xs={6}>
+                    <Detail icon={PeopleIcon}>Déjà inscrit: {sport.numberOfPeopleCurrent}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
                     <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
                   </Grid>
                 </Grid>
@@ -306,11 +309,11 @@ const AnnouncesLists: React.FC = () => {
                   </Button>
                 ) : hasParticipated(sport._id ? sport._id : '') ? (
                   <Button size="large" variant="outlined" fullWidth disabled>
-                    Déjà participé
+                    Inscrit
                   </Button>
                 ) : sport.numberOfPeopleMax === sport.numberOfPeopleCurrent ? (
                   <Button size="large" color="primary" variant="contained" fullWidth disabled>
-                    Déja complet
+                    Complet
                   </Button>
                 ) : (
                   <Button size="large" color="primary" variant="contained" fullWidth onClick={() => handleParticipe(sport._id ? sport._id : '')}>

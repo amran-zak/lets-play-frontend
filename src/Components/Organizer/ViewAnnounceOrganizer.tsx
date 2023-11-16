@@ -11,6 +11,7 @@ import { SvgIconProps } from '@mui/material/SvgIcon'
 import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
 import Announce from '../../Services/Announce'
+import DeleteModal from './DeleteModal'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -36,15 +37,10 @@ export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
-  const [, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   const handleEdit = (sportId: string) => {
     navigate(`/annonce/modifier/${sportId}`)
-  }
-
-  const handleDelete = (sport: AnnounceData) => {
-    // Logique pour gérer la suppression
-    console.log('Supprimer', sport)
   }
 
   const handleViewDetails = (sportId: string) => {
@@ -73,15 +69,60 @@ export default function ViewAnnounceOrganizer() {
       })
   }, [])
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [sportToDelete, setSportToDelete] = useState<AnnounceData | null>(null)
+
+  const handleDelete = (sport: AnnounceData) => {
+    setSportToDelete(sport)
+    setDeleteModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setDeleteModalOpen(false)
+  }
+
+  const [errorMessage, setErrorMessage] = useState<boolean>(false)
+  const [successMessage, setSuccessMessage] = useState<boolean>(false)
+  const [disabledButton, setDisabledButton] = useState<boolean>(false)
+
+  const deleteSport = () => {
+    Announce.delete(sportToDelete?._id)
+      .then(response => {
+        setSuccessMessage(true)
+        setErrorMessage(false)
+        setDisabledButton(true)
+        setTimeout(() => {
+          setDeleteModalOpen(false)
+          Announce.getAll()
+            .then(response => {
+              const data = response.data
+              console.log('all : ', data)
+              setSportsList(data.sports)
+              setLoading(false)
+            })
+            .catch(error => {
+              console.error('Error fetching sports:', error)
+              setLoading(false)
+            })
+        }, 2000)
+      })
+      .catch(error => {
+        console.error(error)
+        setDisabledButton(false)
+        setSuccessMessage(false)
+        setErrorMessage(true)
+      })
+  }
+
   return (
     <Grid container spacing={4} style={{
       padding: useTheme().spacing(2),
       marginTop: 50
     }}>
       {sportsList.map((sport, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index} onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
+        <Grid item xs={12} sm={6} md={4} key={index}>
           <Card elevation={3}>
-            <CardActionArea>
+            <CardActionArea onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
               <CardMedia
                 component="img"
                 height="140"
@@ -121,8 +162,7 @@ export default function ViewAnnounceOrganizer() {
               </CardContent>
             </CardActionArea>
             <CardActions style={{justifyContent: 'space-between'}}>
-              <Button size="small" color="primary" variant="contained"
-                onClick={() => handleEdit(sport._id ? sport._id : '')}>
+              <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>
                 Modifier
               </Button>
               <Button size="small" color="error" variant="contained" onClick={() => handleDelete(sport)}>
@@ -132,6 +172,17 @@ export default function ViewAnnounceOrganizer() {
           </Card>
         </Grid>
       ))}
+      <DeleteModal
+        open={deleteModalOpen}
+        onClose={handleCloseModal}
+        onDelete={() => {
+          deleteSport()
+        }}
+        currentSport={sportToDelete}
+        errorMessage={errorMessage}
+        successMessage={successMessage}
+        disabledButton={disabledButton}
+      />
     </Grid>
   )
 }

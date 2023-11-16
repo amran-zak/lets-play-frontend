@@ -1,9 +1,10 @@
 import * as React from 'react'
-import Button from '@mui/material/Button'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+import {
+  Button,
+  Tooltip
+} from '@mui/material'
 import {useNavigate} from 'react-router-dom'
-import {ListSharp} from '@mui/icons-material'
+import {AddSharp, HowToReg, ListSharp, SportsBaseball, SportsTennis} from '@mui/icons-material'
 
 export default function AnnouncesHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -22,31 +23,48 @@ export default function AnnouncesHeader() {
 
   return (
     <div>
-      <Button
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        style={{color: 'black'}}
-      >
-        <ListSharp />
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={() => setAnchorEl(null)} // Fermer le menu en cliquant en dehors
-        MenuListProps={{
-          'aria-labelledby': 'basic-button'
-        }}
-      >
-        {[
-          <MenuItem key="ajouter-annonce" onClick={() => navigateToPage('/annonce/ajouter')}>Ajouter une annonce</MenuItem>,
-          <MenuItem key="-voir-annonces" onClick={() => navigateToPage('/annonces/liste')}>Voir mes annonces</MenuItem>,
-          <MenuItem key="-voir-annonces" onClick={() => navigateToPage('/annonces/partcipations')}>Voir mes partcipations</MenuItem>
-        ]}
-      </Menu>
+      {token ? ([
+        // eslint-disable-next-line react/jsx-key
+        <div>
+          <Tooltip title="Liste des annonces" arrow>
+            <Button
+              id="basic-button"
+              onClick={() => navigateToPage('/liste/annonces')}
+              style={{ color: 'black' }}
+            >
+              <SportsBaseball />
+              <SportsTennis />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Liste de mes inscriptions" arrow>
+            <Button
+              id="basic-button"
+              onClick={() => navigateToPage('/annonces/participations')}
+              style={{color: 'black'}}
+            >
+              <HowToReg />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Liste de mes annonces" arrow>
+            <Button
+              id="basic-button"
+              onClick={() => navigateToPage('/annonces/liste')}
+              style={{color: 'black'}}
+            >
+              <ListSharp />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Ajouter une annonces" arrow>
+            <Button
+              id="basic-button"
+              onClick={() => navigateToPage('/annonce/ajouter')}
+              style={{color: 'black'}}
+            >
+              <AddSharp />
+            </Button>
+          </Tooltip>
+        </div>
+      ]) : ([])}
     </div>
   )
 }
