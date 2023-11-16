@@ -306,11 +306,11 @@ const AnnouncesLists: React.FC = () => {
                   </Button>
                 ) : hasParticipated(sport._id ? sport._id : '') ? (
                   <Button size="large" variant="outlined" fullWidth disabled>
-                    Déjà participé
+                    Inscrit
                   </Button>
                 ) : sport.numberOfPeopleMax === sport.numberOfPeopleCurrent ? (
                   <Button size="large" color="primary" variant="contained" fullWidth disabled>
-                    Déja complet
+                    Complet
                   </Button>
                 ) : (
                   <Button size="large" color="primary" variant="contained" fullWidth onClick={() => handleParticipe(sport._id ? sport._id : '')}>

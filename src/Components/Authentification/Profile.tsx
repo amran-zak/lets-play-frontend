@@ -17,7 +17,7 @@ import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Authentification from '../../Services/Authentification'
 import debounce from 'lodash/debounce'
-import ResultUserData from '../../Types/ResultUserData.types'
+import background from '../Images/chaussure.jpeg'
 
 interface UserProfileData {
   phoneNumber: number
@@ -120,24 +120,44 @@ export default function ProfileEdit() {
     try {
       const response = await Authentification.updateUserProfile(data)
       setMessage('Profil mis à jour avec succès.')
+      setIsEditing(false)
     } catch (error) {
       console.error(error)
     }
   }
 
   return (
-    <Container component="main" maxWidth="md">
+    <Container component="main"
+      sx={{
+        minWidth: '100%',
+        background: `url(${background})`,
+        backgroundSize: 'cover',
+        minHeight: '100vh'
+      }}
+    >
       <CssBaseline />
-      <Paper elevation={3} sx={{ padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
+      <Box maxWidth="md" component={Paper}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          mx: 'auto',
+          p: 5,
+          justifyContent: 'center',
+          minHeight: '100vh'
+        }}
+      >
+        <Avatar sx={{
+          mx: 'auto',
+          bgcolor: 'secondary.main'
+        }}>
+          <LockOutlinedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5" sx={{ marginTop: 2, marginBottom: 4 }}>
           Modification de profil
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Nom d'utilisateur"
                 fullWidth
@@ -155,7 +175,7 @@ export default function ProfileEdit() {
                 disabled={!isEditing}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Adresse email"
                 fullWidth
@@ -174,7 +194,7 @@ export default function ProfileEdit() {
 
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Téléphone"
                 fullWidth
@@ -189,6 +209,25 @@ export default function ProfileEdit() {
                 error={!!errors.phoneNumber}
                 helperText={errors.phoneNumber?.message}
                 value={profileData?.phoneNumber ?? ''}
+                disabled={!isEditing}
+
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Année de naissance"
+                fullWidth
+                {...register('yearBirth')}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value) // Convertir en nombre
+                  setProfileData((prevData: UserProfileData) => ({
+                    ...prevData,
+                    yearBirth: newValue
+                  }))
+                }}
+                error={!!errors.yearBirth}
+                helperText={errors.yearBirth?.message}
+                value={profileData?.yearBirth ?? ''}
                 disabled={!isEditing}
 
               />
@@ -212,42 +251,29 @@ export default function ProfileEdit() {
 
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Année de naissance"
-                fullWidth
-                {...register('yearBirth')}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target.value) // Convertir en nombre
-                  setProfileData((prevData: UserProfileData) => ({
-                    ...prevData,
-                    yearBirth: newValue
-                  }))
-                }}
-                error={!!errors.yearBirth}
-                helperText={errors.yearBirth?.message}
-                value={profileData?.yearBirth ?? ''}
-                disabled={!isEditing}
-
-              />
-            </Grid>
           </Grid>
           {message && <Typography style={{ color: 'green', marginTop: 2 }}>{message}</Typography>}
-          <Button type="submit" fullWidth variant="contained" sx={{ marginTop: 3 }}>
-            Enregistrer les modifications
-          </Button>
-          <Button fullWidth variant="contained" sx={{ marginTop: 3 }} onClick={handleEditClick}>
-              Modifier
-          </Button>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: 2 }}>
-            <Grid item>
-              <Link href="/profil" variant="body2">
-                Annuler
-              </Link>
+          {isEditing &&
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Button type="submit" variant="contained" sx={{ marginTop: 3 }}>
+                  Enregistrer les modifications
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="error" sx={{ marginTop: 3 }} onClick={() => setIsEditing(false)}>
+                  Annuler
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          }
+          {!isEditing &&
+            <Button fullWidth variant="contained" sx={{ marginTop: 3 }} onClick={handleEditClick}>
+                Modifier
+            </Button>
+          }
         </form>
-      </Paper>
+      </Box>
     </Container>
   )
 }

@@ -10,7 +10,7 @@ const HeroSection = () => {
 
   const navigate = useNavigate()
   const handleClick = () => {
-    navigate('/liste_annonces')
+    navigate('/liste/annonces')
   }
 
   const [actualites, setActualites] = useState<Array<{ titre: string, lien: string, date: string }>>([])

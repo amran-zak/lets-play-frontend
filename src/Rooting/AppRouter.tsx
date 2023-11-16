@@ -26,7 +26,7 @@ export default function AppRouter(): JSX.Element {
           <Header/>
           <Routes>
             <Route path='/' element={<HomePage/>}/>
-            <Route path='/liste_annonces' element={<AnnouncesLists/>}/>
+            <Route path='/liste/annonces' element={<AnnouncesLists/>}/>
             <Route path='/connexion' element={<Login/>}/>
             <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
             <Route path='/inscription' element={<SignUp/>}/>
@@ -36,7 +36,7 @@ export default function AppRouter(): JSX.Element {
               <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
               <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
               <Route path='/profile' element={<ProfileEdit/>}/>
-              <Route path='/annonces/partcipations' element={<AnnouncesListsParticipant/>}/>
+              <Route path='/annonces/participations' element={<AnnouncesListsParticipant/>}/>
               <Route path='/participations/:sportId' element={<AnnounceDetails/>}/>
             </Route>
           </Routes>
