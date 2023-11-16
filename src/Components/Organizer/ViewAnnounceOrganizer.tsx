@@ -93,6 +93,17 @@ export default function ViewAnnounceOrganizer() {
         setDisabledButton(true)
         setTimeout(() => {
           setDeleteModalOpen(false)
+          Announce.getAll()
+            .then(response => {
+              const data = response.data
+              console.log('all : ', data)
+              setSportsList(data.sports)
+              setLoading(false)
+            })
+            .catch(error => {
+              console.error('Error fetching sports:', error)
+              setLoading(false)
+            })
         }, 2000)
       })
       .catch(error => {
