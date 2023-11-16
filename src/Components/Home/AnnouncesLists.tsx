@@ -270,6 +270,9 @@ const AnnouncesLists: React.FC = () => {
                     <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
                   </Grid>
                   <Grid item xs={6}>
+                    <Detail icon={PeopleIcon}>Déjà inscrit: {sport.numberOfPeopleCurrent}</Detail>
+                  </Grid>
+                  <Grid item xs={6}>
                     <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
                   </Grid>
                 </Grid>

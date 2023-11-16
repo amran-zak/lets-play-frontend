@@ -37,7 +37,7 @@ export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()
 
   const [sportsList, setSportsList] = useState<AnnounceData[]>([])
-  const [, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   const handleEdit = (sportId: string) => {
     navigate(`/annonce/modifier/${sportId}`)
@@ -67,7 +67,7 @@ export default function ViewAnnounceOrganizer() {
         console.error('Error fetching sports:', error)
         setLoading(false)
       })
-  })
+  }, [])
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [sportToDelete, setSportToDelete] = useState<AnnounceData | null>(null)

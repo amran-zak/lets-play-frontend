@@ -39,7 +39,7 @@ function Header() {
           </Typography>
           <Box sx={{flexGrow: 1}}/>
           <AnnouncesHeader />
-          <Box sx={{
+          {/* <Box sx={{
             display: {
               xs: 'none',
               md: 'flex'
@@ -54,7 +54,7 @@ function Header() {
                 <NotificationsIcon/>
               </Badge>
             </IconButton>
-          </Box>
+          </Box> */}
           <ProfileHeader />
           <PopUp />
         </Toolbar>
