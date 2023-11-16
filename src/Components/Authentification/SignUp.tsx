@@ -55,11 +55,7 @@ export default function SignUp() {
       .required('L\'année de naissance est requise')
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: {errors}
-  } = useForm<User>({
+  const { register, handleSubmit, formState: {errors} } = useForm<User>({
     resolver: yupResolver(validationSchema),
     criteriaMode: 'all'
   })
@@ -148,6 +144,12 @@ export default function SignUp() {
       })
   }
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    setIsDisabled(false)
+  }
+
   return (
     <Container component="main"
       sx={{
@@ -177,7 +179,7 @@ export default function SignUp() {
         <Typography component='h1' variant='h5' sx={{ marginBottom: 5}}>
           Inscription
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -350,10 +352,12 @@ export default function SignUp() {
                 {message}
               </Typography>
           }
-          <Button type='submit' fullWidth variant='contained' sx={{
-            marginTop: 3,
-            marginBottom: 2
-          }}>
+          <Button type='submit' fullWidth variant='contained' disabled={isDisabled}
+            sx={{
+              marginTop: 3,
+              marginBottom: 2
+            }}
+          >
             Inscription
           </Button>
           <Grid container justifyContent='flex-end'>

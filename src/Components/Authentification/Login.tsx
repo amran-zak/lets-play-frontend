@@ -40,11 +40,7 @@ export default function Login(): JSX.Element {
     password: Yup.string().required('Le mot de passe est requis').min(6, 'Le mot de passe doit contenir au moins 6 caractères')
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: {errors}
-  } = useForm<LoginData>({
+  const { register, handleSubmit, formState: {errors} } = useForm<LoginData>({
     resolver: yupResolver(validationSchema),
     criteriaMode: 'all'
   })
@@ -76,6 +72,12 @@ export default function Login(): JSX.Element {
       console.error(error)
       setErrorMessage(true)
     }
+  }
+
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    setIsDisabled(false)
   }
 
   return (
@@ -126,7 +128,7 @@ export default function Login(): JSX.Element {
           <Typography component='h1' variant='h5' sx={{ marginBottom: 5}}>
             Connexion
           </Typography>
-          <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
+          <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
             <TextField
               margin='normal'
               required
@@ -199,6 +201,7 @@ export default function Login(): JSX.Element {
                 mt: 3,
                 mb: 2
               }}
+              disabled={isDisabled}
             >
               Connexion
             </Button>

@@ -10,13 +10,14 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import {useForm} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
+import { useNavigate } from 'react-router-dom'
+import {useState} from 'react'
 import * as Yup from 'yup'
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import background from '../Images/badminton.jpeg'
 import Authentification from '../../Services/Authentification'
 import NewpasswordData from '../../Types/NewPassword.types'
-import LoginData from '../../Types/Login.types'
 
 interface Newpassword {
   email: string
@@ -55,6 +56,8 @@ export default function NewPassword(): JSX.Element {
     }
   }
 
+  const navigate = useNavigate()
+
   const onSubmit = (data: Newpassword) => {
     const loginData: NewpasswordData = {
       email: data.email,
@@ -66,11 +69,20 @@ export default function NewPassword(): JSX.Element {
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)
+          setTimeout(() => {
+            navigate('/connexion')
+          }, 2000)
         }
       })
       .catch((error: Error) => {
         console.error(error)
       })
+  }
+
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    setIsDisabled(false)
   }
 
   return (
@@ -114,7 +126,7 @@ export default function NewPassword(): JSX.Element {
           <Typography component="h1" variant="h5" sx={{ marginBottom: 5}}>
             Nouveau mot de passe
           </Typography>
-          <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
+          <form style={{width: '100%'}} onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
             <TextField
               margin="normal"
               required
@@ -224,6 +236,7 @@ export default function NewPassword(): JSX.Element {
               type="submit"
               fullWidth
               variant="contained"
+              disabled={isDisabled}
               sx={{
                 mt: 3,
                 mb: 2

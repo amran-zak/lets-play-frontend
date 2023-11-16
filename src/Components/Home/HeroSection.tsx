@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Grid, Typography, Button, useMediaQuery, Paper } from '@mui/material'
+import { Grid, Typography, Button, useMediaQuery, Paper, Card } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import moment from 'moment-timezone'
 import homPageImage from '../../Components/Images/football_homepage.jpeg'
@@ -62,7 +62,7 @@ const HeroSection = () => {
         component='main'
         sx={{
           position: 'relative',
-          height: '700px',
+          height: '100vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -80,15 +80,17 @@ const HeroSection = () => {
         }}
       >
         <Grid item xs={12}>
-          <Typography variant={matchesSM ? 'h4' : 'h2'} component="h1" gutterBottom>
-          Trouvez l événement sportif parfait pour vous
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 4 }}>
-          Rejoignez une communauté de passionnés et participez à des expériences sportives inoubliables
-          </Typography>
-          <Button variant="contained" color="primary" size="large" onClick={() => handleClick()}>
-          Découvrez les annonces
-          </Button>
+          <Card sx={{ m: 10, p: 5, backgroundColor: 'rgba(0, 0, 0, 0.5)', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)' }}>
+            <Typography variant={matchesSM ? 'h4' : 'h2'} component="h1" gutterBottom color='white'>
+              Trouvez l&rsquo;événement sportif parfait pour vous
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 4 }} color='white'>
+              Rejoignez une communauté de passionnés et participez à des expériences sportives inoubliables
+            </Typography>
+            <Button variant="contained" color="primary" size="large" onClick={() => handleClick()}>
+              Découvrez les annonces
+            </Button>
+          </Card>
         </Grid>
       </Grid>
 
