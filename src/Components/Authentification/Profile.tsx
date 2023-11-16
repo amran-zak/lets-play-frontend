@@ -268,7 +268,7 @@ export default function ProfileEdit() {
                 <TextField
                   fullWidth
                   label="Numéro de téléphone"
-                  value={profileData ? profileData.phoneNumber : ''}
+                  value={profileData ? '+33 0' + profileData.phoneNumber : ''}
                   disabled={true}
                 />
               }
@@ -279,10 +279,10 @@ export default function ProfileEdit() {
                   id="phoneNumber"
                   label="Numéro de téléphone"
                   autoComplete='phoneNumber'
-                  value={profileData ? profileData.phoneNumber : ''}
+                  value={profileData ? '+33 0' + profileData.phoneNumber : ''}
                   {...register('phoneNumber')}
                   onChange={(e) => {
-                    const newValue = parseInt(e.target.value)
+                    const newValue = parseInt(e.target.value.replace('+33 0', ''))
                     setProfileData((prevData: UserProfileData) => ({
                       ...prevData,
                       phoneNumber: newValue

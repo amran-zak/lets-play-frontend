@@ -297,7 +297,7 @@ const AnnouncesLists: React.FC = () => {
                 <Detail icon={PeopleIcon}>Organisateur: {sport.organizer?.userName}</Detail>
                 {/* Add masked phoneNumber */}
                 <Detail icon={Phone}>
-                Téléphone: {`${sport.organizer?.phoneNumber ? sport.organizer.phoneNumber : '06'}**-***-****`}
+                Téléphone: {`${sport.organizer?.phoneNumber ? '+33 0' + sport.organizer.phoneNumber : ''}* ** ** **`}
                 </Detail>
               </CardContent>
             </CardActionArea>
