@@ -16,6 +16,14 @@ class Participations {
   async getParticipationsBySportId(sportId: string) {
     return http.get('/api/organizer/sports/' + sportId + '/participations')
   }
+
+  async acceptParticipation(sportId: string, partcipationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/accept')
+  }
+
+  async rejectParticipation(sportId: string, partcipationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/reject')
+  }
 }
 
 export default new Participations()

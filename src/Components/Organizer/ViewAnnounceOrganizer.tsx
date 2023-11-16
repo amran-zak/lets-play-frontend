@@ -149,7 +149,7 @@ export default function ViewAnnounceOrganizer() {
                 <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
                 <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
               </CardContent>
-            </CardActionArea>c
+            </CardActionArea>
             <CardActions style={{justifyContent: 'space-between'}}>
               <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>
                 Modifier
