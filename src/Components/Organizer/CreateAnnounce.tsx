@@ -7,8 +7,11 @@ import {
   Grid,
   Box,
   Typography,
-  Paper, debounce
+  Paper,
+  debounce,
+  Container
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import Map, {Marker, NavigationControl} from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
@@ -19,6 +22,7 @@ import AnnounceData from '../../Types/Announce.types'
 import {useCallback, useState} from 'react'
 import SportsList from '../SportsList'
 import Announce from '../../Services/Announce'
+import background from '../Images/montagne.jpeg'
 
 interface CitySuggestion {
   id: number
@@ -119,6 +123,8 @@ export default function CreateAnnounce() {
   const [cityInput, setCityInput] = useState('')
   const [latitudeInput, setLatitudeInput] = useState(48.866667)
   const [longitudeInput, setLongitudeInput] = useState(2.333333)
+  const [zoomValue, setZoomValue] = useState(4)
+
   const debouncedFetchCitySuggestions = useCallback(
     debounce(async (input) => fetchCitySuggestions(input), 300), []
   )
@@ -134,6 +140,7 @@ export default function CreateAnnounce() {
     setCityInput(suggestion.city)
     setLatitudeInput(suggestion.latitude)
     setLongitudeInput(suggestion.longitude)
+    setZoomValue(6)
     setCitySuggestions([])
   }
 
@@ -145,6 +152,7 @@ export default function CreateAnnounce() {
 
   const [errorMessage, setErrorMessage] = useState<boolean>(false)
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const onSubmit = async (data: AnnounceData) => {
     const addData: AnnounceData = {
@@ -174,6 +182,9 @@ export default function CreateAnnounce() {
           await Announce.create(addData)
           setSuccessMessage(true)
           setErrorMessage(false)
+          setTimeout(() => {
+            navigate('/annonces/liste')
+          }, 2000)
         }
       }
     } catch (error) {
@@ -183,196 +194,218 @@ export default function CreateAnnounce() {
 
   const token = 'pk.eyJ1IjoiZ2lzZmVlZGJhY2siLCJhIjoiY2l2eDJndmtjMDFkeTJvcHM4YTNheXZtNyJ9.-HNJNch_WwLIAifPgzW2Ig'
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    setIsDisabled(false)
+    setSuccessMessage(false)
+    setErrorMessage(false)
+  }
+
   return (
-    <Grid
-      container
-      component='main'
+    <Container component="main"
       sx={{
-        overflowY: 'scroll',
-        height: '100vh'
+        minWidth: '100%',
+        background: `url(${background})`,
+        backgroundSize: 'cover',
+        minHeight: '100vh'
       }}
     >
-      <CssBaseline/>
-      <Grid item xs={12} sm={6}>
-        <Map
-          initialViewState={{
-            longitude: longitudeInput,
-            latitude: latitudeInput,
-            zoom: 5
-          }}
-          mapboxAccessToken={token}
-          style={{
-            width: '100%',
-            height: '80%',
-            top: '10%'
-          }}
-          mapStyle='https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
-        >
-          <NavigationControl/>
-          <Marker longitude={longitudeInput} latitude={latitudeInput} style={{color: 'white'}}/>
-        </Map>
-      </Grid>
-      <Grid item xs={12} sm={6} component={Paper} elevation={6} square sx={{
-        my: 'auto',
-        boxShadow: 'none'
-      }}>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
-          <Avatar sx={{
-            mx: 'auto',
-            bgcolor: 'secondary.main'
+      <CssBaseline />
+      <Box maxWidth="lg" component={Paper}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          mx: 'auto',
+          p: 5,
+          justifyContent: 'center',
+          minHeight: '100vh'
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Map
+              initialViewState={{
+                longitude: longitudeInput,
+                latitude: latitudeInput,
+                zoom: zoomValue
+              }}
+              mapboxAccessToken={token}
+              style={{
+                width: '100%',
+                height: '80%',
+                top: '10%'
+              }}
+              mapStyle='https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
+            >
+              <NavigationControl/>
+              <Marker longitude={longitudeInput} latitude={latitudeInput} style={{color: 'white'}}/>
+            </Map>
+          </Grid>
+          <Grid item xs={12} sm={6} component={Paper} elevation={6} square sx={{
+            my: 'auto',
+            boxShadow: 'none'
           }}>
-            <LockOutlinedIcon/>
-          </Avatar>
-          <Typography component='h1' variant='h5' sx={{marginBottom: 5}}>
-            Créer un évènement
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <SportsList onSportChange={handleSportChange} defaultValue={selectedSport}/>
-                {selectedSport === '' && <Typography variant="caption" display="block" gutterBottom>Ce champ est requis</Typography>}
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='price'
-                  type='number'
-                  label='Prix'
-                  autoComplete='price'
-                  {...register('price')}
-                  error={!!errors.price}
-                  helperText={errors.price?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  id='date'
-                  label='Date'
-                  autoComplete='date'
-                  type='date'
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  {...register('date')}
-                  error={!!errors.date}
-                  helperText={errors.date?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  id='startTime'
-                  label='Horaire début'
-                  autoComplete='startTime'
-                  {...register('startTime')}
-                  error={!!errors.startTime}
-                  helperText={errors.startTime?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  id='endTime'
-                  label='Horaire de fin'
-                  autoComplete='endTime'
-                  {...register('endTime')}
-                  error={!!errors.endTime}
-                  helperText={errors.endTime?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id='address'
-                  label='Lieux'
-                  value={adresseInput}
-                  {...register('address')}
-                  error={!!errors.address}
-                  helperText={errors.address?.message}
-                  onChange={handleCityInputChange}
-                />
-                {citySuggestions.length > 0 && (
-                  <ul>
-                    {citySuggestions.map((suggestion, index) => (
-                      <li key={index} onClick={() => handleCitySuggestionClick(suggestion)}
-                        style={{cursor: 'pointer'}}>{suggestion.label}</li>
-                    ))}
-                  </ul>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='numberOfPeopleMax'
-                  type='number'
-                  label='Nombre maximal de participants'
-                  autoComplete='numberOfPeopleMax'
-                  {...register('numberOfPeopleMax')}
-                  error={!!errors.numberOfPeopleMax}
-                  helperText={errors.numberOfPeopleMax?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='ageMin'
-                  type='number'
-                  label='Âge minimal requis'
-                  autoComplete='ageMin'
-                  {...register('ageMin')}
-                  error={!!errors.ageMin}
-                  helperText={errors.ageMin?.message}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='ageMax'
-                  type='number'
-                  label='Âge maximal'
-                  autoComplete='ageMax'
-                  {...register('ageMax')}
-                  error={!!errors.ageMax}
-                  helperText={errors.ageMax?.message}
-                />
-              </Grid>
-            </Grid>
-            {errorMessage &&
-              <Typography color='red'>
-                L&apos;annonce existe déjà
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
+              <Avatar sx={{
+                mx: 'auto',
+                bgcolor: 'secondary.main'
+              }}>
+                <LockOutlinedIcon/>
+              </Avatar>
+              <Typography component='h1' variant='h5' sx={{marginBottom: 5}}>
+                Créer un évènement
               </Typography>
-            }
-            {successMessage &&
-              <Typography color='secondary.main'>
-                L&apos;annonce est ajouté avec succès
-              </Typography>
-            }
-            <Button type='submit' fullWidth variant='contained' sx={{
-              marginTop: 3,
-              marginBottom: 2
-            }}>
-              Ajouter
-            </Button>
-          </form>
-        </Box>
-      </Grid>
-    </Grid>
+              <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <SportsList onSportChange={handleSportChange} defaultValue={selectedSport}/>
+                    {selectedSport === '' && <Typography variant="caption" display="block" gutterBottom>Ce champ est requis</Typography>}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='price'
+                      type='number'
+                      label='Prix'
+                      autoComplete='price'
+                      {...register('price')}
+                      error={!!errors.price}
+                      helperText={errors.price?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='date'
+                      label='Date'
+                      autoComplete='date'
+                      type='date'
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      {...register('date')}
+                      error={!!errors.date}
+                      helperText={errors.date?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='startTime'
+                      label='Horaire début'
+                      autoComplete='startTime'
+                      {...register('startTime')}
+                      error={!!errors.startTime}
+                      helperText={errors.startTime?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='endTime'
+                      label='Horaire de fin'
+                      autoComplete='endTime'
+                      {...register('endTime')}
+                      error={!!errors.endTime}
+                      helperText={errors.endTime?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='address'
+                      label='Lieux'
+                      value={adresseInput}
+                      {...register('address')}
+                      error={!!errors.address}
+                      helperText={errors.address?.message}
+                      onChange={handleCityInputChange}
+                    />
+                    {citySuggestions.length > 0 && (
+                      <ul>
+                        {citySuggestions.map((suggestion, index) => (
+                          <li key={index} onClick={() => handleCitySuggestionClick(suggestion)}
+                            style={{cursor: 'pointer'}}>{suggestion.label}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='numberOfPeopleMax'
+                      type='number'
+                      label='Nombre maximal de participants'
+                      autoComplete='numberOfPeopleMax'
+                      {...register('numberOfPeopleMax')}
+                      error={!!errors.numberOfPeopleMax}
+                      helperText={errors.numberOfPeopleMax?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='ageMin'
+                      type='number'
+                      label='Âge minimal requis'
+                      autoComplete='ageMin'
+                      {...register('ageMin')}
+                      error={!!errors.ageMin}
+                      helperText={errors.ageMin?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='ageMax'
+                      type='number'
+                      label='Âge maximal'
+                      autoComplete='ageMax'
+                      {...register('ageMax')}
+                      error={!!errors.ageMax}
+                      helperText={errors.ageMax?.message}
+                    />
+                  </Grid>
+                </Grid>
+                {errorMessage &&
+                  <Typography color='red'>
+                    L&apos;annonce existe déjà
+                  </Typography>
+                }
+                {successMessage &&
+                  <Typography color='secondary.main'>
+                    L&apos;annonce est ajouté avec succès
+                  </Typography>
+                }
+                <Button type='submit' fullWidth variant='contained' disabled={isDisabled}
+                  sx={{
+                    marginTop: 3,
+                    marginBottom: 2
+                  }}>
+                  Ajouter
+                </Button>
+              </form>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   )
 }
