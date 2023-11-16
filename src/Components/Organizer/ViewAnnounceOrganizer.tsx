@@ -11,6 +11,7 @@ import { SvgIconProps } from '@mui/material/SvgIcon'
 import AnnounceData from '../../Types/Announce.types'
 import background from '../Images/image.jpeg'
 import Announce from '../../Services/Announce'
+import DeleteModal from './DeleteModal'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -42,11 +43,6 @@ export default function ViewAnnounceOrganizer() {
     navigate(`/annonce/modifier/${sportId}`)
   }
 
-  const handleDelete = (sport: AnnounceData) => {
-    // Logique pour gérer la suppression
-    console.log('Supprimer', sport)
-  }
-
   const handleViewDetails = (sportId: string) => {
     // Logique pour gérer la suppression
     console.log(sportId)
@@ -72,6 +68,18 @@ export default function ViewAnnounceOrganizer() {
         setLoading(false)
       })
   }, [])
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [sportToDelete, setSportToDelete] = useState<AnnounceData | null>(null)
+
+  const handleDelete = (sport: AnnounceData) => {
+    setSportToDelete(sport)
+    setDeleteModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setDeleteModalOpen(false)
+  }
 
   return (
     <Grid container spacing={4} style={{
@@ -132,6 +140,16 @@ export default function ViewAnnounceOrganizer() {
           </Card>
         </Grid>
       ))}
+      <DeleteModal
+        open={deleteModalOpen}
+        onClose={handleCloseModal}
+        onDelete={() => {
+          // Logique pour gérer la suppression ici
+          console.log('Supprimer', sportToDelete)
+          // Fermez la modale après la suppression
+          setDeleteModalOpen(false)
+        }}
+      />
     </Grid>
   )
 }
