@@ -67,7 +67,7 @@ export default function ViewAnnounceOrganizer() {
         console.error('Error fetching sports:', error)
         setLoading(false)
       })
-  }, [])
+  })
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [sportToDelete, setSportToDelete] = useState<AnnounceData | null>(null)
@@ -79,6 +79,28 @@ export default function ViewAnnounceOrganizer() {
 
   const handleCloseModal = () => {
     setDeleteModalOpen(false)
+  }
+
+  const [errorMessage, setErrorMessage] = useState<boolean>(false)
+  const [successMessage, setSuccessMessage] = useState<boolean>(false)
+  const [disabledButton, setDisabledButton] = useState<boolean>(false)
+
+  const deleteSport = () => {
+    Announce.delete(sportToDelete?._id)
+      .then(response => {
+        setSuccessMessage(true)
+        setErrorMessage(false)
+        setDisabledButton(true)
+        setTimeout(() => {
+          setDeleteModalOpen(false)
+        }, 2000)
+      })
+      .catch(error => {
+        console.error(error)
+        setDisabledButton(false)
+        setSuccessMessage(false)
+        setErrorMessage(true)
+      })
   }
 
   return (
@@ -129,8 +151,7 @@ export default function ViewAnnounceOrganizer() {
               </CardContent>
             </CardActionArea>c
             <CardActions style={{justifyContent: 'space-between'}}>
-              <Button size="small" color="primary" variant="contained"
-                onClick={() => handleEdit(sport._id ? sport._id : '')}>
+              <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>
                 Modifier
               </Button>
               <Button size="small" color="error" variant="contained" onClick={() => handleDelete(sport)}>
@@ -144,11 +165,12 @@ export default function ViewAnnounceOrganizer() {
         open={deleteModalOpen}
         onClose={handleCloseModal}
         onDelete={() => {
-          // Logique pour gérer la suppression ici
-          console.log('Supprimer', sportToDelete)
-          // Fermez la modale après la suppression
-          setDeleteModalOpen(false)
+          deleteSport()
         }}
+        currentSport={sportToDelete}
+        errorMessage={errorMessage}
+        successMessage={successMessage}
+        disabledButton={disabledButton}
       />
     </Grid>
   )

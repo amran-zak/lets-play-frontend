@@ -105,7 +105,20 @@ const AnnounceDetails: React.FC = () => {
                   {participant.participant.userName}
                 </Typography>
                 <Typography color="textSecondary">
-                  État: {participant.etat}
+                  Etat de la demande: {(() => {
+                    switch (participant.etat) { // eslint-disable-next-line indent
+                      // eslint-disable-next-line indent
+                      case 'accepted': return 'Acceptée'
+                      // eslint-disable-next-line indent
+                      case 'refused': return 'Refusée'
+                      // eslint-disable-next-line indent
+                      case 'pending': return 'En attente'
+                      // eslint-disable-next-line indent
+                      case 'expired': return 'Expirée'
+                      // eslint-disable-next-line indent
+                      default: return participant.etat
+                    }
+                  })()}
                 </Typography>
                 <Button
                   variant="contained"
