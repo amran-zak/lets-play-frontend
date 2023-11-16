@@ -106,6 +106,7 @@ const AnnouncesLists: React.FC = () => {
       </Typography>
     </Box>
   )
+  console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzz')
   return (
     <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 50 }}>
       {sportsList.map((sport, index) => (

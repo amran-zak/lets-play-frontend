@@ -35,7 +35,7 @@ const AnnounceDetails: React.FC = () => {
     try {
       const response = await AnnouncesService.getById(sportId)
       console.log(response)
-      setAnnounce(response.data)
+      setAnnounce(response.data.sport)
     } catch (error) {
       console.error('Erreur lors du chargement des participants', error)
     }
@@ -48,7 +48,7 @@ const AnnounceDetails: React.FC = () => {
   const handleAccept = async (participantId: string) => {
     try {
       // Envoyez une requête pour accepter la participation avec participantId
-      await axios.put(`/api/participations/${participantId}/accept`)
+      await ParticipationsService.acceptParticipation(sportId, participantId)
       // Mettez à jour l'état des participants localement
       setParticipants((prevParticipants) =>
         prevParticipants.map((participant) =>
@@ -65,8 +65,7 @@ const AnnounceDetails: React.FC = () => {
   const handleReject = async (participantId: string) => {
     try {
       // Envoyez une requête pour refuser la participation avec participantId
-      await axios.put(`/api/participations/${participantId}/reject`)
-      // Mettez à jour l'état des participants localement
+      await ParticipationsService.rejectParticipation(sportId, participantId)
       setParticipants((prevParticipants) =>
         prevParticipants.map((participant) =>
           participant._id === participantId
@@ -80,7 +79,7 @@ const AnnounceDetails: React.FC = () => {
   }
 
   return announce ? (
-    <Container>
+    <Container style={{ marginTop: 60 }}>
       <Card>
         <CardContent>
           <Typography variant="h5" component="div">
