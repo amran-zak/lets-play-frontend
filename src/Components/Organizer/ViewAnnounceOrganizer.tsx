@@ -9,9 +9,9 @@ import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import { SvgIconProps } from '@mui/material/SvgIcon'
 import AnnounceData from '../../Types/Announce.types'
-import background from '../Images/image.jpeg'
 import Announce from '../../Services/Announce'
 import DeleteModal from './DeleteModal'
+import {sportsListMapping, SportsListMappingKey} from '../../Types/SportListImagePath'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -126,8 +126,8 @@ export default function ViewAnnounceOrganizer() {
               <CardMedia
                 component="img"
                 height="140"
-                image={background}
-                alt={sport.sport}
+                src={require(`../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}.jpeg`)}
+                alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>

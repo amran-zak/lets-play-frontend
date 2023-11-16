@@ -1,0 +1,33 @@
+export const sportsListMapping = {
+  Football: 'football',
+  Basketball: 'basketball',
+  Tennis: 'tennis',
+  Golf: 'golf',
+  Natation: 'natation',
+  Athlétisme: 'athletisme',
+  Cyclisme: 'cyclisme',
+  'Volley-ball': 'volley-ball',
+  Baseball: 'baseball',
+  Boxe: 'boxe',
+  Escalade: 'escalade',
+  'Hockey sur glace': 'hockey-sur-glace',
+  Rugby: 'rugby',
+  Badminton: 'badminton',
+  'Course automobile': 'course-automobile',
+  'Ski alpin': 'ski-alpin',
+  Escrime: 'escrime',
+  Gymnastique: 'gymnastique',
+  Musculation: 'musculation',
+  Judo: 'judo',
+  Surf: 'surf',
+  'Planche à voile': 'planche-voile',
+  'Water-polo': 'water-polo',
+  'Tir à l\'arc': 'tir-arc',
+  Haltérophilie: 'halterophilie',
+  Handball: 'handball',
+  Karaté: 'karate',
+  Taekwondo: 'taekwondo',
+  Wrestling: 'wrestling'
+} as const
+
+export type SportsListMappingKey = keyof typeof sportsListMapping

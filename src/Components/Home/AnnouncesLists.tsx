@@ -22,12 +22,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
 import { SvgIconProps } from '@mui/material/SvgIcon'
 import AnnounceData from '../../Types/Announce.types'
-import background from '../Images/image.jpeg'
 import publicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
 import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import Authentification from '../../Services/Authentification'
 import UserProfileData from '../../Types/ProfileModif.types'
+import {sportsListMapping, SportsListMappingKey} from '../../Types/SportListImagePath'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -258,8 +258,8 @@ const AnnouncesLists: React.FC = () => {
               <CardMedia
                 component="img"
                 height="140"
-                image={background}
-                alt={sport.sport}
+                src={require(`../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}.jpeg`)}
+                alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>

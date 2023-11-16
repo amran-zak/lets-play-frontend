@@ -13,7 +13,7 @@ import { SvgIconProps } from '@mui/material/SvgIcon'
 import ParticipationsService from '../../Services/Participations'
 import AnnounceData from '../../Types/Announce.types'
 import PopulateParticipationData from '../../Types/PopulateParticipations.types'
-import background from '../Images/image.jpeg'
+import {sportsListMapping, SportsListMappingKey} from '../../Types/SportListImagePath'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -66,8 +66,8 @@ const AnnouncesListsParticipant: React.FC = () => {
               <CardMedia
                 component="img"
                 height="140"
-                image={background}
-                alt={participation.sport.sport}
+                src={require(`../Images/sports_images/${sportsListMapping[participation?.sport?.sport as SportsListMappingKey]}.jpeg`)}
+                alt={`Photo du sport ${sportsListMapping[participation?.sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div" style={{ color: theme.palette.primary.main }}>
