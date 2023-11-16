@@ -386,7 +386,13 @@ export default function ModifyAnnounce() {
                       value={announceData ? announceData.startTime : ''}
                       {...register('startTime')}
                       onChange={(e) => {
-                        const newValue = e.target.value
+                        let newValue = e.target.value
+                        // Supprimer les caractères non numériques
+                        newValue = newValue.replace(/\D/g, '')
+                        // Ajouter automatiquement les deux-points après les deux premiers caractères
+                        if (newValue.length > 2 && newValue.length <= 4) {
+                          newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
+                        }
                         setAnnounceData((prevData: AnnounceData) => ({
                           ...prevData,
                           startTime: newValue
@@ -406,7 +412,13 @@ export default function ModifyAnnounce() {
                       value={announceData ? announceData.endTime : ''}
                       {...register('endTime')}
                       onChange={(e) => {
-                        const newValue = e.target.value
+                        let newValue = e.target.value
+                        // Supprimer les caractères non numériques
+                        newValue = newValue.replace(/\D/g, '')
+                        // Ajouter automatiquement les deux-points après les deux premiers caractères
+                        if (newValue.length > 2 && newValue.length <= 4) {
+                          newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
+                        }
                         setAnnounceData((prevData: AnnounceData) => ({
                           ...prevData,
                           endTime: newValue

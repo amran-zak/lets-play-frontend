@@ -153,14 +153,16 @@ export default function CreateAnnounce() {
   const [errorMessage, setErrorMessage] = useState<boolean>(false)
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [startTimeInput, setStartTimeInput] = useState('')
+  const [endTimeInput, setEndTimeInput] = useState('')
 
   const onSubmit = async (data: AnnounceData) => {
     const addData: AnnounceData = {
       sport: selectedSport,
       numberOfPeopleMax: data.numberOfPeopleMax,
       date: data.date,
-      startTime: `${data.date}T${data.startTime}:00.000Z`,
-      endTime: `${data.date}T${data.endTime}:00.000Z`,
+      startTime: `${data.date}T${startTimeInput}:00.000Z`,
+      endTime: `${data.date}T${endTimeInput}:00.000Z`,
       address: adresseInput,
       city: cityInput,
       ageMin: data.ageMin,
@@ -307,6 +309,17 @@ export default function CreateAnnounce() {
                       label='Horaire début'
                       autoComplete='startTime'
                       {...register('startTime')}
+                      value={startTimeInput}
+                      onChange={(e) => {
+                        let newValue = e.target.value
+                        // Supprimer les caractères non numériques
+                        newValue = newValue.replace(/\D/g, '')
+                        // Ajouter automatiquement les deux-points après les deux premiers caractères
+                        if (newValue.length > 2 && newValue.length <= 4) {
+                          newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
+                        }
+                        setStartTimeInput(newValue)
+                      }}
                       error={!!errors.startTime}
                       helperText={errors.startTime?.message}
                     />
@@ -319,6 +332,17 @@ export default function CreateAnnounce() {
                       label='Horaire de fin'
                       autoComplete='endTime'
                       {...register('endTime')}
+                      value={endTimeInput}
+                      onChange={(e) => {
+                        let newValue = e.target.value
+                        // Supprimer les caractères non numériques
+                        newValue = newValue.replace(/\D/g, '')
+                        // Ajouter automatiquement les deux-points après les deux premiers caractères
+                        if (newValue.length > 2 && newValue.length <= 4) {
+                          newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
+                        }
+                        setEndTimeInput(newValue)
+                      }}
                       error={!!errors.endTime}
                       helperText={errors.endTime?.message}
                     />
