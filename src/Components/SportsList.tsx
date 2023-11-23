@@ -36,9 +36,10 @@ const sportsList = [
 interface SportsListProps {
   onSportChange: (selectedSport: string) => void
   defaultValue: string
+  disabled?: boolean
 }
 
-const SportsList: React.FC<SportsListProps> = ({ onSportChange, defaultValue }) => {
+const SportsList: React.FC<SportsListProps> = ({ onSportChange, defaultValue, disabled }) => {
   const [selectedSport, setSelectedSport] = useState<string>('')
 
   useEffect(() => {
@@ -60,6 +61,7 @@ const SportsList: React.FC<SportsListProps> = ({ onSportChange, defaultValue }) 
           id="sport"
           value={selectedSport}
           onChange={handleSportChange}
+          disabled={disabled}
         >
           {sportsList.map((sport, index) => (
             <MenuItem key={index} value={sport}>

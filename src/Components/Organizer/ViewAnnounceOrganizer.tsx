@@ -126,7 +126,7 @@ export default function ViewAnnounceOrganizer() {
               <CardMedia
                 component="img"
                 height="140"
-                src={require(`../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}.jpeg`)}
+                src={require(`../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}`)}
                 alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>

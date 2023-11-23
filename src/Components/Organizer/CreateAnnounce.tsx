@@ -158,7 +158,7 @@ export default function CreateAnnounce() {
 
   const onSubmit = async (data: AnnounceData) => {
     const addData: AnnounceData = {
-      sport: selectedSport,
+      sport: selectedSport || 'Football',
       numberOfPeopleMax: data.numberOfPeopleMax,
       date: data.date,
       startTime: `${data.date}T${startTimeInput}:00.000Z`,
@@ -169,6 +169,7 @@ export default function CreateAnnounce() {
       ageMax: data.ageMax,
       price: data.price
     }
+    console.log(addData)
     try {
       const existingAnnouncements = await Announce.getAll()
 
