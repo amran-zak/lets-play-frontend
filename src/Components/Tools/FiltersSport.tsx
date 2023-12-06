@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import {
-  Button, FormControl, TextField, List, ListItem, ListItemText, Drawer, Divider, Grid, debounce, FormControlLabel,
+  Button, FormControl, TextField, List, ListItem, Drawer, Divider, Grid, debounce, FormControlLabel,
   Checkbox
 } from '@mui/material'
+import {AxiosResponse} from 'axios'
 import { Close, FilterAlt, FilterAltOff } from '@mui/icons-material'
-import publicService from '../../Services/Public'
 import AnnounceData from '../../Types/Announce.types'
 import SportsList from '../SportsList'
 
@@ -13,13 +13,14 @@ import SportsList from '../SportsList'
 interface FilterProps {
   sportsList: AnnounceData[]
   setSportsList: React.Dispatch<React.SetStateAction<AnnounceData[]>>
+  getAllSports: () => Promise<AxiosResponse<any, any>>
 }
 
 interface CitySuggestion {
   city: string
 }
 
-const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => {
+const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList, getAllSports}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -35,6 +36,7 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
   const [searchBetweenStartDate, setSearchBetweenStartDate] = React.useState<Date | string>('')
   const [searchBetweenEndDate, setSearchBetweenEndDate] = React.useState<Date | string>('')
   const [checkedBetweenDate, setCheckedBetweenDate] = React.useState<boolean>(false)
+  const [searchInfPrice, setSearchInfPrice] = React.useState<number>(0)
 
   const handleCitySuggestionClick = (suggestion: CitySuggestion) => {
     setSearchCity(suggestion.city)
@@ -107,6 +109,18 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
     setSearchSimpleDate('')
   }
 
+  const [errorSearchInfPrice, setErrorSearchInfPrice] = React.useState<string>('')
+
+  const handleSearchInfPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = parseFloat(event.target.value)
+    setSearchInfPrice(inputValue)
+    if (!isNaN(inputValue) && inputValue >= 0) {
+      setErrorSearchInfPrice('')
+    } else {
+      setErrorSearchInfPrice('Veuillez saisir une valeur numérique non négative.')
+    }
+  }
+
   const handleFilter = () => {
     if (searchSport === '') {
       setSearchSport('Football')
@@ -125,36 +139,32 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
       }
       return propertyDate >= new Date(searchTerm1) && propertyDate <= new Date(searchTerm2)
     }
-    let filteredList
-    switch (true) {
-      case searchCity !== '' && searchSport !== '' && searchSimpleDate !== '':
-        filteredList = sportsList.filter((element) => filterFunction(element.city, searchCity) && filterFunction(element.sport, searchSport) && filterFunction(element.date, searchSimpleDate.toString()))
-        break
-      case searchCity !== '' && searchSport !== '' && searchBetweenStartDate !== '' && searchBetweenEndDate !== '':
-        filteredList = sportsList.filter((element) => filterFunction(element.city, searchCity) && filterFunction(element.sport, searchSport) && filterFunctionBetweenDates(element.date, searchBetweenStartDate.toString(), searchBetweenEndDate.toString()))
-        break
-      case searchCity !== '' && searchSport !== '':
-        filteredList = sportsList.filter((element) => filterFunction(element.city, searchCity) && filterFunction(element.sport, searchSport))
-        break
-      case searchSimpleDate !== '' && searchSport !== '':
-        filteredList = sportsList.filter((element) => filterFunction(element.date, searchSimpleDate.toString()) && filterFunction(element.sport, searchSport))
-        break
-      case searchBetweenStartDate !== '' && searchBetweenEndDate !== '' && searchSport !== '':
-        filteredList = sportsList.filter((element) => filterFunctionBetweenDates(element.date, searchBetweenStartDate.toString(), searchBetweenEndDate.toString()) && filterFunction(element.sport, searchSport))
-        break
-      case searchSport !== '':
-        filteredList = sportsList.filter((element) => filterFunction(element.sport, searchSport))
-        break
-      default:
-      filteredList = sportsList
-  }
+    const filterFunctionInfPrice = (property: any, searchTerm: number) => {
+      return property <= searchTerm
+    }
 
-  setSportsList(filteredList)
+    let filteredList = sportsList
+    if (searchCity !== '') {
+      filteredList = filteredList.filter((element) => filterFunction(element.city, searchCity))
+    }
+    if (searchSport !== '') {
+      filteredList = filteredList.filter((element) => filterFunction(element.sport, searchSport))
+    }
+    if (searchSimpleDate !== '') {
+      filteredList = filteredList.filter((element) => filterFunction(element.date, searchSimpleDate.toString()))
+    }
+    if (searchInfPrice >= 0) {
+      filteredList = filteredList.filter((element) => filterFunctionInfPrice(element.price, searchInfPrice))
+    }
+    if (searchBetweenStartDate !== '' && searchBetweenEndDate !== '') {
+      filteredList = filteredList.filter((element) => filterFunctionBetweenDates(element.date, searchBetweenStartDate.toString(), searchBetweenEndDate.toString()))
+    }
+    setSportsList(filteredList)
     setIsFiltered(true)
   }
 
   const handleFilterReset = () => {
-    publicService.getAllSports()
+    getAllSports()
       .then(response => {
         const data = response.data
         setSportsList(data.sports)
@@ -171,6 +181,7 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
     setCheckedBetweenDate(false)
     setSearchBetweenStartDate('')
     setSearchBetweenEndDate('')
+    setSearchInfPrice(0)
   }
 
   return (
@@ -260,10 +271,11 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
                       value={searchSimpleDate}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearchSimpleDate(e)}
                       disabled={isFiltered}
+                      sx={{marginBottom: '20px'}}
                     />
                   }
                   {checkedBetweenDate &&
-                    <Grid container>
+                    <Grid container sx={{marginBottom: '20px'}}>
                       <Grid item md={6}>
                         <TextField
                           label='Début'
@@ -292,6 +304,18 @@ const FilterComponent: React.FC<FilterProps> = ({sportsList, setSportsList}) => 
                       </Grid>
                     </Grid>
                   }
+                  <TextField
+                    label='Prix inférieur à ...'
+                    autoComplete='searchInfPrice'
+                    type='number'
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                    value={searchInfPrice}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearchInfPrice(e)}
+                    disabled={isFiltered}
+                  />
+                  {errorSearchInfPrice && <span>{errorSearchInfPrice}</span>}
                   {!isFiltered && (
                     <Button
                       variant="contained"

@@ -20,7 +20,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
 import { SvgIconProps } from '@mui/material/SvgIcon'
 import AnnounceData from '../../Types/Announce.types'
-import publicService from '../../Services/Public'
+import PublicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
 import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import Authentification from '../../Services/Authentification'
@@ -75,7 +75,7 @@ const AnnouncesLists: React.FC = () => {
   }
 
   useEffect(() => {
-    publicService.getAllSports()
+    PublicService.getAllSports()
       .then(response => {
         const data = response.data
         setSportsList(data.sports)
@@ -97,7 +97,7 @@ const AnnouncesLists: React.FC = () => {
   )
 
   const [currentPage, setCurrentPage] = useState(1)
-  const announcesPerPage = 6 // Nombre d'annonces à afficher par page
+  const announcesPerPage = 6
 
   const indexOfLastAnnounce = currentPage * announcesPerPage
   const indexOfFirstAnnounce = indexOfLastAnnounce - announcesPerPage
@@ -109,7 +109,8 @@ const AnnouncesLists: React.FC = () => {
 
   const FilterProps = {
     sportsList,
-    setSportsList
+    setSportsList,
+    getAllSports: PublicService.getAllSports
   }
 
   const PaginationProps = {

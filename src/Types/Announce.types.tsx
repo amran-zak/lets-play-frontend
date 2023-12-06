@@ -1,5 +1,3 @@
-import module from 'module'
-import Timestamp = module
 import UserData from './User.types'
 
 export default interface AnnounceData {
