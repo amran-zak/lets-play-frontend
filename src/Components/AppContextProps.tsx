@@ -1,18 +1,17 @@
-// AppContextProps.tsx
 import React, { createContext, useContext, ReactNode, useState } from 'react'
 
 interface AppContextProps {
-  isPhoneNumberDisplay: boolean
-  setIsPhoneNumberDisplay: (value: boolean) => void
+  isYourParticipationOrAnnounce: boolean
+  setIsYourParticipationOrAnnounce: (value: boolean) => void
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined)
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isPhoneNumberDisplay, setIsPhoneNumberDisplay] = useState<boolean>(false)
+  const [isYourParticipationOrAnnounce, setIsYourParticipationOrAnnounce] = useState<boolean>(false)
 
   return (
-    <AppContext.Provider value={{ isPhoneNumberDisplay, setIsPhoneNumberDisplay }}>
+    <AppContext.Provider value={{ isYourParticipationOrAnnounce, setIsYourParticipationOrAnnounce }}>
       {children}
     </AppContext.Provider>
   )

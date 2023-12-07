@@ -1,71 +1,58 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Grid, Container, Box, CssBaseline, Paper
-} from '@mui/material'
+import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper } from '@mui/material'
 import { CheckCircle, Cancel } from '@mui/icons-material'
 import AnnounceData from '../Types/Announce.types'
 import PopulateParticipationData from '../Types/PopulateParticipations.types'
 import ParticipationsService from '../Services/Participations'
 import PublicService from '../Services/Public'
 import background from './Images/football_homepage.jpeg'
-import Authentification from '../Services/Authentification'
-import AnnouncesService from '../Services/Announce'
-import UserProfileData from '../Types/ProfileModif.types'
 import DetailAnnounce from './Details'
 import { useAppContext } from './AppContextProps'
 
 const ViewDetailAnnounce: React.FC = () => {
-  const [participants, setParticipants] = useState<PopulateParticipationData[]>([])
+  const [participantsGestion, setParticipantsGestion] = useState<PopulateParticipationData[]>([])
+  const [participantsList, setParticipantsList] = useState<PopulateParticipationData[]>([])
   const [sport, setSport] = useState<AnnounceData>()
-  const [organizer, setOrganizer] = useState<UserProfileData>()
   const sportId = useParams().sportId ?? ''
 
   // Chargez ici les participants de l'annonce depuis votre API ou votre source de données
-  const fetchParticipants = async (sportId: string) => {
+  const fetchParticipantsGestion = async (sportId: string) => {
     try {
-      const response = await ParticipationsService.getParticipationsBySportId(sportId)
-      setParticipants(response.data)
+      const response = await ParticipationsService.getParticipationsGestionBySportId(sportId)
+      setParticipantsGestion(response.data)
     } catch (error) {
-      console.error('Erreur lors du chargement des participants', error)
+      setParticipantsGestion([])
+      console.error('Erreur lors du chargement de la gestion des participants', error)
+    }
+  }
+
+  const fetchParticipantsList = async (sportId: string) => {
+    try {
+      const response = await ParticipationsService.getParticipationsListBySportId(sportId)
+      setParticipantsList(response.data)
+    } catch (error) {
+      console.error('Erreur lors du chargement de la liste des participants', error)
     }
   }
 
   const fetchAnnounce = async (sportId: string) => {
     try {
       const response = await PublicService.getSportById(sportId)
-      setSport(response.data)
-      void fetchOrganizer(response.data.sport.organizer)
+      setSport(response.data.sport)
     } catch (error) {
-      console.error('Erreur lors du chargement des participants', error)
+      console.error('Erreur lors du chargement du sport', error)
     }
   }
 
-  const fetchAnnounceOrganizer = async (sportId: string) => {
-    try {
-      await AnnouncesService.getById(sportId)
-    } catch (error) {
-      console.error('Erreur lors du chargement des participants', error)
-    }
-  }
-
-  const fetchOrganizer = async (id: string) => {
-    try {
-      const response = await Authentification.getProfileById(id)
-      setOrganizer(response.data.user)
-    } catch (error) {
-      console.error('Erreur lors du chargement de l organisateur', error)
-    }
-  }
+  const {isYourParticipationOrAnnounce} = useAppContext()
 
   useEffect(() => {
-    void fetchParticipants(sportId ?? '')
+    if (isYourParticipationOrAnnounce) {
+      void fetchParticipantsGestion(sportId ?? '')
+      void fetchParticipantsList(sportId ?? '')
+    }
     void fetchAnnounce(sportId ?? '')
-    void fetchAnnounceOrganizer(sportId ?? '')
   }, [sportId])
 
   const handleAccept = async (participantId: string) => {
@@ -73,7 +60,7 @@ const ViewDetailAnnounce: React.FC = () => {
       // Envoyez une requête pour accepter la participation avec participantId
       await ParticipationsService.acceptParticipation(sportId, participantId)
       // Mettez à jour l'état des participants localement
-      setParticipants((prevParticipants) =>
+      setParticipantsGestion((prevParticipants) =>
         prevParticipants.map((participant) =>
           participant._id === participantId
             ? { ...participant, etat: 'accepted' }
@@ -89,7 +76,7 @@ const ViewDetailAnnounce: React.FC = () => {
     try {
       // Envoyez une requête pour refuser la participation avec participantId
       await ParticipationsService.rejectParticipation(sportId, participantId)
-      setParticipants((prevParticipants) =>
+      setParticipantsGestion((prevParticipants) =>
         prevParticipants.map((participant) =>
           participant._id === participantId
             ? { ...participant, etat: 'refused' }
@@ -100,8 +87,6 @@ const ViewDetailAnnounce: React.FC = () => {
       console.error('Erreur lors du refus de la participation', error)
     }
   }
-
-  const {isPhoneNumberDisplay} = useAppContext()
 
   return sport ? (
     <Container component="main"
@@ -124,59 +109,74 @@ const ViewDetailAnnounce: React.FC = () => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item md={participants.length > 0 ? 6 : 12}>
-            <Typography variant="h5" component="div" sx={{marginBottom: '25px'}}>
-              Détails de l&apos;annonce
-            </Typography>
-            <DetailAnnounce sport={sport} isPhoneNumberDisplay={isPhoneNumberDisplay}/>
-          </Grid>
           <Grid item md={6}>
-            {participants.map((participant) => (
-              <Grid item xs={12} sm={6} md={4} key={participant._id}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      {participant.participant.userName}
-                    </Typography>
-                    <Typography color="textSecondary">
-                      Etat de la demande: {(() => {
-                        switch (participant.etat) { // eslint-disable-next-line indent
-                          // eslint-disable-next-line indent
-                          case 'accepted': return 'Acceptée'
-                          // eslint-disable-next-line indent
-                          case 'refused': return 'Refusée'
-                          // eslint-disable-next-line indent
-                          case 'pending': return 'En attente'
-                          // eslint-disable-next-line indent
-                          case 'expired': return 'Expirée'
-                          // eslint-disable-next-line indent
-                          default: return participant.etat
-                        }
-                      })()}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={async () => handleAccept(participant._id)}
-                      startIcon={<CheckCircle />}
-                      disabled={participant.etat !== 'pending'}
-                    >
-                      Accepter
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={async () => handleReject(participant._id)}
-                      startIcon={<Cancel />}
-                      disabled={participant.etat !== 'pending'}
-                    >
-                      Refuser
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+            <Typography variant="h5" component="div" sx={{marginBottom: '25px'}}>
+              Détails de l&apos;annonce : {sport.sport}
+            </Typography>
+            <DetailAnnounce sport={sport} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce} isOrganizerDisplay={true}/>
           </Grid>
+          {isYourParticipationOrAnnounce &&
+            <>
+              <Grid item md={6}>
+                {participantsList.map((participant) => (
+                  <Grid item xs={12} sm={6} md={4} key={participant._id}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" component="div">
+                          {participant.participant.userName}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+                {participantsGestion.map((participant) => (
+                  <Grid item xs={12} sm={6} md={4} key={participant._id}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" component="div">
+                          {participant.participant.userName}
+                        </Typography>
+                        <Typography color="textSecondary">
+                          Etat de la demande: {(() => {
+                            switch (participant.etat) { // eslint-disable-next-line indent
+                              // eslint-disable-next-line indent
+                              case 'accepted': return 'Acceptée'
+                              // eslint-disable-next-line indent
+                              case 'refused': return 'Refusée'
+                              // eslint-disable-next-line indent
+                              case 'pending': return 'En attente'
+                              // eslint-disable-next-line indent
+                              case 'expired': return 'Expirée'
+                              // eslint-disable-next-line indent
+                              default: return participant.etat
+                            }
+                          })()}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={async () => handleAccept(participant._id)}
+                          startIcon={<CheckCircle />}
+                          disabled={participant.etat !== 'pending'}
+                        >
+                          Accepter
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={async () => handleReject(participant._id)}
+                          startIcon={<Cancel />}
+                          disabled={participant.etat !== 'pending'}
+                        >
+                          Refuser
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          }
         </Grid>
       </Box>
     </Container>

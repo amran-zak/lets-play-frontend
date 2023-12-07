@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  CardActionArea,
-  Grid,
-  useTheme,
-  Box,
-  CardActions,
-  Button
-} from '@mui/material'
+import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import AnnounceData from '../../Types/Announce.types'
 import PublicService from '../../Services/Public'
@@ -32,10 +21,9 @@ const AnnouncesLists: React.FC = () => {
 
   const handleParticipe = (sportId: string) => {
     ParticipationsService.participer(sportId).then((result) => {
-      alert('Participation a été bien prise en compte!')
       window.location.reload()
     }).catch((error) => {
-      alert('Veuillez vous connectez à votre compte!')
+      alert('Veuillez vous connectez à votre compte !')
       console.error(error)
     })
   }
@@ -60,11 +48,11 @@ const AnnouncesLists: React.FC = () => {
     void fetchProfile()
   }, [])
 
-  const { setIsPhoneNumberDisplay } = useAppContext()
+  const { setIsYourParticipationOrAnnounce } = useAppContext()
   // Fonction pour vérifier si l'utilisateur a déjà participé à un sport donné
   const hasParticipated = (sportId: string) => {
     if (userParticipations?.some(participation => participation.sport._id === sportId)) {
-      setIsPhoneNumberDisplay(true)
+      setIsYourParticipationOrAnnounce(true)
     }
     return userParticipations?.some(participation => participation.sport._id === sportId)
   }
@@ -105,7 +93,7 @@ const AnnouncesLists: React.FC = () => {
 
   const navigate = useNavigate()
   const handleViewDetails = (sportId: string) => {
-    setIsPhoneNumberDisplay(false)
+    setIsYourParticipationOrAnnounce(false)
     void hasParticipated(sportId)
     navigate(`/annonce/details/${sportId}`)
   }
@@ -134,7 +122,7 @@ const AnnouncesLists: React.FC = () => {
                 <Box width="100%">
                   {sport.organizer?._id === profileData?._id ? (
                     <Button size="large" variant="outlined" fullWidth disabled>
-                  Votre annonce
+                      Votre annonce
                     </Button>
                   ) : hasParticipated(sport._id ? sport._id : '') ? (
                     <Button size="large" variant="outlined" fullWidth disabled>

@@ -13,8 +13,12 @@ class Participations {
     return http.delete('/api/participations/' + partcipationId)
   }
 
-  async getParticipationsBySportId(sportId: string) {
-    return http.get('/api/organizer/sports/' + sportId + '/participations')
+  async getParticipationsGestionBySportId(sportId: string) {
+    return http.get('/api/organizer/sports/' + sportId + '/participations/gestion')
+  }
+
+  async getParticipationsListBySportId(sportId: string) {
+    return http.get('/api/organizer/sports/' + sportId + '/participations/list')
   }
 
   async acceptParticipation(sportId: string, partcipationId: string) {

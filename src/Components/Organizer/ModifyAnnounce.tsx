@@ -1,36 +1,15 @@
-import * as React from 'react'
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Grid,
-  Box,
-  Typography,
-  Paper,
-  debounce,
-  Container
-} from '@mui/material'
-import Map, {Marker, NavigationControl} from 'react-map-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import React, {useEffect, useState} from 'react'
+import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Paper, Container } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import {useForm} from 'react-hook-form'
 import * as Yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import AnnounceData from '../../Types/Announce.types'
-import {useCallback, useEffect, useState} from 'react'
 import SportsList from '../SportsList'
 import Announce from '../../Services/Announce'
 import {useParams, useNavigate} from 'react-router-dom'
 import background from '../Images/football_homepage.jpeg'
-
-interface CitySuggestion {
-  id: number
-  label: string
-  city: string
-  latitude: number
-  longitude: number
-}
+import AddressInputWithMap from '../Tools/AddressInputWithMap'
 
 export default function ModifyAnnounce() {
   const id = useParams()
@@ -116,13 +95,7 @@ export default function ModifyAnnounce() {
         }
         return value
       }).required('L\'heure de fin de l\'évènement est requise et doit être du format 00:00'),
-    address: Yup.string()
-      .transform((value, originalValue) => {
-        if (!value) {
-          value = announceData.address
-        }
-        return value
-      }).required('L\'adresse est requise'),
+    address: Yup.string(),
     city: Yup.string(),
     ageMin: Yup.number()
       .typeError('L\'âge minimum du participant doit être un nombre')
@@ -143,66 +116,6 @@ export default function ModifyAnnounce() {
     resolver: yupResolver(validationSchema),
     criteriaMode: 'all'
   })
-
-  const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([])
-  const [latitudeInput, setLatitudeInput] = useState(48.866667)
-  const [longitudeInput, setLongitudeInput] = useState(2.333333)
-  const [zoomValue, setZoomValue] = useState(4)
-
-  const fetchCitySuggestions = async (input: string) => {
-    if (input.length >= 3) {
-      try {
-        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${input.replaceAll(' ', '+')}&limit=15`)
-        if (response.ok) {
-          const data = await response.json()
-          if (data.features) {
-            const citySuggestions: CitySuggestion[] = data.features.map((
-              feature: {
-                properties: {
-                  id: number
-                  label: string
-                  city: string
-                }
-                geometry: {
-                  coordinates: {
-                    0: number
-                    1: number
-                  }
-                }
-              }) => ({
-              id: feature.properties.id,
-              label: feature.properties.label,
-              city: feature.properties.city,
-              latitude: feature.geometry.coordinates[1],
-              longitude: feature.geometry.coordinates[0]
-            }))
-            setCitySuggestions(citySuggestions)
-          }
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  }
-
-  const debouncedFetchCitySuggestions = useCallback(
-    debounce(async (input) => fetchCitySuggestions(input), 300), []
-  )
-
-  const handleCityInputChange = async (e: { target: { value: any } }) => {
-    const inputValue = e.target.value
-    setAdresseInput(inputValue)
-    await debouncedFetchCitySuggestions(inputValue)
-  }
-
-  const handleCitySuggestionClick = (suggestion: CitySuggestion) => {
-    setAdresseInput(suggestion.label)
-    setCityInput(suggestion.city)
-    setLatitudeInput(suggestion.latitude)
-    setLongitudeInput(suggestion.longitude)
-    setZoomValue(6)
-    setCitySuggestions([])
-  }
 
   const [selectedSport, setSelectedSport] = useState<string>('')
 
@@ -244,8 +157,6 @@ export default function ModifyAnnounce() {
       })
   }
 
-  const token = 'pk.eyJ1IjoiZ2lzZmVlZGJhY2siLCJhIjoiY2l2eDJndmtjMDFkeTJvcHM4YTNheXZtNyJ9.-HNJNch_WwLIAifPgzW2Ig'
-
   const transformHours = (time: string) => {
     const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
     return timePart || ''
@@ -257,6 +168,11 @@ export default function ModifyAnnounce() {
     setIsDisabled(false)
     setSuccessMessage(false)
     setErrorMessage(false)
+  }
+
+  const handleCityInputChange = async (e: { target: { value: any } }) => {
+    const inputValue = e.target.value
+    setAdresseInput(inputValue)
   }
 
   return (
@@ -279,49 +195,49 @@ export default function ModifyAnnounce() {
           minHeight: '100vh'
         }}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Map
-              initialViewState={{
-                longitude: longitudeInput,
-                latitude: latitudeInput,
-                zoom: zoomValue
-              }}
-              mapboxAccessToken={token}
-              style={{
-                width: '100%',
-                height: '80%',
-                top: '10%'
-              }}
-              mapStyle='https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
-            >
-              <NavigationControl/>
-              <Marker longitude={longitudeInput} latitude={latitudeInput} style={{color: 'white'}}/>
-            </Map>
-          </Grid>
-          <Grid item xs={12} sm={6} component={Paper} elevation={6} square sx={{
-            my: 'auto',
-            boxShadow: 'none'
+        <Box
+          sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <Avatar sx={{
+            mx: 'auto',
+            bgcolor: 'secondary.main'
           }}>
-            <Box
-              sx={{
-                my: 8,
-                mx: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}
-            >
-              <Avatar sx={{
-                mx: 'auto',
-                bgcolor: 'secondary.main'
+            <LockOutlinedIcon/>
+          </Avatar>
+          <Typography component='h1' variant='h5' sx={{marginBottom: 5}}>
+            Modifier l&rsquo;évènement
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <AddressInputWithMap
+                  id={'address'}
+                  value={adresseInput}
+                  {...register('address')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    void handleCityInputChange(e)
+                    setAnnounceData((prevData: AnnounceData) => ({
+                      ...prevData,
+                      address: newValue
+                    }))
+                  }}
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                  setAdresseInput={setAdresseInput}
+                  setCityInput={setCityInput}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} component={Paper} elevation={6} square sx={{
+                my: 'auto',
+                boxShadow: 'none'
               }}>
-                <LockOutlinedIcon/>
-              </Avatar>
-              <Typography component='h1' variant='h5' sx={{marginBottom: 5}}>
-                Modifier l&rsquo;évènement
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <SportsList onSportChange={handleSportChange} defaultValue={selectedSport} />
@@ -428,34 +344,6 @@ export default function ModifyAnnounce() {
                       helperText={errors.endTime?.message}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id='address'
-                      label='Lieux'
-                      value={adresseInput}
-                      {...register('address')}
-                      onChange={(e) => {
-                        const newValue = e.target.value
-                        void handleCityInputChange(e)
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          address: newValue
-                        }))
-                      }}
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                    {citySuggestions.length > 0 && (
-                      <ul>
-                        {citySuggestions.map((suggestion, index) => (
-                          <li key={index} onClick={() => handleCitySuggestionClick(suggestion)}
-                            style={{cursor: 'pointer'}}>{suggestion.label}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required
@@ -520,6 +408,8 @@ export default function ModifyAnnounce() {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid item sm={12} sx={{marginTop: 10}}>
                 {errorMessage &&
                   <Typography color='red'>
                     L&apos;annonce existe déjà en état
@@ -530,17 +420,13 @@ export default function ModifyAnnounce() {
                     L&apos;annonce est modifiée avec succès
                   </Typography>
                 }
-                <Button type='submit' fullWidth variant='contained' disabled={isDisabled}
-                  sx={{
-                    marginTop: 3,
-                    marginBottom: 2
-                  }}>
+                <Button type='submit' variant='contained' disabled={isDisabled} sx={{marginTop: 5}}>
                   Modifier
                 </Button>
-              </form>
-            </Box>
-          </Grid>
-        </Grid>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
       </Box>
     </Container>
   )

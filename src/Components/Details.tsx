@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Grid, Typography, useTheme } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Grid, Typography } from '@mui/material'
 import { SvgIconProps } from '@mui/material/SvgIcon'
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
@@ -9,14 +9,18 @@ import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
 import AnnounceData from '../Types/Announce.types'
+import Authentification from '../Services/Authentification'
+import UserProfileData from '../Types/ProfileModif.types'
+import { useAppContext } from './AppContextProps'
 
 interface Detail {
   icon: React.ElementType<SvgIconProps>
   children: React.ReactNode
 }
 
-const DetailAnnounce: React.FC<{ sport: AnnounceData, isPhoneNumberDisplay?: boolean }> = ({ sport, isPhoneNumberDisplay }) => {
+const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnounce?: boolean, isOrganizerDisplay?: boolean }> = ({ sport, isYourParticipationOrAnnounce, isOrganizerDisplay }) => {
   const organizer = sport?.organizer
+  const { setIsYourParticipationOrAnnounce } = useAppContext()
 
   const Detail: React.FC<Detail> = ({ icon: IconComponent, children }) => (
     <Box display='flex' alignItems='center' mt={1}>
@@ -27,6 +31,23 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isPhoneNumberDisplay?: boo
     </Box>
   )
 
+  const [profileData, setProfileData] = useState<UserProfileData | null>(null)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await Authentification.getProfile()
+        setProfileData(response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    void fetchProfile()
+
+    if (!isYourParticipationOrAnnounce && sport.organizer?._id === profileData?._id) {
+      setIsYourParticipationOrAnnounce(true)
+    }
+  }, [])
+
   return (
     <>
       <Grid container spacing={2}>
@@ -36,6 +57,8 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isPhoneNumberDisplay?: boo
         <Grid item xs={6}>
           <Detail icon={PeopleIcon}>Déjà inscrit: {sport.numberOfPeopleCurrent}</Detail>
         </Grid>
+      </Grid>
+      <Grid container spacing={2}>
         <Grid item xs={6}>
           <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
         </Grid>
@@ -60,12 +83,15 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isPhoneNumberDisplay?: boo
           <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).getUTCHours()}h{new Date(sport.endTime).getUTCMinutes()}</Detail>
         </Grid>
       </Grid>
-      <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
-      <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
-      <Detail icon={PeopleIcon}>Organisateur: {organizer?.userName}</Detail>
-      <Detail icon={Phone}>
-        Téléphone: {`${isPhoneNumberDisplay ? '+33 0' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
-      </Detail>
+      <Detail icon={LocationOnIcon}>{sport.address}</Detail>
+      {isOrganizerDisplay &&
+        <Detail icon={PeopleIcon}>Organisateur: {organizer?.userName}</Detail>
+      }
+      {isOrganizerDisplay &&
+        <Detail icon={Phone}>
+          Téléphone: {`${isYourParticipationOrAnnounce ? '+33 0' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
+        </Detail>
+      }
     </>
   )
 }
