@@ -11,7 +11,7 @@ import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer
 import HomePage from '../Components/Home'
 import AnnouncesLists from '../Components/Home/AnnouncesLists'
 import AnnouncesListsParticipant from '../Components/Participant/AnnounceListParticipant'
-import ViewDetailAnnounce from '../Components/ViewDetailAnnounce'
+import ViewDetailAnnounce from '../Components/Tools/AnnounceDetails/ViewDetailAnnounce'
 
 // Composant pour la protection de route
 const PrivateRoute = () => {

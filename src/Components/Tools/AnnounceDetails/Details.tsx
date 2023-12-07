@@ -8,10 +8,10 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
-import AnnounceData from '../Types/Announce.types'
-import Authentification from '../Services/Authentification'
-import UserProfileData from '../Types/ProfileModif.types'
-import { useAppContext } from './AppContextProps'
+import AnnounceData from '../../../Types/Announce.types'
+import Authentification from '../../../Services/Authentification'
+import UserProfileData from '../../../Types/ProfileModif.types'
+import { useAppContext } from '../../AppContextProps'
 
 interface Detail {
   icon: React.ElementType<SvgIconProps>

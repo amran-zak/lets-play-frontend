@@ -11,7 +11,7 @@ import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListIm
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
 import { useAppContext } from '../AppContextProps'
-import DetailAnnounce from '../Details'
+import DetailAnnounce from '../Tools/AnnounceDetails/Details'
 
 const AnnouncesLists: React.FC = () => {
   const [userParticipations, setUserParticipations] = useState<PopulateParticipationData[]>([])

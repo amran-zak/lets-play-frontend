@@ -8,7 +8,7 @@ import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import PaginationComponent from '../Tools/PaginationComponent'
 import { useAppContext } from '../AppContextProps'
-import DetailAnnounce from '../Details'
+import DetailAnnounce from '../Tools/AnnounceDetails/Details'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>

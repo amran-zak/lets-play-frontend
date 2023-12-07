@@ -8,7 +8,7 @@ import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListIm
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
 import { useAppContext } from '../AppContextProps'
-import DetailAnnounce from '../Details'
+import DetailAnnounce from '../Tools/AnnounceDetails/Details'
 
 export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()

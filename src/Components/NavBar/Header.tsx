@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import {useNavigate} from 'react-router-dom'
 import LogoGreen from '../Images/logo-green.png'
-import PopUp from '../PopUp'
+import PopUp from '../Tools/PopUp'
 import ProfileHeader from './ProfileHeader'
 import AnnouncesHeader from './AnnouncesHearder'
 import { Home } from '@mui/icons-material'

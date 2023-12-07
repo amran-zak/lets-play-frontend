@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper } from '@mui/material'
+import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper, CardMedia } from '@mui/material'
 import { CheckCircle, Cancel } from '@mui/icons-material'
-import AnnounceData from '../Types/Announce.types'
-import PopulateParticipationData from '../Types/PopulateParticipations.types'
-import ParticipationsService from '../Services/Participations'
-import PublicService from '../Services/Public'
-import background from './Images/football_homepage.jpeg'
+import AnnounceData from '../../../Types/Announce.types'
+import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
+import ParticipationsService from '../../../Services/Participations'
+import PublicService from '../../../Services/Public'
+import background from '../../Images/football_homepage.jpeg'
 import DetailAnnounce from './Details'
-import { useAppContext } from './AppContextProps'
+import { useAppContext } from '../../AppContextProps'
+import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
 
 const ViewDetailAnnounce: React.FC = () => {
   const [participantsGestion, setParticipantsGestion] = useState<PopulateParticipationData[]>([])
@@ -113,6 +114,11 @@ const ViewDetailAnnounce: React.FC = () => {
             <Typography variant="h5" component="div" sx={{marginBottom: '25px'}}>
               Détails de l&apos;annonce : {sport.sport}
             </Typography>
+            <img
+              height="140" style={{marginBottom: '20px', borderRadius: '10px'}}
+              src={require(`../../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}`)}
+              alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
+            />
             <DetailAnnounce sport={sport} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce} isOrganizerDisplay={true}/>
           </Grid>
           {isYourParticipationOrAnnounce &&
