@@ -15,6 +15,7 @@ import AnnounceData from '../../Types/Announce.types'
 import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import {sportsListMapping, SportsListMappingKey} from '../../Types/SportListImagePath'
 import PaginationComponent from '../Tools/PaginationComponent'
+import { useAppContext } from '../AppContextProps'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -36,6 +37,13 @@ const AnnouncesListsParticipant: React.FC = () => {
       console.error(error)
     })
   }
+
+  const { setIsPhoneNumberDisplay } = useAppContext()
+  const handleViewDetails = (sportId: string) => {
+    setIsPhoneNumberDisplay(true)
+    navigate(`/annonce/details/${sportId}`)
+  }
+
   const handleAnnuler = (participationID: string) => {
     ParticipationsService.deleteParticipation(participationID).then((result) => {
       alert('Participation a été bien supprimer!')
@@ -82,7 +90,7 @@ const AnnouncesListsParticipant: React.FC = () => {
         {currentParticipations.map((participation, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card elevation={3}>
-              <CardActionArea>
+              <CardActionArea onClick={() => handleViewDetails(participation.sport._id ? participation.sport._id : '')}>
                 <CardMedia
                   component="img"
                   height="140"

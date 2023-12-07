@@ -11,14 +11,7 @@ import {
   CardActions,
   Button
 } from '@mui/material'
-import EventIcon from '@mui/icons-material/Event'
-import PeopleIcon from '@mui/icons-material/People'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
-import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import Phone from '@mui/icons-material/Phone'
-import { SvgIconProps } from '@mui/material/SvgIcon'
+import { useNavigate } from 'react-router-dom'
 import AnnounceData from '../../Types/Announce.types'
 import PublicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
@@ -28,11 +21,8 @@ import UserProfileData from '../../Types/ProfileModif.types'
 import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
-
-interface DetailProps {
-  icon: React.ElementType<SvgIconProps>
-  children: React.ReactNode
-}
+import { useAppContext } from '../AppContextProps'
+import DetailAnnounce from '../Details'
 
 const AnnouncesLists: React.FC = () => {
   const [userParticipations, setUserParticipations] = useState<PopulateParticipationData[]>([])
@@ -69,8 +59,13 @@ const AnnouncesLists: React.FC = () => {
     }
     void fetchProfile()
   }, [])
+
+  const { setIsPhoneNumberDisplay } = useAppContext()
   // Fonction pour vérifier si l'utilisateur a déjà participé à un sport donné
   const hasParticipated = (sportId: string) => {
+    if (userParticipations?.some(participation => participation.sport._id === sportId)) {
+      setIsPhoneNumberDisplay(true)
+    }
     return userParticipations?.some(participation => participation.sport._id === sportId)
   }
 
@@ -79,22 +74,11 @@ const AnnouncesLists: React.FC = () => {
       .then(response => {
         const data = response.data
         setSportsList(data.sports)
-        console.log(data)
       })
       .catch(error => {
         console.error('Error fetching sports:', error)
       })
   }, [])
-
-  const theme = useTheme()
-  const Detail: React.FC<DetailProps> = ({ icon: IconComponent, children }) => (
-    <Box display="flex" alignItems="center" mt={1}>
-      <IconComponent color="action" style={{ marginRight: theme.spacing(1), color: 'green' }} />
-      <Typography variant="body2" color="text.secondary">
-        {children}
-      </Typography>
-    </Box>
-  )
 
   const [currentPage, setCurrentPage] = useState(1)
   const announcesPerPage = 6
@@ -119,6 +103,15 @@ const AnnouncesLists: React.FC = () => {
     totalPageCount: Math.ceil(sportsList.length / announcesPerPage)
   }
 
+  const navigate = useNavigate()
+  const handleViewDetails = (sportId: string) => {
+    setIsPhoneNumberDisplay(false)
+    void hasParticipated(sportId)
+    navigate(`/annonce/details/${sportId}`)
+  }
+
+  const theme = useTheme()
+
   return (
     <>
       <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 100 }}>
@@ -126,7 +119,7 @@ const AnnouncesLists: React.FC = () => {
         {currentAnnounces.map((sport, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card elevation={3}>
-              <CardActionArea>
+              <CardActionArea onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
                 <CardMedia
                   component="img"
                   height="140"
@@ -134,43 +127,7 @@ const AnnouncesLists: React.FC = () => {
                   alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" style={{color: useTheme().palette.primary.main}}>
-                    {sport.sport}
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Detail icon={PeopleIcon}>Déjà inscrit: {sport.numberOfPeopleCurrent}</Detail>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Detail icon={ChildFriendlyIcon}>Ages: {sport.ageMin} - {sport.ageMax}</Detail>
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Detail icon={EventIcon}>Date: {new Date(sport.date).toLocaleDateString()}</Detail>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Detail icon={AttachMoneyIcon}>Prix: {sport.price}€</Detail>
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Detail icon={AccessTimeIcon}>Debut: {new Date(sport.startTime).getUTCHours()}h{new Date(sport.startTime).getUTCMinutes()}</Detail>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Detail icon={AccessTimeIcon}>Fin: {new Date(sport.endTime).getUTCHours()}h{new Date(sport.endTime).getUTCMinutes()}</Detail>
-                    </Grid>
-                  </Grid>
-                  <Detail icon={LocationOnIcon}>Adresse postal: {sport.address}</Detail>
-                  <Detail icon={LocationOnIcon}>Ville: {sport.city ? `${sport.city}` : ''}</Detail>
-                  <Detail icon={PeopleIcon}>Organisateur: {sport.organizer?.userName}</Detail>
-                  {/* Add masked phoneNumber */}
-                  <Detail icon={Phone}>
-                  Téléphone: {`${sport.organizer?.phoneNumber ? '+33 0' + sport.organizer.phoneNumber : ''}* ** ** **`}
-                  </Detail>
+                  <DetailAnnounce sport={sport}/>
                 </CardContent>
               </CardActionArea>
               <CardActions>

@@ -14,6 +14,7 @@ import DeleteModal from './DeleteModal'
 import {sportsListMapping, SportsListMappingKey} from '../../Types/SportListImagePath'
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
+import { useAppContext } from '../AppContextProps'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -45,8 +46,10 @@ export default function ViewAnnounceOrganizer() {
     navigate(`/annonce/modifier/${sportId}`)
   }
 
+  const { setIsPhoneNumberDisplay } = useAppContext()
   const handleViewDetails = (sportId: string) => {
-    navigate(`/participations/${sportId}`)
+    setIsPhoneNumberDisplay(true)
+    navigate(`/annonce/details/${sportId}`)
   }
 
   useEffect(() => {

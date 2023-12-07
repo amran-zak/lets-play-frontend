@@ -35,6 +35,10 @@ class Authentification {
     }
     throw new Error('No token found')
   }
+
+  async getProfileById(id: string | undefined) {
+    return http.get(`/api/auth/profile/${id}`)
+  }
 }
 
 export default new Authentification()
