@@ -1,14 +1,17 @@
+// React
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography, useTheme } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+// Materials
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography, useTheme, SvgIconProps } from '@mui/material'
+// Icons
 import Start from '@mui/icons-material/Start'
-import { SvgIconProps } from '@mui/material/SvgIcon'
-import ParticipationsService from '../../Services/Participations'
-import PopulateParticipationData from '../../Types/PopulateParticipations.types'
-import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
-import PaginationComponent from '../Tools/PaginationComponent'
-import { useAppContext } from '../AppContextProps'
-import DetailAnnounce from '../Tools/AnnounceDetails/Details'
+// Files
+import { useAppContext } from '../../AppContextProps'
+import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
+import ParticipationsService from '../../../Services/Participations'
+import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
+import PaginationComponent from '../../Tools/PaginationComponent'
+import DetailAnnounce from '../../Tools/AnnounceDetails/Details'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>
@@ -84,7 +87,7 @@ const AnnouncesListsParticipant: React.FC = () => {
                 <CardMedia
                   component="img"
                   height="140"
-                  src={require(`../Images/sports_images/${sportsListMapping[participation?.sport?.sport as SportsListMappingKey]}`)}
+                  src={require(`../../Images/sports_images/${sportsListMapping[participation?.sport?.sport as SportsListMappingKey]}`)}
                   alt={`Photo du sport ${sportsListMapping[participation?.sport?.sport as SportsListMappingKey]}`}
                 />
                 <CardContent>

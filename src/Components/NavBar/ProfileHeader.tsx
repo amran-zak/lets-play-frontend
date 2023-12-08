@@ -1,9 +1,10 @@
+// React
 import * as React from 'react'
-import Button from '@mui/material/Button'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import AccountCircle from '@mui/icons-material/AccountCircle'
 import { useNavigate } from 'react-router-dom'
+// Materials
+import { Button, Menu, MenuItem } from '@mui/material'
+// Icons
+import AccountCircle from '@mui/icons-material/AccountCircle'
 
 export default function ProfileHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)

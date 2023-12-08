@@ -1,16 +1,19 @@
+// React
 import React, { useEffect, useState } from 'react'
-import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+// Materials
+import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
+// Files
+import { useAppContext } from '../AppContextProps'
+import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import AnnounceData from '../../Types/Announce.types'
 import PublicService from '../../Services/Public'
 import ParticipationsService from '../../Services/Participations'
 import PopulateParticipationData from '../../Types/PopulateParticipations.types'
 import Authentification from '../../Services/Authentification'
 import UserProfileData from '../../Types/ProfileModif.types'
-import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
-import { useAppContext } from '../AppContextProps'
 import DetailAnnounce from '../Tools/AnnounceDetails/Details'
 
 const AnnouncesLists: React.FC = () => {

@@ -1,18 +1,16 @@
+// React
 import React from 'react'
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  Tooltip,
-  Typography,
-  Button
-} from '@mui/material'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+// Materials
+import { AppBar, Box, Toolbar, Tooltip, Typography, Button } from '@mui/material'
+// Icons
+import { Home } from '@mui/icons-material'
+// Images
 import LogoGreen from '../Images/logo-green.png'
+// Files
 import PopUp from '../Tools/PopUp'
 import ProfileHeader from './ProfileHeader'
 import AnnouncesHeader from './AnnouncesHearder'
-import { Home } from '@mui/icons-material'
 
 function Header() {
   const navigate = useNavigate()

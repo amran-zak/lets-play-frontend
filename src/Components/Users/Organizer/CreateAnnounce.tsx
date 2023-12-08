@@ -1,68 +1,23 @@
-import React, {useEffect, useState} from 'react'
-import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Paper, Container } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import {useForm} from 'react-hook-form'
+// React
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+// Yup
 import * as Yup from 'yup'
-import {yupResolver} from '@hookform/resolvers/yup'
-import AnnounceData from '../../Types/Announce.types'
-import SportsList from '../Tools/SportsList'
-import Announce from '../../Services/Announce'
-import {useParams, useNavigate} from 'react-router-dom'
-import background from '../Images/football_homepage.jpeg'
-import AddressInputWithMap from '../Tools/AddressInputWithMap'
+import { yupResolver } from '@hookform/resolvers/yup'
+// Materials
+import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Paper, Container } from '@mui/material'
+// Icons
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+// Images
+import background from '../../Images/football_homepage.jpeg'
+// Files
+import AnnounceData from '../../../Types/Announce.types'
+import SportsList from '../../Tools/SportsList'
+import Announce from '../../../Services/Announce'
+import AddressInputWithMap from '../../Tools/AddressInputWithMap'
 
-export default function ModifyAnnounce() {
-  const id = useParams()
-  const [announceData, setAnnounceData] = useState<AnnounceData>({
-    _id: '',
-    sport: '',
-    numberOfPeopleMax: 0,
-    date: '',
-    startTime: '',
-    endTime: '',
-    address: '',
-    city: '',
-    ageMin: 0,
-    ageMax: 0,
-    price: 0,
-    organizer: {
-      phoneNumber: 0,
-      userName: '',
-      email: '',
-      password: '',
-      address: '',
-      city: '',
-      yearBirth: 0
-    }
-  })
-  const [adresseInput, setAdresseInput] = useState('')
-  const [cityInput, setCityInput] = useState('')
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Announce.getById(id.id)
-        if (response) {
-          const selectedAnnounce = response.data.sport
-          setAnnounceData(selectedAnnounce)
-          setAnnounceData((prevData: AnnounceData) => ({
-            ...prevData,
-            date: selectedAnnounce.date.split('T')[0],
-            startTime: transformHours(selectedAnnounce.startTime),
-            endTime: transformHours(selectedAnnounce.endTime)
-          }))
-          setSelectedSport(selectedAnnounce.sport)
-          setAdresseInput(selectedAnnounce.address)
-          setCityInput(selectedAnnounce.city)
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    void fetchData()
-  }, [id])
-
+export default function CreateAnnounce() {
   const validationSchema = Yup.object().shape({
     sport: Yup.string(),
     numberOfPeopleMax: Yup.number()
@@ -70,16 +25,14 @@ export default function ModifyAnnounce() {
       .required('Le nombre de participants maximum que peut accueillir votre évènement'),
     date: Yup.string()
       .transform((value, originalValue) => {
-        if (!value) {
-          value = announceData.date
+        // Assurez-vous que la date est sous le format "AAAA-MM-JJ" (année-mois-jour)
+        if (originalValue && !originalValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          return null
         }
         return value
       }).required('La date de l\'évènement est requise'),
     startTime: Yup.string()
       .transform((value, originalValue) => {
-        if (!value) {
-          value = announceData.startTime
-        }
         if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
           return null
         }
@@ -87,9 +40,6 @@ export default function ModifyAnnounce() {
       }).required('L\'heure de début de l\'évènement est requise et doit être du format 00:00'),
     endTime: Yup.string()
       .transform((value, originalValue) => {
-        if (!value) {
-          value = announceData.endTime
-        }
         if (originalValue && !originalValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
           return null
         }
@@ -117,6 +67,14 @@ export default function ModifyAnnounce() {
     criteriaMode: 'all'
   })
 
+  const [adresseInput, setAdresseInput] = useState('')
+  const [cityInput, setCityInput] = useState('')
+
+  const handleCityInputChange = async (e: { target: { value: any } }) => {
+    const inputValue = e.target.value
+    setAdresseInput(inputValue)
+  }
+
   const [selectedSport, setSelectedSport] = useState<string>('')
 
   const handleSportChange = (selectedSport: string) => {
@@ -126,40 +84,32 @@ export default function ModifyAnnounce() {
   const [errorMessage, setErrorMessage] = useState<boolean>(false)
   const [successMessage, setSuccessMessage] = useState<boolean>(false)
   const navigate = useNavigate()
+  const [startTimeInput, setStartTimeInput] = useState('')
+  const [endTimeInput, setEndTimeInput] = useState('')
 
   const onSubmit = async (data: AnnounceData) => {
-    const modifyData: AnnounceData = {
-      sport: selectedSport,
-      numberOfPeopleMax: announceData.numberOfPeopleMax,
-      date: announceData.date,
-      startTime: `${announceData.date.split('T')[0]}T${announceData.startTime}:00.000Z`,
-      endTime: `${announceData.date.split('T')[0]}T${announceData.endTime}:00.000Z`,
+    const addData: AnnounceData = {
+      sport: selectedSport || 'Football',
+      numberOfPeopleMax: data.numberOfPeopleMax,
+      date: data.date,
+      startTime: `${data.date}T${startTimeInput}:00.000Z`,
+      endTime: `${data.date}T${endTimeInput}:00.000Z`,
       address: adresseInput,
       city: cityInput,
-      ageMin: announceData.ageMin,
-      ageMax: announceData.ageMax,
-      price: announceData.price
+      ageMin: data.ageMin,
+      ageMax: data.ageMax,
+      price: data.price
     }
-
-    Announce.modify(modifyData, id.id)
-      .then(response => {
-        setSuccessMessage(true)
-        setErrorMessage(false)
-        setIsDisabled(true)
-        setTimeout(() => {
-          navigate('/annonces/liste')
-        }, 2000)
-      })
-      .catch(error => {
-        console.error(error)
-        setSuccessMessage(false)
-        setErrorMessage(true)
-      })
-  }
-
-  const transformHours = (time: string) => {
-    const [, timePart] = time.match(/T(\d+:\d+):\d+/) ?? []
-    return timePart || ''
+    try {
+      await Announce.create(addData)
+      setSuccessMessage(true)
+      setErrorMessage(false)
+      setTimeout(() => {
+        navigate('/annonces/liste')
+      }, 2000)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des annonces existantes :', error)
+    }
   }
 
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
@@ -168,11 +118,6 @@ export default function ModifyAnnounce() {
     setIsDisabled(false)
     setSuccessMessage(false)
     setErrorMessage(false)
-  }
-
-  const handleCityInputChange = async (e: { target: { value: any } }) => {
-    const inputValue = e.target.value
-    setAdresseInput(inputValue)
   }
 
   return (
@@ -211,7 +156,7 @@ export default function ModifyAnnounce() {
             <LockOutlinedIcon/>
           </Avatar>
           <Typography component='h1' variant='h5' sx={{marginBottom: 5}}>
-            Modifier l&rsquo;évènement
+            Créer un évènement
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)} onChange={handleFormChange}>
             <Grid container spacing={2}>
@@ -220,14 +165,7 @@ export default function ModifyAnnounce() {
                   id={'address'}
                   value={adresseInput}
                   {...register('address')}
-                  onChange={(e) => {
-                    const newValue = e.target.value
-                    void handleCityInputChange(e)
-                    setAnnounceData((prevData: AnnounceData) => ({
-                      ...prevData,
-                      address: newValue
-                    }))
-                  }}
+                  onChange={handleCityInputChange}
                   error={!!errors.address}
                   helperText={errors.address?.message}
                   setAdresseInput={setAdresseInput}
@@ -240,7 +178,7 @@ export default function ModifyAnnounce() {
               }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <SportsList onSportChange={handleSportChange} defaultValue={selectedSport} />
+                    <SportsList onSportChange={handleSportChange} defaultValue={selectedSport}/>
                     {selectedSport === '' && <Typography variant="caption" display="block" gutterBottom>Ce champ est requis</Typography>}
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -248,19 +186,10 @@ export default function ModifyAnnounce() {
                       required
                       fullWidth
                       id='price'
-                      label='Prix'
                       type='number'
+                      label='Prix'
                       autoComplete='price'
-                      value={announceData ? announceData.price : ''}
                       {...register('price')}
-                      onChange={(e) => {
-                        const inputValue = e.target.value
-                        const newValue = inputValue !== '' ? parseInt(inputValue) : 0
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          price: newValue
-                        }))
-                      }}
                       error={!!errors.price}
                       helperText={errors.price?.message}
                     />
@@ -272,22 +201,11 @@ export default function ModifyAnnounce() {
                       id='date'
                       label='Date'
                       autoComplete='date'
-                      value={announceData ? announceData.date : ''}
                       type='date'
                       InputLabelProps={{
                         shrink: true
                       }}
                       {...register('date')}
-                      onChange={(e) => {
-                        const inputValue = e.target.value
-                        const newValue = inputValue !== '' ? inputValue : ''
-                        if (newValue.match(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)) {
-                          setAnnounceData((prevData: AnnounceData) => ({
-                            ...prevData,
-                            date: newValue
-                          }))
-                        }
-                      }}
                       error={!!errors.date}
                       helperText={errors.date?.message}
                     />
@@ -299,8 +217,8 @@ export default function ModifyAnnounce() {
                       id='startTime'
                       label='Horaire début'
                       autoComplete='startTime'
-                      value={announceData ? announceData.startTime : ''}
                       {...register('startTime')}
+                      value={startTimeInput}
                       onChange={(e) => {
                         let newValue = e.target.value
                         // Supprimer les caractères non numériques
@@ -309,10 +227,7 @@ export default function ModifyAnnounce() {
                         if (newValue.length > 2 && newValue.length <= 4) {
                           newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
                         }
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          startTime: newValue
-                        }))
+                        setStartTimeInput(newValue)
                       }}
                       error={!!errors.startTime}
                       helperText={errors.startTime?.message}
@@ -325,8 +240,8 @@ export default function ModifyAnnounce() {
                       id='endTime'
                       label='Horaire de fin'
                       autoComplete='endTime'
-                      value={announceData ? announceData.endTime : ''}
                       {...register('endTime')}
+                      value={endTimeInput}
                       onChange={(e) => {
                         let newValue = e.target.value
                         // Supprimer les caractères non numériques
@@ -335,10 +250,7 @@ export default function ModifyAnnounce() {
                         if (newValue.length > 2 && newValue.length <= 4) {
                           newValue = `${newValue.slice(0, 2)}:${newValue.slice(2)}`
                         }
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          endTime: newValue
-                        }))
+                        setEndTimeInput(newValue)
                       }}
                       error={!!errors.endTime}
                       helperText={errors.endTime?.message}
@@ -352,15 +264,7 @@ export default function ModifyAnnounce() {
                       type='number'
                       label='Nombre maximal de participants'
                       autoComplete='numberOfPeopleMax'
-                      value={announceData ? announceData.numberOfPeopleMax : ''}
                       {...register('numberOfPeopleMax')}
-                      onChange={(e) => {
-                        const newValue = parseInt(e.target.value)
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          numberOfPeopleMax: newValue
-                        }))
-                      }}
                       error={!!errors.numberOfPeopleMax}
                       helperText={errors.numberOfPeopleMax?.message}
                     />
@@ -373,15 +277,7 @@ export default function ModifyAnnounce() {
                       type='number'
                       label='Âge minimal requis'
                       autoComplete='ageMin'
-                      value={announceData ? announceData.ageMin : ''}
                       {...register('ageMin')}
-                      onChange={(e) => {
-                        const newValue = parseInt(e.target.value)
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          ageMin: newValue
-                        }))
-                      }}
                       error={!!errors.ageMin}
                       helperText={errors.ageMin?.message}
                     />
@@ -394,15 +290,7 @@ export default function ModifyAnnounce() {
                       type='number'
                       label='Âge maximal'
                       autoComplete='ageMax'
-                      value={announceData ? announceData.ageMax : ''}
                       {...register('ageMax')}
-                      onChange={(e) => {
-                        const newValue = parseInt(e.target.value)
-                        setAnnounceData((prevData: AnnounceData) => ({
-                          ...prevData,
-                          ageMax: newValue
-                        }))
-                      }}
                       error={!!errors.ageMax}
                       helperText={errors.ageMax?.message}
                     />
@@ -412,16 +300,20 @@ export default function ModifyAnnounce() {
               <Grid item sm={12} sx={{marginTop: 10}}>
                 {errorMessage &&
                   <Typography color='red'>
-                    L&apos;annonce existe déjà en état
+                    L&apos;annonce existe déjà
                   </Typography>
                 }
                 {successMessage &&
                   <Typography color='secondary.main'>
-                    L&apos;annonce est modifiée avec succès
+                    L&apos;annonce est ajouté avec succès
                   </Typography>
                 }
-                <Button type='submit' variant='contained' disabled={isDisabled} sx={{marginTop: 5}}>
-                  Modifier
+                <Button type='submit' variant='contained' disabled={isDisabled}
+                  sx={{
+                    marginTop: 3,
+                    marginBottom: 2
+                  }}>
+                  Ajouter
                 </Button>
               </Grid>
             </Grid>

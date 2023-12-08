@@ -1,11 +1,11 @@
+// React
 import React from 'react'
-import { Typography, Button, TextField, Grid } from '@mui/material'
-// components
+// Materials
+import { Grid } from '@mui/material'
+// Files
 import HeroSection from './HeroSection'
 
 const HomePage: React.FC = () => {
-  // Ajoutez le code pour gérer la logique de votre composant ici
-
   return (
     <Grid
       container

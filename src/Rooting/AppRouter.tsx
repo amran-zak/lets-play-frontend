@@ -1,16 +1,18 @@
+// React
 import * as React from 'react'
-import {BrowserRouter, Route, Routes, Navigate, Outlet} from 'react-router-dom'
-import NewPassword from '../Components/Authentification/NewPassword'
-import SignUp from '../Components/Authentification/SignUp'
-import Login from '../Components/Authentification/Login'
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom'
+// Files
+import NewPassword from '../Components/Users/Authentification/NewPassword'
+import SignUp from '../Components/Users/Authentification/SignUp'
+import Login from '../Components/Users/Authentification/Login'
 import Header from '../Components/NavBar/Header'
-import CreateAnnounce from '../Components/Organizer/CreateAnnounce'
-import ProfileEdit from '../Components/Authentification/Profile'
-import ModifyAnnounce from '../Components/Organizer/ModifyAnnounce'
-import ViewAnnounceOrganizer from '../Components/Organizer/ViewAnnounceOrganizer'
+import CreateAnnounce from '../Components/Users/Organizer/CreateAnnounce'
+import ProfileEdit from '../Components/Users/Authentification/Profile'
+import ModifyAnnounce from '../Components/Users/Organizer/ModifyAnnounce'
+import ViewAnnounceOrganizer from '../Components/Users/Organizer/ViewAnnounceOrganizer'
 import HomePage from '../Components/Home'
 import AnnouncesLists from '../Components/Home/AnnouncesLists'
-import AnnouncesListsParticipant from '../Components/Participant/AnnounceListParticipant'
+import AnnouncesListsParticipant from '../Components/Users/Participant/AnnounceListParticipant'
 import ViewDetailAnnounce from '../Components/Tools/AnnounceDetails/ViewDetailAnnounce'
 
 // Composant pour la protection de route

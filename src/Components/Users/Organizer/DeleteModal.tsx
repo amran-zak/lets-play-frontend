@@ -1,20 +1,16 @@
+// React
 import React from 'react'
-import {
-  Modal,
-  Box,
-  Typography,
-  Button,
-  Grid,
-  useTheme
-} from '@mui/material'
-import { SvgIconProps } from '@mui/material/SvgIcon'
+// Materials
+import { SvgIconProps, Modal, Box, Typography, Button, Grid, useTheme } from '@mui/material'
+// Icons
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import AnnounceData from '../../Types/Announce.types'
+// Files
+import AnnounceData from '../../../Types/Announce.types'
 
 interface DeleteModalProps {
   open: boolean

@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from 'react'
-import {FormControl, MenuItem, Select, SelectChangeEvent} from '@mui/material'
+// React
+import React, { useEffect, useState } from 'react'
+// Materials
+import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 
 const sportsList = [
   'Football',
