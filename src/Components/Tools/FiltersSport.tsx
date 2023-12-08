@@ -6,7 +6,7 @@ import {
 import {AxiosResponse} from 'axios'
 import { Close, FilterAlt, FilterAltOff } from '@mui/icons-material'
 import AnnounceData from '../../Types/Announce.types'
-import SportsList from '../SportsList'
+import SportsList from './SportsList'
 
 /* eslint-disable indent, @typescript-eslint/indent */
 

@@ -8,7 +8,7 @@ export default interface AnnounceData {
   date: string
   startTime: string
   endTime: string
-  address: string
+  address?: string
   city?: string | undefined
   ageMin: number
   ageMax: number
