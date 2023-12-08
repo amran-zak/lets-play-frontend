@@ -1,27 +1,22 @@
-import * as React from 'react'
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, FormHelperText, Paper, debounce
-} from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import {useForm} from 'react-hook-form'
+// React
+import React, { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form'
+// Yup
 import * as Yup from 'yup'
-import {yupResolver} from '@hookform/resolvers/yup'
-import UserData from '../../Types/User.types'
-import Authentification from '../../Services/Authentification'
+import { yupResolver } from '@hookform/resolvers/yup'
+// Materilas
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, FormHelperText, Paper, debounce } from '@mui/material'
+// Icons
 import {Visibility, VisibilityOff} from '@mui/icons-material'
-import background from '../Images/chaussure.jpeg'
-import {useCallback, useState} from 'react'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+// Images
+import background from '../../Images/chaussure.jpeg'
+// Files
+import UserData from '../../../Types/User.types'
+import Authentification from '../../../Services/Authentification'
 
 interface User {
-  phoneNumber: number
+  phoneNumber: string
   userName: string
   email: string
   password: string
@@ -45,8 +40,7 @@ export default function SignUp() {
     passwordConfirmation: Yup.string()
       .oneOf([Yup.ref('password')], 'Les mots de passe ne correspondent pas')
       .required('La confirmation du mot de passe est requise'),
-    phoneNumber: Yup.number()
-      .typeError('Le téléphone doit être un nombre')
+    phoneNumber: Yup.string()
       .required('Le téléphone est requis'),
     address: Yup.string().required('La ville est requise'),
     city: Yup.string(),

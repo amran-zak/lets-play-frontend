@@ -1,6 +1,9 @@
+// React
 import React, { useCallback, useState } from 'react'
+import Map, { Marker, NavigationControl } from 'react-map-gl'
+// Materials
 import { TextField, debounce } from '@mui/material'
-import Map, {Marker, NavigationControl} from 'react-map-gl'
+// CSS
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 interface FormInputProps {

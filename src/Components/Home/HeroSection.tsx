@@ -1,9 +1,12 @@
+// React
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Grid, Typography, Button, useMediaQuery, Paper, Card } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+// Materials
+import { Grid, Typography, Button, useMediaQuery, Paper, Card, useTheme } from '@mui/material'
 import moment from 'moment-timezone'
+// Files
 import homPageImage from '../../Components/Images/football_homepage.jpeg'
+
 const HeroSection = () => {
   const theme = useTheme()
   const matchesSM = useMediaQuery(theme.breakpoints.down('sm'))

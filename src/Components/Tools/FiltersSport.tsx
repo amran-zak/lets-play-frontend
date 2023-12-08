@@ -1,10 +1,12 @@
+// React
 import React, { useState, useCallback } from 'react'
-import {
-  Button, FormControl, TextField, List, ListItem, Drawer, Divider, Grid, debounce, FormControlLabel,
-  Checkbox
-} from '@mui/material'
+// Axios
 import {AxiosResponse} from 'axios'
+// Materials
+import { Button, FormControl, TextField, List, ListItem, Drawer, Divider, Grid, debounce, FormControlLabel, Checkbox } from '@mui/material'
+// Icons
 import { Close, FilterAlt, FilterAltOff } from '@mui/icons-material'
+// Files
 import AnnounceData from '../../Types/Announce.types'
 import SportsList from './SportsList'
 

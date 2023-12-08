@@ -1,14 +1,17 @@
+// React
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+// Materials
 import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
-import AnnounceData from '../../Types/Announce.types'
-import AnnounceSerive from '../../Services/Announce'
+// Files
+import { useAppContext } from '../../AppContextProps'
+import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
+import AnnounceData from '../../../Types/Announce.types'
+import AnnounceSerive from '../../../Services/Announce'
 import DeleteModal from './DeleteModal'
-import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
-import FilterComponent from '../Tools/FiltersSport'
-import PaginationComponent from '../Tools/PaginationComponent'
-import { useAppContext } from '../AppContextProps'
-import DetailAnnounce from '../Tools/AnnounceDetails/Details'
+import FilterComponent from '../../Tools/FiltersSport'
+import PaginationComponent from '../../Tools/PaginationComponent'
+import DetailAnnounce from '../../Tools/AnnounceDetails/Details'
 
 export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()
@@ -107,7 +110,7 @@ export default function ViewAnnounceOrganizer() {
               <CardMedia
                 component="img"
                 height="140"
-                src={require(`../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}`)}
+                src={require(`../../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}`)}
                 alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>

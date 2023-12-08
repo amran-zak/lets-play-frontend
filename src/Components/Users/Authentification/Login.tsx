@@ -1,32 +1,21 @@
-import * as React from 'react'
+// React
+import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Link,
-  Paper,
-  Box,
-  Grid,
-  Typography,
-  FormControl,
-  InputLabel,
-  IconButton,
-  OutlinedInput,
-  InputAdornment,
-  FormHelperText
-} from '@mui/material'
+import { useForm } from 'react-hook-form'
+// Yup
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+// Materials
+import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography, FormControl, InputLabel, IconButton, OutlinedInput, InputAdornment, FormHelperText } from '@mui/material'
+// Icons
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import background from '../Images/image.jpeg'
-import {useForm} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
-import LoginData from '../../Types/Login.types'
-import {useState} from 'react'
-import Authentification from '../../Services/Authentification'
+// Images
+import background from '../../Images/image.jpeg'
+// Files
+import LoginData from '../../../Types/Login.types'
+import Authentification from '../../../Services/Authentification'
 
 export default function Login(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState(false)

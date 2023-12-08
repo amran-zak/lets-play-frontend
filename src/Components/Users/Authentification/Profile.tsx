@@ -1,25 +1,22 @@
+// React
 import React, { useState, useEffect, useCallback } from 'react'
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  Paper
-} from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { useForm } from 'react-hook-form'
+// Yup
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import Authentification from '../../Services/Authentification'
+// Lodash
 import debounce from 'lodash/debounce'
-import background from '../Images/football_homepage.jpeg'
+// Materials
+import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, Paper } from '@mui/material'
+// Icons
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+// Images
+import background from '../../Images/football_homepage.jpeg'
+// Files
+import Authentification from '../../../Services/Authentification'
 
 interface UserProfileData {
-  phoneNumber: number
+  phoneNumber: string
   userName: string
   email: string
   address: string
@@ -35,7 +32,7 @@ interface CitySuggestion {
 
 export default function ProfileEdit() {
   const [profileData, setProfileData] = useState<UserProfileData>({
-    phoneNumber: 1,
+    phoneNumber: '',
     userName: '',
     email: '',
     address: '',
@@ -87,8 +84,7 @@ export default function ProfileEdit() {
         }
         return value
       }).required('L\'adresse email est requise').email('L\'adresse email n\'est pas valide'),
-    phoneNumber: Yup.number()
-      .typeError('Le téléphone doit être un nombre')
+    phoneNumber: Yup.string()
       .required('Le téléphone est requis'),
     address: Yup.string().required('La ville est requise'),
     city: Yup.string(),
@@ -268,7 +264,7 @@ export default function ProfileEdit() {
                 <TextField
                   fullWidth
                   label="Numéro de téléphone"
-                  value={profileData ? '+33 0' + profileData.phoneNumber : ''}
+                  value={profileData ? '+33 ' + profileData.phoneNumber : ''}
                   disabled={true}
                 />
               }
@@ -279,10 +275,12 @@ export default function ProfileEdit() {
                   id="phoneNumber"
                   label="Numéro de téléphone"
                   autoComplete='phoneNumber'
-                  value={profileData ? '+33 0' + profileData.phoneNumber : ''}
+                  value={profileData ? profileData.phoneNumber : ''}
                   {...register('phoneNumber')}
                   onChange={(e) => {
-                    const newValue = parseInt(e.target.value.replace('+33 0', ''))
+                    let newValue = e.target.value
+                    newValue = newValue.replace(/(\d{2})(?=\d)/g, '$1 ')
+
                     setProfileData((prevData: UserProfileData) => ({
                       ...prevData,
                       phoneNumber: newValue

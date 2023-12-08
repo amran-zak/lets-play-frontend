@@ -1,6 +1,8 @@
+// React
 import React, { useEffect, useState } from 'react'
-import { Box, Grid, Typography } from '@mui/material'
-import { SvgIconProps } from '@mui/material/SvgIcon'
+// Materials
+import { SvgIconProps, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+// Icons
 import EventIcon from '@mui/icons-material/Event'
 import PeopleIcon from '@mui/icons-material/People'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -8,24 +10,27 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
+import { Face6 } from '@mui/icons-material'
+// Files
+import { useAppContext } from '../../AppContextProps'
 import AnnounceData from '../../../Types/Announce.types'
 import Authentification from '../../../Services/Authentification'
 import UserProfileData from '../../../Types/ProfileModif.types'
-import { useAppContext } from '../../AppContextProps'
 
 interface Detail {
   icon: React.ElementType<SvgIconProps>
   children: React.ReactNode
+  color?: string
 }
 
 const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnounce?: boolean, isOrganizerDisplay?: boolean }> = ({ sport, isYourParticipationOrAnnounce, isOrganizerDisplay }) => {
   const organizer = sport?.organizer
   const { setIsYourParticipationOrAnnounce } = useAppContext()
 
-  const Detail: React.FC<Detail> = ({ icon: IconComponent, children }) => (
-    <Box display='flex' alignItems='center' mt={1}>
-      <IconComponent color='action' style={{ marginRight: '10px', color: 'green' }} />
-      <Typography variant='body2' color='text.secondary'>
+  const Detail: React.FC<Detail> = ({ icon: IconComponent, children, color }) => (
+    <Box display='flex' alignItems='center' mt={1} color={color}>
+      <IconComponent color='action' style={{ marginRight: '10px', color: color ?? 'green' }} />
+      <Typography variant='body2' color={color ?? 'text.secondary'}>
         {children}
       </Typography>
     </Box>
@@ -50,6 +55,36 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
 
   return (
     <>
+      {isOrganizerDisplay && (
+        <Tooltip placement="right" style={{width: 'auto'}}
+          title={
+            <div>
+              Détails de l&apos;organisateur
+              <div style={{marginTop: '15px', marginBottom: '15px'}}>
+                <Detail icon={Face6} color={'white'}>
+                  {organizer?.userName}
+                </Detail>
+                <Detail icon={Phone} color={'white'}>
+                  {`${isYourParticipationOrAnnounce ? '+33 ' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
+                </Detail>
+              </div>
+              <Button size="small" variant="contained" color="primary">
+                Voir le profile
+              </Button>
+            </div>
+          }
+        >
+          <IconButton>
+            <Grid container spacing={2} style={{marginBottom: '20px'}}>
+              <Grid item xs={12}>
+                <Detail icon={Face6}>
+                  Organisateur: {organizer?.userName}
+                </Detail>
+              </Grid>
+            </Grid>
+          </IconButton>
+        </Tooltip>
+      )}
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Detail icon={PeopleIcon}>Maximum: {sport.numberOfPeopleMax}</Detail>
@@ -84,14 +119,6 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
         </Grid>
       </Grid>
       <Detail icon={LocationOnIcon}>{sport.address}</Detail>
-      {isOrganizerDisplay &&
-        <Detail icon={PeopleIcon}>Organisateur: {organizer?.userName}</Detail>
-      }
-      {isOrganizerDisplay &&
-        <Detail icon={Phone}>
-          Téléphone: {`${isYourParticipationOrAnnounce ? '+33 0' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
-        </Detail>
-      }
     </>
   )
 }

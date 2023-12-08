@@ -1,5 +1,5 @@
 export default interface UserProfileData {
-  phoneNumber: number
+  phoneNumber: string
   userName: string
   email: string
   address: string
