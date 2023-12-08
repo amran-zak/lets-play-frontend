@@ -1,10 +1,10 @@
 // React
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 // Materials
-import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper, CardMedia } from '@mui/material'
+import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper, CardMedia, CardActionArea } from '@mui/material'
 // Icons
-import { CheckCircle, Cancel } from '@mui/icons-material'
+import { CheckCircle, Cancel, Message } from '@mui/icons-material'
 // Images
 import background from '../../Images/football_homepage.jpeg'
 // Files
@@ -14,7 +14,9 @@ import AnnounceData from '../../../Types/Announce.types'
 import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
 import ParticipationsService from '../../../Services/Participations'
 import PublicService from '../../../Services/Public'
-import DetailAnnounce from './Details'
+import DetailAnnounce from './DetailAnnounce'
+import UserProfileData from '../../../Types/ProfileModif.types'
+import Authentification from '../../../Services/Authentification'
 
 const ViewDetailAnnounce: React.FC = () => {
   const [participantsGestion, setParticipantsGestion] = useState<PopulateParticipationData[]>([])
@@ -94,6 +96,30 @@ const ViewDetailAnnounce: React.FC = () => {
     }
   }
 
+  const [profile, setProfile] = useState<UserProfileData>()
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await Authentification.getProfile()
+        setProfile(response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    void fetchProfile()
+  }, [])
+
+  const navigate = useNavigate()
+  const { setIsYourParticipationOrAnnounce } = useAppContext()
+  const handleViewDetailsProfile = (userId: string) => {
+    setIsYourParticipationOrAnnounce(false)
+    if (profile?._id === userId) {
+      navigate('/profile')
+    } else {
+      navigate(`/profile/${userId}`)
+    }
+  }
+
   return sport ? (
     <Container component="main"
       sx={{
@@ -132,11 +158,13 @@ const ViewDetailAnnounce: React.FC = () => {
                 {participantsList.map((participant) => (
                   <Grid item xs={12} sm={6} md={4} key={participant._id}>
                     <Card>
-                      <CardContent>
-                        <Typography variant="h6" component="div">
-                          {participant.participant.userName}
-                        </Typography>
-                      </CardContent>
+                      <CardActionArea onClick={() => handleViewDetailsProfile(participant.participant._id ?? '')}>
+                        <CardContent>
+                          <Typography variant="h6" component="div">
+                            {profile?._id === participant.participant._id ? participant.participant.userName : 'Moi'}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
                     </Card>
                   </Grid>
                 ))}
@@ -163,6 +191,14 @@ const ViewDetailAnnounce: React.FC = () => {
                             }
                           })()}
                         </Typography>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<Message />}
+                          disabled={participant.etat !== 'pending'}
+                        >
+                          Refuser
+                        </Button>
                         <Button
                           variant="contained"
                           color="primary"

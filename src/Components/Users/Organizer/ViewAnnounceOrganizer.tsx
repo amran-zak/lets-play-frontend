@@ -11,7 +11,7 @@ import AnnounceSerive from '../../../Services/Announce'
 import DeleteModal from './DeleteModal'
 import FilterComponent from '../../Tools/FiltersSport'
 import PaginationComponent from '../../Tools/PaginationComponent'
-import DetailAnnounce from '../../Tools/AnnounceDetails/Details'
+import DetailAnnounce from '../../Tools/AnnounceDetails/DetailAnnounce'
 
 export default function ViewAnnounceOrganizer() {
   const navigate = useNavigate()

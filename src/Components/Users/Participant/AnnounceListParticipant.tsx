@@ -11,7 +11,7 @@ import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportLis
 import ParticipationsService from '../../../Services/Participations'
 import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
 import PaginationComponent from '../../Tools/PaginationComponent'
-import DetailAnnounce from '../../Tools/AnnounceDetails/Details'
+import DetailAnnounce from '../../Tools/AnnounceDetails/DetailAnnounce'
 
 interface DetailProps {
   icon: React.ElementType<SvgIconProps>

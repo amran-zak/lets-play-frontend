@@ -14,7 +14,7 @@ import Authentification from '../../Services/Authentification'
 import UserProfileData from '../../Types/ProfileModif.types'
 import FilterComponent from '../Tools/FiltersSport'
 import PaginationComponent from '../Tools/PaginationComponent'
-import DetailAnnounce from '../Tools/AnnounceDetails/Details'
+import DetailAnnounce from '../Tools/AnnounceDetails/DetailAnnounce'
 
 const AnnouncesLists: React.FC = () => {
   const [userParticipations, setUserParticipations] = useState<PopulateParticipationData[]>([])

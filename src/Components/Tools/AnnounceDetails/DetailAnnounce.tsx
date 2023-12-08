@@ -1,5 +1,6 @@
 // React
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 // Materials
 import { SvgIconProps, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 // Icons
@@ -53,6 +54,12 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
     }
   }, [])
 
+  const navigate = useNavigate()
+  const handleViewDetailsProfile = (userId: string) => {
+    setIsYourParticipationOrAnnounce(isYourParticipationOrAnnounce ?? false)
+    navigate(`/profile/${userId}`)
+  }
+
   return (
     <>
       {isOrganizerDisplay && (
@@ -68,7 +75,7 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
                   {`${isYourParticipationOrAnnounce ? '+33 ' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
                 </Detail>
               </div>
-              <Button size="small" variant="contained" color="primary">
+              <Button size="small" variant="contained" color="primary" onClick={() => handleViewDetailsProfile(organizer?._id ?? '')}>
                 Voir le profile
               </Button>
             </div>
