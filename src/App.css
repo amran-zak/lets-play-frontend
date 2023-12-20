@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.background-container {
+  position: relative;
+}
+
+.background-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(./Components/Images/fond.png) center center / cover no-repeat;
+  opacity: 0.7; /* Réglez l'opacité selon vos besoins */
+  z-index: -1; /* Pour s'assurer que l'image reste en arrière-plan */
+}

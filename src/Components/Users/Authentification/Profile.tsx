@@ -10,8 +10,6 @@ import debounce from 'lodash/debounce'
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, Paper } from '@mui/material'
 // Icons
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-// Images
-import background from '../../Images/football_homepage.jpeg'
 // Files
 import Authentification from '../../../Services/Authentification'
 
@@ -68,8 +66,6 @@ export default function ProfileEdit() {
   const validationSchema = Yup.object().shape({
     userName: Yup.string()
       .transform((value, originalValue) => {
-        console.log('value : ' + value)
-        console.log('user : ' + profileData.userName)
         if (!value) {
           value = profileData.userName
         }
@@ -77,8 +73,6 @@ export default function ProfileEdit() {
       }).required('Le nom est requis'),
     email: Yup.string()
       .transform((value, originalValue) => {
-        console.log('value : ' + value)
-        console.log('user : ' + profileData.email)
         if (!value) {
           value = profileData.email
         }
@@ -170,10 +164,9 @@ export default function ProfileEdit() {
 
   return (
     <Container component="main"
+      className="background-container"
       sx={{
         minWidth: '100%',
-        background: `url(${background})`,
-        backgroundSize: 'cover',
         minHeight: '100vh'
       }}
     >

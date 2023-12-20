@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 // Images
-import background from '../../Images/image.jpeg'
+import background from '../../Images/logo.png'
 // Files
 import LoginData from '../../../Types/Login.types'
 import Authentification from '../../../Services/Authentification'

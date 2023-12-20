@@ -9,8 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Paper, Container } from '@mui/material'
 // Icons
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-// Images
-import background from '../../Images/football_homepage.jpeg'
 // Files
 import AnnounceData from '../../../Types/Announce.types'
 import SportsList from '../../Tools/SportsList'
@@ -122,10 +120,9 @@ export default function CreateAnnounce() {
 
   return (
     <Container component="main"
+      className="background-container"
       sx={{
         minWidth: '100%',
-        background: `url(${background})`,
-        backgroundSize: 'cover',
         minHeight: '100vh'
       }}
     >

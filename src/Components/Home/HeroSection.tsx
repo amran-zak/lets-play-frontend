@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Grid, Typography, Button, useMediaQuery, Paper, Card, useTheme } from '@mui/material'
 import moment from 'moment-timezone'
 // Files
-import homPageImage from '../../Components/Images/football_homepage.jpeg'
+import homPageImage from '../../Components/Images/fond.png'
 
 const HeroSection = () => {
   const theme = useTheme()
@@ -83,7 +83,7 @@ const HeroSection = () => {
         }}
       >
         <Grid item xs={12}>
-          <Card sx={{ m: 10, p: 5, backgroundColor: 'rgba(0, 0, 0, 0.5)', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)' }}>
+          <Card sx={{ m: 10, p: 5, backgroundColor: 'rgba(0, 0, 0, 0.8)', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)' }}>
             <Typography variant={matchesSM ? 'h4' : 'h2'} component="h1" gutterBottom color='white'>
               Trouvez l&rsquo;événement sportif parfait pour vous
             </Typography>

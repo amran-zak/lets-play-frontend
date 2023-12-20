@@ -17,6 +17,7 @@ import { useAppContext } from '../../AppContextProps'
 import AnnounceData from '../../../Types/Announce.types'
 import Authentification from '../../../Services/Authentification'
 import UserProfileData from '../../../Types/ProfileModif.types'
+import ViewAverageRating from '../RatingAndComment/ViewAverageRating'
 
 interface Detail {
   icon: React.ElementType<SvgIconProps>
@@ -49,15 +50,34 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
     }
     void fetchProfile()
 
+    console.log(isYourParticipationOrAnnounce, sport.organizer?._id, profileData?._id)
+
     if (!isYourParticipationOrAnnounce && sport.organizer?._id === profileData?._id) {
       setIsYourParticipationOrAnnounce(true)
     }
   }, [])
 
+  const [profile, setProfile] = useState<UserProfileData>()
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await Authentification.getProfile()
+        setProfile(response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    void fetchProfile()
+  }, [])
+
   const navigate = useNavigate()
   const handleViewDetailsProfile = (userId: string) => {
-    setIsYourParticipationOrAnnounce(isYourParticipationOrAnnounce ?? false)
-    navigate(`/profile/${userId}`)
+    setIsYourParticipationOrAnnounce(false)
+    if (profile?._id === userId) {
+      navigate('/profile')
+    } else {
+      navigate(`/profile/${userId}`)
+    }
   }
 
   return (
@@ -74,6 +94,9 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
                 <Detail icon={Phone} color={'white'}>
                   {`${isYourParticipationOrAnnounce ? '+33 ' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
                 </Detail>
+              </div>
+              <div style={{textAlign: 'center', marginBottom: '15px'}}>
+                <ViewAverageRating userId={organizer?._id} starColor='white'/>
               </div>
               <Button size="small" variant="contained" color="primary" onClick={() => handleViewDetailsProfile(organizer?._id ?? '')}>
                 Voir le profile

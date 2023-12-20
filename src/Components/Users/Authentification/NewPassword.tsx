@@ -11,7 +11,7 @@ import { Typography, Grid, Box, Paper, TextField, CssBaseline, Button, FormContr
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 // Images
-import background from '../../Images/badminton.jpeg'
+import background from '../../Images/fond.png'
 // Files
 import Authentification from '../../../Services/Authentification'
 import NewpasswordData from '../../../Types/NewPassword.types'

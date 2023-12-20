@@ -5,8 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaseline, Paper, CardMedia, CardActionArea } from '@mui/material'
 // Icons
 import { CheckCircle, Cancel, Message } from '@mui/icons-material'
-// Images
-import background from '../../Images/football_homepage.jpeg'
 // Files
 import { useAppContext } from '../../AppContextProps'
 import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
@@ -122,10 +120,9 @@ const ViewDetailAnnounce: React.FC = () => {
 
   return sport ? (
     <Container component="main"
+      className="background-container"
       sx={{
         minWidth: '100%',
-        background: `url(${background})`,
-        backgroundSize: 'cover',
         minHeight: '100vh'
       }}
     >

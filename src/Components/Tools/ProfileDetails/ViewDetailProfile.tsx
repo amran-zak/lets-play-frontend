@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 // Materials
 import { Typography, Grid, Container, Box, CssBaseline, Paper } from '@mui/material'
-// Icons
-// Images
-import background from '../../Images/football_homepage.jpeg'
 // Files
 import { useAppContext } from '../../AppContextProps'
 import UserData from '../../../Types/User.types'
 import Users from '../../../Services/Users'
 import DetailProfile from './DetailProfile'
+import RatingAndCommentUser from '../RatingAndComment/RatingAndCommentUser'
+import Authentification from '../../../Services/Authentification'
+import UserProfileData from '../../../Types/ProfileModif.types'
 
 const DetailsProfileUserPage: React.FC = () => {
   const [user, setUser] = useState<UserData>()
@@ -33,10 +33,9 @@ const DetailsProfileUserPage: React.FC = () => {
 
   return user ? (
     <Container component="main"
+      className="background-container"
       sx={{
         minWidth: '100%',
-        background: `url(${background})`,
-        backgroundSize: 'cover',
         minHeight: '100vh'
       }}
     >
@@ -63,6 +62,7 @@ const DetailsProfileUserPage: React.FC = () => {
             /><br/>
             <DetailProfile user={user} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce}/>
           </Grid>
+          <RatingAndCommentUser userId={user._id}/>
         </Grid>
       </Box>
     </Container>

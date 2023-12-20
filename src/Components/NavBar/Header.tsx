@@ -6,7 +6,7 @@ import { AppBar, Box, Toolbar, Tooltip, Typography, Button } from '@mui/material
 // Icons
 import { Home } from '@mui/icons-material'
 // Images
-import LogoGreen from '../Images/logo-green.png'
+import LogoGreen from '../Images/logo.png'
 // Files
 import PopUp from '../Tools/PopUp'
 import ProfileHeader from './ProfileHeader'

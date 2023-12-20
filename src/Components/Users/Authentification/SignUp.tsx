@@ -9,8 +9,6 @@ import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Co
 // Icons
 import {Visibility, VisibilityOff} from '@mui/icons-material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-// Images
-import background from '../../Images/chaussure.jpeg'
 // Files
 import UserData from '../../../Types/User.types'
 import Authentification from '../../../Services/Authentification'
@@ -146,10 +144,9 @@ export default function SignUp() {
 
   return (
     <Container component="main"
+      className="background-container"
       sx={{
         minWidth: '100%',
-        background: `url(${background})`,
-        backgroundSize: 'cover',
         minHeight: '100vh'
       }}
     >
