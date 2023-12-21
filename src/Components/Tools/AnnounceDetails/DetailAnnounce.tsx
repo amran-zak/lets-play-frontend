@@ -50,8 +50,6 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
     }
     void fetchProfile()
 
-    console.log(isYourParticipationOrAnnounce, sport.organizer?._id, profileData?._id)
-
     if (!isYourParticipationOrAnnounce && sport.organizer?._id === profileData?._id) {
       setIsYourParticipationOrAnnounce(true)
     }

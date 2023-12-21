@@ -62,7 +62,6 @@ export default function NewPassword(): JSX.Element {
     }
     Authentification.newPassword(loginData)
       .then((response: any) => {
-        console.log('Mot de passe rénitialisé')
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
           setUser(response.data.User)

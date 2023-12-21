@@ -49,7 +49,6 @@ export default function Login(): JSX.Element {
     try {
       const response = await Authentification.signIn(data)
       if (response.data.token || response.data.message) {
-        console.log('Connecté')
         // Stocker le token dans le localStorage
         localStorage.setItem('token', response.data.token)
         setErrorMessage(false)

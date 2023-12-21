@@ -37,7 +37,6 @@ const RatingAndCommentUser: React.FC<RatingComponentProps> = ({ userId, starColo
   const fetchProfile = async () => {
     try {
       const response = await Authentification.getProfile()
-      console.log(response)
       if (response.data.user) {
         setProfile(response.data.user)
       } else {

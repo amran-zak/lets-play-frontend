@@ -125,7 +125,6 @@ export default function SignUp() {
     }
     Authentification.signUp(signUpData)
       .then((response: any) => {
-        console.log('Inscript réussit')
         setMessage(response.data.message)
         if (response.data.token) {
           localStorage.setItem('token', response.data.token)
