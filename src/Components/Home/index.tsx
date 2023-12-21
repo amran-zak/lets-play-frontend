@@ -26,9 +26,6 @@ const HomePage: React.FC = () => {
         {/* Témoignages */}
         {/* Ajoutez des témoignages ou des avis ici */}
       </section>
-      <footer style={{ marginTop: '20px' }}>
-        {/* Pied de page avec des liens supplémentaires et des informations */}
-      </footer>
     </Grid>
   )
 }

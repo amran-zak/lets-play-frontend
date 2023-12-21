@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom
 import NewPassword from '../Components/Users/Authentification/NewPassword'
 import SignUp from '../Components/Users/Authentification/SignUp'
 import Login from '../Components/Users/Authentification/Login'
-import Header from '../Components/NavBar/Header'
+import Header from '../Components/NavbarAndFooter/Header'
 import CreateAnnounce from '../Components/Users/Organizer/CreateAnnounce'
 import ProfileEdit from '../Components/Users/Authentification/Profile'
 import ModifyAnnounce from '../Components/Users/Organizer/ModifyAnnounce'
@@ -15,6 +15,8 @@ import AnnouncesLists from '../Components/Home/AnnouncesLists'
 import AnnouncesListsParticipant from '../Components/Users/Participant/AnnounceListParticipant'
 import ViewDetailAnnounce from '../Components/Tools/AnnounceDetails/ViewDetailAnnounce'
 import DetailsProfileUserPage from '../Components/Tools/ProfileDetails/ViewDetailProfile'
+import Footer from '../Components/NavbarAndFooter/Footer'
+import About from '../Components/Home/About'
 
 // Composant pour la protection de route
 const PrivateRoute = () => {
@@ -29,6 +31,7 @@ export default function AppRouter(): JSX.Element {
           <Header/>
           <Routes>
             <Route path='/' element={<HomePage/>}/>
+            <Route path='/a_propos' element={<About/>}/>
             <Route path='/liste/annonces' element={<AnnouncesLists/>}/>
             <Route path='/connexion' element={<Login/>}/>
             <Route path='/nouveau_mot_de_passe' element={<NewPassword/>}/>
@@ -46,6 +49,7 @@ export default function AppRouter(): JSX.Element {
           </Routes>
         </div>
       </div>
+      <Footer />
     </BrowserRouter>
   )
 }
