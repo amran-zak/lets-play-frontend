@@ -34,7 +34,7 @@ const DetailProfile: React.FC<{ user: UserData, sportId: string }> = ({ user, sp
         const response = await ParticipationsService.getIfParticiping(sportId)
         setIsParticipating(response.data.isParticipating)
       } catch (error) {
-        console.error('Erreur lors du chargement du profile', error)
+        console.error(error)
       }
     }
     void fetchData()

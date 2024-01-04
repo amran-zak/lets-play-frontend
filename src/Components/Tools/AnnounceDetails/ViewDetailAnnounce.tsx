@@ -109,6 +109,26 @@ const ViewDetailAnnounce: React.FC = () => {
     }
   }
 
+  const [isParticipating, setIsParticipating] = useState<boolean>(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ParticipationsService.getIfParticiping(sportId ?? '')
+        setIsParticipating(response.data.isParticipating)
+        if (response.data.isParticipating) {
+          void fetchParticipantsGestion(sportId ?? '')
+          void fetchParticipantsList(sportId ?? '')
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    void fetchData()
+  }, [isParticipating])
+
+  console.log(isParticipating)
+
   return sport ? (
     <Container component="main"
       className="background-container"
@@ -140,7 +160,7 @@ const ViewDetailAnnounce: React.FC = () => {
             /><br/>
             <DetailAnnounce sport={sport} isOrganizerDisplay={true}/>
           </Grid>
-          {'' &&
+          {isParticipating &&
             <>
               <Grid item md={6}>
                 {participantsList.map((participant) => (

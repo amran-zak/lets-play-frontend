@@ -80,7 +80,7 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isOrganizerDisplay?: boole
         const response = await ParticipationsService.getIfParticiping(sport._id ?? '')
         setIsParticipating(response.data.isParticipating)
       } catch (error) {
-        console.error('Erreur lors du chargement du profile', error)
+        console.error(error)
       }
     }
     void fetchData()
