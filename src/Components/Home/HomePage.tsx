@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // Materials
-import { Grid, Typography, Button, useMediaQuery, Paper, Card, useTheme } from '@mui/material'
+import { Grid, Typography, Button, useMediaQuery, Paper, Card, useTheme, lighten } from '@mui/material'
 import moment from 'moment-timezone'
 // Files
 import homPageImage from '../../Components/Images/fond.png'
@@ -95,9 +95,7 @@ const HeroSection = () => {
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   backgroundColor: '#f5f5f5',
-                  ':hover': {
-                    backgroundColor: `${theme.palette.primary.light}`
-                  },
+                  ':hover': {backgroundColor: lighten(`${theme.palette.primary.light}`, 0.7)},
                   border: `solid 2px ${theme.palette.primary.light}`
                 }}
               >
@@ -121,7 +119,7 @@ const HeroSection = () => {
                   <Grid item md={6}>
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="primary"
                       href={article.link}
                       target="_blank"
                       rel="noopener noreferrer"

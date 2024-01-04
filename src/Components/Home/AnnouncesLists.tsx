@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // Materials
-import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
+import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button, lighten } from '@mui/material'
 // Files
 import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import AnnounceData from '../../Types/Announce.types'
@@ -103,7 +103,7 @@ const AnnouncesLists: React.FC = () => {
         <FilterComponent {...FilterProps}/>
         {currentAnnounces.map((sport, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card elevation={3}>
+            <Card elevation={3} sx={{':hover': {backgroundColor: lighten(`${theme.palette.primary.light}`, 0.7)}}}>
               <CardActionArea onClick={() => handleViewDetails(sport._id ? sport._id : '')}>
                 <CardMedia
                   component="img"

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // Materials
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography, useTheme, SvgIconProps } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography, useTheme, SvgIconProps, lighten } from '@mui/material'
 // Icons
 import Start from '@mui/icons-material/Start'
 // Files
@@ -79,7 +79,7 @@ const AnnouncesListsParticipant: React.FC = () => {
       <Grid container spacing={4} style={{ padding: theme.spacing(2), marginTop: 50 }}>
         {currentParticipations.map((participation, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card elevation={3}>
+            <Card elevation={3} sx={{':hover': {backgroundColor: lighten(`${theme.palette.primary.light}`, 0.7)}}}>
               <CardActionArea onClick={() => handleViewDetails(participation.sport._id ? participation.sport._id : '')}>
                 <CardMedia
                   component="img"
