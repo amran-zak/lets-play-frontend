@@ -30,6 +30,13 @@ const RatingAndCommentUser: React.FC<RatingComponentProps> = ({ userId, starColo
     criteriaMode: 'all'
   })
 
+  const [comment, setComment] = useState('')
+  const isButtonDisabled = comment.trim() === ''
+
+  const handleCommentChange = (event: { target: { value: React.SetStateAction<string> } }) => {
+    setComment(event.target.value)
+  }
+
   const [currentRating, setCurrentRating] = useState<RatingData>()
 
   const [profile, setProfile] = useState<UserProfileData>()
@@ -93,12 +100,13 @@ const RatingAndCommentUser: React.FC<RatingComponentProps> = ({ userId, starColo
       rating: currentRating?.rating ?? 0,
       comment: formData.comment,
       at: currentRating?.at ?? new Date(),
-      from: currentRating?.from ?? defaultUserData, // Utilisez un UserData par défaut si from est undefined
-      to: currentRating?.to ?? defaultUserData // Faites la même chose pour to
+      from: currentRating?.from ?? defaultUserData,
+      to: currentRating?.to ?? defaultUserData
     }
 
     try {
       void createOrUpdate(modifyData)
+      setComment('')
     } catch (error) {
       console.error(error)
     }
@@ -140,12 +148,13 @@ const RatingAndCommentUser: React.FC<RatingComponentProps> = ({ userId, starColo
           placeholder="Ajouter un commentaire"
           autoComplete='comment'
           {...register('comment')}
+          onChange={handleCommentChange}
           multiline
           rows={5}
           error={!!errors.comment}
           helperText={errors.comment?.message}
         />
-        <Button type="submit" variant="contained" sx={{ marginTop: 3 }}>
+        <Button type="submit" variant="contained" sx={{ marginTop: 3 }} disabled={isButtonDisabled}>
           Enregistrer
         </Button>
       </form>

@@ -2,7 +2,6 @@ import React from 'react'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
 import './App.css'
 import AppRouter from './Rooting/AppRouter'
-import { AppProvider } from './Components/AppContextProps'
 
 const theme = createTheme({
   palette: {
@@ -18,11 +17,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppProvider>
-        <div className="App">
-          <AppRouter/>
-        </div>
-      </AppProvider>
+      <div className="App">
+        <AppRouter/>
+      </div>
     </ThemeProvider>
   )
 }

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 // Materials
 import { Card, CardMedia, CardContent, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 // Files
-import { useAppContext } from '../AppContextProps'
 import { sportsListMapping, SportsListMappingKey } from '../../Types/SportListImagePath'
 import AnnounceData from '../../Types/Announce.types'
 import PublicService from '../../Services/Public'
@@ -51,12 +50,8 @@ const AnnouncesLists: React.FC = () => {
     void fetchProfile()
   }, [])
 
-  const { setIsYourParticipationOrAnnounce } = useAppContext()
   // Fonction pour vérifier si l'utilisateur a déjà participé à un sport donné
   const hasParticipated = (sportId: string) => {
-    if (userParticipations?.some(participation => participation.sport._id === sportId)) {
-      setIsYourParticipationOrAnnounce(true)
-    }
     return userParticipations?.some(participation => participation.sport._id === sportId)
   }
 
@@ -96,7 +91,6 @@ const AnnouncesLists: React.FC = () => {
 
   const navigate = useNavigate()
   const handleViewDetails = (sportId: string) => {
-    setIsYourParticipationOrAnnounce(false)
     void hasParticipated(sportId)
     navigate(`/annonce/details/${sportId}`)
   }

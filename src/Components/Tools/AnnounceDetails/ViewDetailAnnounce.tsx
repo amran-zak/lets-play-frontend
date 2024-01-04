@@ -6,12 +6,11 @@ import { Card, CardContent, Typography, Button, Grid, Container, Box, CssBaselin
 // Icons
 import { CheckCircle, Cancel, Message } from '@mui/icons-material'
 // Files
-import { useAppContext } from '../../AppContextProps'
 import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
 import AnnounceData from '../../../Types/Announce.types'
 import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
-import ParticipationsService from '../../../Services/Participations'
 import PublicService from '../../../Services/Public'
+import ParticipationsService from '../../../Services/Participations'
 import DetailAnnounce from './DetailAnnounce'
 import UserProfileData from '../../../Types/ProfileModif.types'
 import Authentification from '../../../Services/Authentification'
@@ -51,13 +50,7 @@ const ViewDetailAnnounce: React.FC = () => {
     }
   }
 
-  const {isYourParticipationOrAnnounce} = useAppContext()
-
   useEffect(() => {
-    if (isYourParticipationOrAnnounce) {
-      void fetchParticipantsGestion(sportId ?? '')
-      void fetchParticipantsList(sportId ?? '')
-    }
     void fetchAnnounce(sportId ?? '')
   }, [sportId])
 
@@ -108,13 +101,11 @@ const ViewDetailAnnounce: React.FC = () => {
   }, [])
 
   const navigate = useNavigate()
-  const { setIsYourParticipationOrAnnounce } = useAppContext()
   const handleViewDetailsProfile = (userId: string) => {
-    setIsYourParticipationOrAnnounce(false)
     if (profile?._id === userId) {
       navigate('/profile')
     } else {
-      navigate(`/profile/${userId}`)
+      navigate(`/profile/${userId}/${sportId}`)
     }
   }
 
@@ -147,9 +138,9 @@ const ViewDetailAnnounce: React.FC = () => {
               src={require(`../../Images/sports_images/${sportsListMapping[sport?.sport as SportsListMappingKey]}`)}
               alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
             /><br/>
-            <DetailAnnounce sport={sport} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce} isOrganizerDisplay={true}/>
+            <DetailAnnounce sport={sport} isOrganizerDisplay={true}/>
           </Grid>
-          {isYourParticipationOrAnnounce &&
+          {'' &&
             <>
               <Grid item md={6}>
                 {participantsList.map((participant) => (

@@ -4,17 +4,16 @@ import { useParams } from 'react-router-dom'
 // Materials
 import { Typography, Grid, Container, Box, CssBaseline, Paper } from '@mui/material'
 // Files
-import { useAppContext } from '../../AppContextProps'
 import UserData from '../../../Types/User.types'
 import Users from '../../../Services/Users'
 import DetailProfile from './DetailProfile'
 import RatingAndCommentUser from '../RatingAndComment/RatingAndCommentUser'
-import Authentification from '../../../Services/Authentification'
-import UserProfileData from '../../../Types/ProfileModif.types'
 
 const DetailsProfileUserPage: React.FC = () => {
   const [user, setUser] = useState<UserData>()
   const userId = useParams().userId ?? ''
+
+  const sportId = useParams().sportId ?? ''
 
   const fetchUser = async (userId: string) => {
     try {
@@ -24,8 +23,6 @@ const DetailsProfileUserPage: React.FC = () => {
       console.error('Erreur lors du chargement du profile', error)
     }
   }
-
-  const {isYourParticipationOrAnnounce} = useAppContext()
 
   useEffect(() => {
     void fetchUser(userId ?? '')
@@ -60,7 +57,7 @@ const DetailsProfileUserPage: React.FC = () => {
               src={require('../../Images/football_homepage.jpeg')}
               alt='Photo de profile'
             /><br/>
-            <DetailProfile user={user} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce}/>
+            <DetailProfile user={user} sportId={sportId}/>
           </Grid>
           <RatingAndCommentUser userId={user._id}/>
         </Grid>

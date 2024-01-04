@@ -13,11 +13,11 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import Phone from '@mui/icons-material/Phone'
 import { Face6 } from '@mui/icons-material'
 // Files
-import { useAppContext } from '../../AppContextProps'
 import AnnounceData from '../../../Types/Announce.types'
 import Authentification from '../../../Services/Authentification'
 import UserProfileData from '../../../Types/ProfileModif.types'
 import ViewAverageRating from '../RatingAndComment/ViewAverageRating'
+import ParticipationsService from '../../../Services/Participations'
 
 interface Detail {
   icon: React.ElementType<SvgIconProps>
@@ -25,9 +25,8 @@ interface Detail {
   color?: string
 }
 
-const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnounce?: boolean, isOrganizerDisplay?: boolean }> = ({ sport, isYourParticipationOrAnnounce, isOrganizerDisplay }) => {
+const DetailAnnounce: React.FC<{ sport: AnnounceData, isOrganizerDisplay?: boolean }> = ({ sport, isOrganizerDisplay }) => {
   const organizer = sport?.organizer
-  const { setIsYourParticipationOrAnnounce } = useAppContext()
 
   const Detail: React.FC<Detail> = ({ icon: IconComponent, children, color }) => (
     <Box display='flex' alignItems='center' mt={1} color={color}>
@@ -49,10 +48,6 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
       }
     }
     void fetchProfile()
-
-    if (!isYourParticipationOrAnnounce && sport.organizer?._id === profileData?._id) {
-      setIsYourParticipationOrAnnounce(true)
-    }
   }, [])
 
   const [profile, setProfile] = useState<UserProfileData>()
@@ -70,13 +65,26 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
 
   const navigate = useNavigate()
   const handleViewDetailsProfile = (userId: string) => {
-    setIsYourParticipationOrAnnounce(false)
     if (profile?._id === userId) {
       navigate('/profile')
     } else {
-      navigate(`/profile/${userId}`)
+      navigate(`/profile/${userId}/${sport._id}`)
     }
   }
+
+  const [isParticipating, setIsParticipating] = useState<boolean>(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ParticipationsService.getIfParticiping(sport._id ?? '')
+        setIsParticipating(response.data.isParticipating)
+      } catch (error) {
+        console.error('Erreur lors du chargement du profile', error)
+      }
+    }
+    void fetchData()
+  }, [isParticipating])
 
   return (
     <>
@@ -90,7 +98,7 @@ const DetailAnnounce: React.FC<{ sport: AnnounceData, isYourParticipationOrAnnou
                   {organizer?.userName}
                 </Detail>
                 <Detail icon={Phone} color={'white'}>
-                  {`${isYourParticipationOrAnnounce ? '+33 ' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
+                  {`${isParticipating ? '+33 ' + organizer?.phoneNumber : '+33 0* ** ** **'}`}
                 </Detail>
               </div>
               <div style={{textAlign: 'center', marginBottom: '15px'}}>

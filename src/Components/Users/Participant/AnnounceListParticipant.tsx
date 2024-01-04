@@ -6,7 +6,6 @@ import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia,
 // Icons
 import Start from '@mui/icons-material/Start'
 // Files
-import { useAppContext } from '../../AppContextProps'
 import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
 import ParticipationsService from '../../../Services/Participations'
 import PopulateParticipationData from '../../../Types/PopulateParticipations.types'
@@ -31,9 +30,7 @@ const AnnouncesListsParticipant: React.FC = () => {
     })
   }
 
-  const { setIsYourParticipationOrAnnounce } = useAppContext()
   const handleViewDetails = (sportId: string) => {
-    setIsYourParticipationOrAnnounce(true)
     navigate(`/annonce/details/${sportId}`)
   }
 

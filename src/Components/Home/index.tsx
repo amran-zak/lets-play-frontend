@@ -3,7 +3,7 @@ import React from 'react'
 // Materials
 import { Grid } from '@mui/material'
 // Files
-import HeroSection from './HeroSection'
+import HeroSection from './HomePage'
 
 const HomePage: React.FC = () => {
   return (

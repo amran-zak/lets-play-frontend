@@ -22,12 +22,25 @@ class Participations {
     return http.get('/api/organizer/sports/' + sportId + '/participations/list')
   }
 
-  async acceptParticipation(sportId: string, partcipationId: string) {
-    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/accept')
+  async acceptParticipation(sportId: string, participationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + participationId + '/accept')
   }
 
-  async rejectParticipation(sportId: string, partcipationId: string) {
-    return http.put('/api/organizer/sports/' + sportId + '/participations/' + partcipationId + '/reject')
+  async rejectParticipation(sportId: string, participationId: string) {
+    return http.put('/api/organizer/sports/' + sportId + '/participations/' + participationId + '/reject')
+  }
+
+  async getIfParticiping(sportId: string) {
+    const token = localStorage.getItem('token')
+    if (token) {
+      return http.get('api/participations/isParticipating/' + sportId, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+      )
+    }
+    throw new Error('No token found')
   }
 }
 

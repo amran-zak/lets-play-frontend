@@ -15,7 +15,7 @@ const About = () => {
         <Typography variant="h5" component="div" sx={{marginBottom: '25px'}} color="secondary">
           Bienvenue dans l&apos;univers de LET&apos;S PLAY
         </Typography>
-        <Grid container spacing={5}>
+        <Grid container spacing={5} sx={{textAlign: 'justify'}}>
           <Grid item md={6}>
             <p>
               LET&apos;S PLAY est une application web révolutionnaire conçue pour les passionnés de sport de tous horizons. Notre mission est de faciliter la découverte et la participation à des activités sportives locales, en créant un pont entre organisateurs d&apos;événements sportifs et participants enthousiastes.
@@ -37,7 +37,7 @@ const About = () => {
         </Grid>
         <Grid container spacing={5}>
           <Grid item md={4}>
-            <Card elevation={3} sx={{marginX: 'auto', width: '90%', marginTop: '15%'}}>
+            <Card elevation={3} sx={{marginX: 'auto', width: '90%', marginTop: '10%'}}>
               <CardMedia
                 component="img"
                 src={logo}
@@ -45,11 +45,11 @@ const About = () => {
               />
             </Card>
           </Grid>
-          <Grid item md={8}>
+          <Grid item md={8} sx={{textAlign: 'justify'}}>
             <Typography variant="h5" component="div" sx={{marginTop: '50px', marginBottom: '25px'}} color="secondary">
               Caractéristiques clés de LET&apos;S PLAY
             </Typography>
-            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+            <ul style={{ listStyle: 'none', paddingLeft: 0, paddingRight: 15 }}>
               {['Facilité d\'utilisation : Une interface intuitive et conviviale qui rend la navigation et l\'inscription aux événements sportifs aussi simple qu\'un clic.',
                 'Diversité des sports : Un large éventail d\'activités sportives pour répondre à tous les goûts et niveaux de compétence.',
                 'Qualité des matchs : Un système de classement et de matchmaking équilibré pour des expériences de jeu compétitives et équitables.',

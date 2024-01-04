@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 // Materials
 import { Card, CardMedia, CardContent, Typography, CardActionArea, Grid, useTheme, Box, CardActions, Button } from '@mui/material'
 // Files
-import { useAppContext } from '../../AppContextProps'
 import { sportsListMapping, SportsListMappingKey } from '../../../Types/SportListImagePath'
 import AnnounceData from '../../../Types/Announce.types'
 import AnnounceSerive from '../../../Services/Announce'
@@ -75,8 +74,6 @@ export default function ViewAnnounceOrganizer() {
 
   const theme = useTheme()
 
-  const {isYourParticipationOrAnnounce} = useAppContext()
-
   const [currentPage, setCurrentPage] = useState(1)
   const announcesPerPage = 6
 
@@ -114,7 +111,7 @@ export default function ViewAnnounceOrganizer() {
                 alt={`Photo du sport ${sportsListMapping[sport?.sport as SportsListMappingKey]}`}
               />
               <CardContent>
-                <DetailAnnounce sport={sport} isYourParticipationOrAnnounce={isYourParticipationOrAnnounce}/>
+                <DetailAnnounce sport={sport}/>
               </CardContent>
               <CardActions style={{justifyContent: 'space-between'}}>
                 <Button size="small" color="primary" variant="contained" onClick={() => handleEdit(sport._id ? sport._id : '')}>

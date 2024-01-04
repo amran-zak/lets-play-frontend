@@ -42,7 +42,7 @@ export default function AppRouter(): JSX.Element {
               <Route path='/annonces/liste' element={<ViewAnnounceOrganizer/>}/>
               <Route path='/annonce/modifier/:id' element={<ModifyAnnounce/>}/>
               <Route path='/profile' element={<ProfileEdit/>}/>
-              <Route path='/profile/:userId' element={<DetailsProfileUserPage/>}/>
+              <Route path='/profile/:userId/:sportId' element={<DetailsProfileUserPage/>}/>
               <Route path='/annonces/participations' element={<AnnouncesListsParticipant/>}/>
               <Route path='/annonce/details/:sportId' element={<ViewDetailAnnounce/>}/>
             </Route>
